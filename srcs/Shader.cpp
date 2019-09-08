@@ -15,6 +15,8 @@
 #include <fstream>
 #include <string>
 #include <glm.hpp>
+#include "Camera.hpp"
+#include "SdlWindow.hpp"
 
 Shader::Shader(std::vector<const char *> shaderSource, std::vector<GLenum> shaderType) : _shaderSource(shaderSource),
 _shaderType(shaderType)

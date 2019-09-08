@@ -14,9 +14,9 @@
 # define POSTPROCESS_HPP
 
 # include "Shader.hpp"
-# include "IGameObject.hpp"
+# include "GameObject.hpp"
 
-class PostProcess : public Shader, public Engine42::IGameObject
+class PostProcess : public Shader, public GameObject
 {
 	public:
 		PostProcess(std::vector<const char *> shaderSource, std::vector<GLenum> shaderType);

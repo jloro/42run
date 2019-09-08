@@ -4,7 +4,7 @@
 # include <iostream>
 # include <list>
 
-# include "AGameObject.hpp"
+# include "GameObject.hpp"
 # include "SdlWindow.hpp"
 # include "Time.hpp"
 # include "Skybox.hpp"
@@ -29,9 +29,9 @@ namespace Engine42
 			static void            AddRenderer(std::shared_ptr<ARenderer> renderer);
 			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);
 			static void            SetWindow(const SdlWindow *win);
-			static void            AddGameObject(std::shared_ptr<AGameObject> object);
-			static void            AddGameObject(std::list<std::shared_ptr<Engine42::AGameObject>> objects);
-			static void            AddUIElement(std::shared_ptr<AGameObject> object);
+			static void            AddGameObject(std::shared_ptr<GameObject> object);
+			static void            AddGameObject(std::list<std::shared_ptr<GameObject>> objects);
+			static void            AddUIElement(std::shared_ptr<GameObject> object);
 			static void            ChangeFontUI(std::shared_ptr<Text> font);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
@@ -59,8 +59,8 @@ namespace Engine42
 			static Engine                       _inst;
 			std::list<std::shared_ptr<ARenderer>>           _renderers;
 			std::list<std::shared_ptr<Framebuffer>>			_framebuffers;
-			std::list<std::shared_ptr<AGameObject>>   _gameObjs;
-			std::list<std::shared_ptr<AGameObject>>   _UI;
+			std::list<std::shared_ptr<GameObject>>   _gameObjs;
+			std::list<std::shared_ptr<GameObject>>   _UI;
 			std::shared_ptr<Text>					_fontUI;
 
 			SDL_Event                           _event;

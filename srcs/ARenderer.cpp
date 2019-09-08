@@ -1,8 +1,8 @@
 #include "ARenderer.hpp"
 
-ARenderer::ARenderer() : _shader(nullptr) {}
-ARenderer::ARenderer(std::shared_ptr<Shader>  shader) :_shader(shader) {}
-ARenderer::ARenderer(std::shared_ptr<Shader>  shader, Transform trans) : _shader(shader) 
+ARenderer::ARenderer(std::shared_ptr<GameObject> obj) : AComponent(obj), _shader(nullptr) {}
+ARenderer::ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader>  shader) : AComponent(obj), _shader(shader) {}
+ARenderer::ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader>  shader, Transform trans) : AComponent(obj), _shader(shader) 
 {
     transform = trans;
     UpdateMatrix();

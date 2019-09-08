@@ -20,6 +20,7 @@
 # include <memory>
 # include "glm.hpp"
 # include <map>
+# include "SdlWindow.hpp"
 
 struct Character {
     GLuint     TextureID;  // ID handle of the glyph texture

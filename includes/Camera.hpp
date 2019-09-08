@@ -14,7 +14,7 @@
 # define CAMERA_HPP
 
 # include <glm.hpp>
-# include "IGameObject.hpp"
+# include "GameObject.hpp"
 
 # define MOVE_SPEED 2.5f
 # define MOUSE_SENSITIVITY 0.1f
@@ -22,7 +22,7 @@
 
 enum eCameraDirection { Forward, Backward, Right, Left, Up, Down};
 
-class Camera : public Engine42::IGameObject
+class Camera : public GameObject
 {
 	public:
 		Camera(float width, float height);

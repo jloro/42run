@@ -2,7 +2,7 @@
 # define ACOLLIDER_HPP
 
 # include <iostream>
-# include "AGameObject.hpp"
+# include "GameObject.hpp"
 # include "AComponent.hpp"
 # include <memory>
 
@@ -11,7 +11,9 @@ class ACollider : public AComponent
 
 public: 
 /*	constructors / destrucors	*/
-    ACollider(std::shared_ptr<AGameObject> obj);
+    ACollider(std::shared_ptr<GameObject> obj);
+    ACollider(GameObject *obj);
+
     //ACollider(const ACollider & src); 
     virtual ~ACollider(void); 
 /*	public variables	*/

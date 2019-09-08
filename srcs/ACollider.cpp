@@ -6,10 +6,12 @@
     _gameObj = nullptr;
 }*/
 
-ACollider::ACollider(std::shared_ptr<AGameObject> obj) : ACollider(obj)
+ACollider::ACollider(std::shared_ptr<GameObject> obj) : AComponent(obj)
 {
 }
-
+ACollider::ACollider(GameObject *obj) : AComponent(obj)
+{
+}
 ACollider::~ACollider(void)
 {
     

@@ -2,8 +2,9 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
+#include "SdlWindow.hpp"
 
-Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans) : MeshRenderer(model, shader, trans)
+Framebuffer::Framebuffer(int width, int height, std::shared_ptr<GameObject> obj, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans) : MeshRenderer(obj, model, shader, trans)
 {
 	UpdateMatrix();
 	glGenFramebuffers(1, &_fbo);
@@ -66,7 +67,7 @@ void	Framebuffer::genTexture() const
 
 	glBindVertexArray(_quadVAO);
 	_shader->use();
-    _shader->SetUpUniforms(*Camera::instance, *SdlWindow::GetMain(), ((float)SDL_GetTicks()) / 1000.f);
+    _shader->SetUpUniforms(*Camera::instance, *(SdlWindow::GetMain()), ((float)SDL_GetTicks()) / 1000.f);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -2,20 +2,21 @@
 # define ACOMPONENT_HPP
 
 # include <iostream>
-# include "AGameObject.hpp"
+# include "GameObject.hpp"
 # include <memory>
 
 class AComponent 
 {
 public: 
 /*	constructors / destrucors	*/
-    AComponent(std::shared_ptr<AGameObject> obj);
+    AComponent(std::shared_ptr<GameObject> obj);
+    AComponent(GameObject *obj); 
     ~AComponent();
 
 /*	public functions	*/
-    virtual std::shared_ptr<AGameObject>  GetGameObj() const;
+    virtual std::shared_ptr<GameObject>  GetGameObj() const;
 
 protected:
-    std::shared_ptr<AGameObject> _gameObj;
+    std::shared_ptr<GameObject> _gameObj;
 };
 #endif

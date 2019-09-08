@@ -2,6 +2,7 @@
 #include "vector"
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
+#include <iostream>
 
  Text::Text(const std::string font, FT_Library lib)
 {

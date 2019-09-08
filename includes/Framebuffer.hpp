@@ -16,11 +16,12 @@
 # include "Shader.hpp"
 # include "Model.hpp"
 # include "MeshRenderer.hpp"
+# include "GameObject.hpp"
 
 class Framebuffer : public MeshRenderer
 {
 	public:
-		Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans);
+		Framebuffer(int width, int height, std::shared_ptr<GameObject> obj, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans);
 		void genTexture() const;
 		virtual void Draw() const;
 		virtual	~Framebuffer();

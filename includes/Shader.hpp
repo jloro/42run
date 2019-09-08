@@ -16,8 +16,8 @@
 # include <vector>
 # include "glad.h"
 # include <glm.hpp>
-# include "Camera.hpp"
-# include "SdlWindow.hpp"
+class Camera;
+class SdlWindow;
 
 class Shader
 {

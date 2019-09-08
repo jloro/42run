@@ -6,16 +6,17 @@
 # include "Shader.hpp"
 //# include "glm.hpp"
 # include "gtc/matrix_transform.hpp"
+# include "AComponent.hpp"
 
-class ARenderer : public IComponent
+class ARenderer : public AComponent
 {
 
 public: 
 /*	constructors / destrucors	*/
-    ARenderer();
-    ARenderer(std::shared_ptr<Shader>  shader);
-    ARenderer(std::shared_ptr<Shader>  shader, Transform trans);
-    virtual ~Renderer() {};
+    ARenderer(std::shared_ptr<GameObject> obj);
+    ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader> shader);
+    ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader> shader, Transform trans);
+    virtual ~ARenderer() {};
 /*	public variables	*/
     Transform           transform;
 /*	public functions	*/
