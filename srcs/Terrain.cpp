@@ -86,7 +86,7 @@ Mesh       Terrain::_GenerateTerrain(unsigned int xSize, unsigned int zSize)
 bool    Terrain::LoadTexture(const std::string & path) 
 {
     _dir  = path.substr(0, path.find_last_of('/'));
-    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Specular ,path));
+    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
     return true;
 }   
 bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
@@ -94,6 +94,6 @@ bool Terrain::LoadTexture(const std::string &path, float tilingX, float tilingY)
     _tilingX = tilingX;
     _tilingY = tilingY;
     _dir  = path.substr(0, path.find_last_of('/'));
-    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Specular ,path));
+    _meshes[0].textures.push_back(Model::_LoadSimpleTexture(eTextureType::Diffuse ,path));
     return true;
 }

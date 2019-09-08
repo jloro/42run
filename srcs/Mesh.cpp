@@ -82,12 +82,10 @@ void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
 		glActiveTexture(GL_TEXTURE0 + i);
 		if (textures[i].type == eTextureType::Diffuse)
 		{
-			//number = ;
 			name = "texture_diffuse" + std::to_string(diffuseNb++);
 		}
 		else if (textures[i].type == eTextureType::Specular)
 		{
-			//number = ;
 			name = "texture_specular" + std::to_string(specularNb++);
 		}
 		else if (textures[i].type == eTextureType::Cubemap)
