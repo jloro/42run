@@ -1,20 +1,20 @@
-#ifndef RENDERER_HPP
-# define RENDERER_HPP
+#ifndef ARENDERER_HPP
+# define ARENDERER_HPP
 
 # include <iostream>
 # include "Transform.hpp"
 # include "Shader.hpp"
 //# include "glm.hpp"
-#include "gtc/matrix_transform.hpp"
+# include "gtc/matrix_transform.hpp"
 
-class Renderer 
+class ARenderer : public IComponent
 {
 
 public: 
 /*	constructors / destrucors	*/
-    Renderer();
-    Renderer(std::shared_ptr<Shader>  shader);
-    Renderer(std::shared_ptr<Shader>  shader, Transform trans);
+    ARenderer();
+    ARenderer(std::shared_ptr<Shader>  shader);
+    ARenderer(std::shared_ptr<Shader>  shader, Transform trans);
     virtual ~Renderer() {};
 /*	public variables	*/
     Transform           transform;

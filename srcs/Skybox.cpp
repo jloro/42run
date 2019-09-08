@@ -70,6 +70,8 @@ void    Skybox::Draw(void) const
 	_shader->setMat4("view",glm::mat4(glm::mat3(Camera::instance->GetViewMatrix())));  
 	_shader->setMat4("projection", Camera::instance->GetMatProj());
 	glBindVertexArray(_vao);
+	_shader->setInt("skybox", _cubeMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, _cubeMap);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glDepthMask(GL_TRUE);

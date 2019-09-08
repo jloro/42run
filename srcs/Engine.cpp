@@ -33,7 +33,7 @@ void            Engine42::Engine::AddFramebuffer(std::shared_ptr<Framebuffer> fb
 	}
 }
 
-void            Engine42::Engine::AddGameObject(std::shared_ptr<Engine42::IGameObject> object)
+void            Engine42::Engine::AddGameObject(std::shared_ptr<Engine42::AGameObject> object)
 {
 	if (object != nullptr)
 		_inst._gameObjs.push_back(object);
@@ -43,12 +43,12 @@ void Engine42::Engine::SetSkybox(std::shared_ptr<Skybox> skybox)
 	_inst._skybox = skybox;
 }
 
-void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<Engine42::IGameObject>> objs)
+void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<Engine42::AGameObject>> objs)
 {
 	_inst._gameObjs.insert(_inst._gameObjs.begin(), objs.begin(), objs.end());
 }
 std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
-void            Engine42::Engine::AddUIElement(std::shared_ptr<Engine42::IGameObject> object)
+void            Engine42::Engine::AddUIElement(std::shared_ptr<Engine42::AGameObject> object)
 {
 	if (object != nullptr)
 		_inst._UI.push_back(object);
@@ -223,7 +223,7 @@ void                         Engine42::Engine::_RenderAll(void)
 }*/
 void                          Engine42::Engine::_UpdateAll(void)
 {
-    std::list<std::shared_ptr<IGameObject>>::iterator  it;
+    std::list<std::shared_ptr<AGameObject>>::iterator  it;
 
 	for (it = _gameObjs.begin(); it != _gameObjs.end(); it++)
 	{
@@ -240,7 +240,7 @@ void                       Engine42::Engine::ReloadShaders(void)
 }
 void                       Engine42::Engine::_FixedUpdateAll(void) 
 {
-    std::list<std::shared_ptr<IGameObject>>::iterator  it;
+    std::list<std::shared_ptr<AGameObject>>::iterator  it;
 
 	for (it = _gameObjs.begin(); it != _gameObjs.end(); it++)
 	{
