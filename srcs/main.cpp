@@ -39,16 +39,18 @@ bool InitModels(SdlWindow &win)
 
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
 
+	std::shared_ptr<Model>	test(new Model("halo/halo.mesh.xml"));
 	shadersPath[0] = "shaders/Vertex.vs.glsl";
 	shadersPath[1] = "shaders/Assimp.fs.glsl";
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
+	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)))));
 	Transform trans(glm::vec3(10.0f, 0.1f, -20.0f),//position
 						glm::vec3(1.4f, 1.9f, 0.0f));//scale
 	Engine42::Engine::SetWindow(&win);
 	Engine42::Engine::AddGameObject(cam);
-	std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
-	std::shared_ptr<Renderer> terrainRenderer(new MeshRenderer((terrainModel), myShader, Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
-	Engine42::Engine::AddRenderer(terrainRenderer);
+	//std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
+	//std::shared_ptr<Renderer> terrainRenderer(new MeshRenderer((terrainModel), myShader, Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
+	//Engine42::Engine::AddRenderer(terrainRenderer);
 	std::shared_ptr<Skybox> sky = CreateSkyBox();
 	Engine42::Engine::SetSkybox(sky);
 	return true;

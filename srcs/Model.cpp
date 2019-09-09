@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/08/19 16:28:22 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/09 13:06:17 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	Model::_LoadModel(std::string path)
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + import.GetErrorString());
+	std::cout << scene->HasAnimations()<< std::endl;
 	_dir = path.substr(0, path.find_last_of('/'));
 	_ProcessNode(scene->mRootNode, scene);
 }
@@ -69,6 +70,14 @@ void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
 		_ProcessNode(node->mChildren[i], scene);
 }
 
+void	Model::_LoadBones(aiMesh *mesh, unsigned int index, Vertex &vertex)
+{
+	std::cout << mesh->mNumBones << std::endl;
+	(void)mesh;
+	(void)vertex;
+	(void)index;
+}
+
 Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 {
 	std::vector<Vertex>	vertices;
@@ -77,6 +86,8 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 	std::cout <<  "Load mesh" << std::endl;
 	//Get vertices
+	std::cout << mesh->mNumBones<< std::endl;
+	std::cout << mesh->mNumVertices<< std::endl;
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
@@ -90,6 +101,11 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		else
 			vertex.texCoord = glm::vec2(0.0f, 0.0f);
 		vertices.push_back(vertex);
+	}
+	//Get Bones
+	if (mesh->HasBones())
+	{
+		;
 	}
 	//Get faces
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)

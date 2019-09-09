@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/06/22 17:03:45 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/09 12:54:47 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Model
 /*  protected functions    */
 		void					_LoadModel(std::string path);
 		void					_ProcessNode(aiNode *node, const aiScene *scene);
+		void					_LoadBones(aiMesh *mesh, unsigned int index, Vertex &vertex);
 		Mesh					_ProcessMesh(aiMesh *mesh, const aiScene *scene);
 		std::vector<Texture>	_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName);
 		static Texture			_LoadSimpleTexture(eTextureType typeName, const std::string filename);
