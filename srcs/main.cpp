@@ -39,7 +39,7 @@ bool InitModels(SdlWindow &win)
 
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
 
-	std::shared_ptr<Model>	test(new Model("halo/halo.mesh.xml"));
+	std::shared_ptr<Model>	test(new Model("test/boblampclean.md5mesh"));
 	shadersPath[0] = "shaders/Vertex.vs.glsl";
 	shadersPath[1] = "shaders/Assimp.fs.glsl";
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));

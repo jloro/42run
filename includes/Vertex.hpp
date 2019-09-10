@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 16:41:44 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/09 12:44:18 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/10 12:53:40 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ struct Vertex {
 	glm::vec2		texCoord;
 	unsigned int	ids[NUM_BONES_PER_VERTEX];
 	float			weights[NUM_BONES_PER_VERTEX];
+};
+
+struct BoneInfo {
+	glm::mat4		offsetMat;
+	glm::mat4		finalTransMat;
 };
 
 #endif

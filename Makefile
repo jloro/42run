@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/04 10:53:30 by jloro            ###   ########.fr        #
+#    Updated: 2019/09/10 15:51:33 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
-		Text.hpp FpsDisplay.hpp Renderer.hpp  
+		Text.hpp FpsDisplay.hpp Renderer.hpp Model.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
