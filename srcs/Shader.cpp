@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 14:24:02 by jloro             #+#    #+#             */
-/*   Updated: 2019/08/19 16:46:34 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/11 13:29:17 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <fstream>
 #include <string>
 #include <glm.hpp>
+#include <gtc/type_ptr.hpp>
 
 Shader::Shader(std::vector<const char *> shaderSource, std::vector<GLenum> shaderType) : _shaderSource(shaderSource),
 _shaderType(shaderType)
@@ -157,4 +158,9 @@ void Shader::setMat3(const std::string &name, const glm::mat3 &mat) const
 void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(_program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::setMat4v(const std::string &name, std::vector<glm::mat4> &mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(_program, name.c_str()), mat.size(), GL_FALSE, glm::value_ptr(mat[0]));
 }

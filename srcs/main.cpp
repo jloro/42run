@@ -34,16 +34,14 @@ std::shared_ptr<Skybox> CreateSkyBox()
 
 bool InitModels(SdlWindow &win)
 {
-	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
+	std::vector<const char *>	shadersPath{ "shaders/Skeletical.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
 
 	std::shared_ptr<Model>	test(new Model("test/boblampclean.md5mesh"));
-	shadersPath[0] = "shaders/Vertex.vs.glsl";
-	shadersPath[1] = "shaders/Assimp.fs.glsl";
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
-	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)))));
+	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f)))));
 	Transform trans(glm::vec3(10.0f, 0.1f, -20.0f),//position
 						glm::vec3(1.4f, 1.9f, 0.0f));//scale
 	Engine42::Engine::SetWindow(&win);
@@ -77,7 +75,7 @@ int				main(int ac, char **av)
 		return ErrorQuit("Failed to init freetype library", std::string());
 	}
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	SdlWindow	win(800, 400, false, true, "Ft_Vox");
+	SdlWindow	win(800, 400, false, true, "42run");
 	win.CreateGlContext(4, 1, true, 24);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);

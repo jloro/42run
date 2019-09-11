@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/10 16:25:39 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/11 11:23:34 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <glm.hpp>
 # include <gtx/quaternion.hpp>
 # include <map>
+# include <assimp/Importer.hpp>
 
 # define ROTATION 0
 # define SCALING 1
@@ -44,13 +45,14 @@ class Model
 		glm::mat4				_globalTransform;
 
 		const aiScene*			_scene;
+		Assimp::Importer		_importer;
 /*  protected functions    */
 		void					_LoadModel(std::string path);
 		void					_ProcessNode(aiNode *node, const aiScene *scene);
 
 		void					_LoadBones(aiMesh *mesh, std::vector<Vertex>& vertices);
 		void					_AddBoneData(unsigned int id, float weight, Vertex& vertex);
-		void					_BoneTransform(float timeInSecond);
+		void					_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader);
 		void					_ReadNodeHierarchy(float animationTime, const aiNode* node, const glm::mat4 parentTransform);
 		aiQuaternion			_CalcInterpolatedRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
 		aiVector3D				_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
