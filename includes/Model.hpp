@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 14:23:49 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 16:15:33 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Model
 /*  constructors / Destructor*/
 		Model(void);
 		Model(const char* path);
+		Model(const char* path, const char* texture);
 		Model(const Model & rhs);
 		virtual~Model();
 /*  public functions    */
@@ -43,6 +44,7 @@ class Model
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
 		glm::mat4				_globalTransform;
+		std::string				_texture;
 
 		bool					_hasAnim;
 		const aiScene*			_scene;

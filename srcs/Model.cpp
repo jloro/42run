@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 15:48:11 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 16:18:15 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,13 @@ Model::Model(void)
 {
 }
 
-Model::Model(const char* path)
+Model::Model(const char* path) : _texture("")
+{
+	_LoadModel(path);
+	for (unsigned int i = 0; i < _meshes.size(); i++)
+		_meshes[i].SendToOpenGL();
+}
+Model::Model(const char* path, const char* texture) : _texture(texture)
 {
 	_LoadModel(path);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
@@ -325,8 +331,6 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 		std::vector<Texture> diffuseMaps = _LoadMaterialTexture(material, aiTextureType_DIFFUSE, Diffuse);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		std::vector<Texture> specularMaps = _LoadMaterialTexture(material, aiTextureType_SPECULAR, Specular);
-		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 	//std::cout << "nb meshs" << std::endl;
 	return Mesh(vertices, faces, textures);// I think this line force push to timeto openGl, cause it call the constructor 2 times
@@ -340,7 +344,10 @@ std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType 
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		Texture texture;
-		texture.id = _TextureFromFile(str.C_Str(), _dir);
+		if (_texture == "")
+			texture.id = _TextureFromFile(str.C_Str(), _dir);
+		else
+			texture.id = _TextureFromFile(_texture.c_str(), _dir);
 		texture.type = typeName;
 		textures.push_back(texture);
 	}
@@ -374,7 +381,7 @@ unsigned int 			Model::_TextureFromFile(const std::string &filename)
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
-	unsigned char *data = stbi_load("Running/textures/Boy01_diffuse.jpg", &width, &height, &nrComponents, 0);
+	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum format;

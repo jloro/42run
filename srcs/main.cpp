@@ -39,9 +39,13 @@ bool InitModels(SdlWindow &win)
 
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
 
-	std::shared_ptr<Model>	test(new Model("Running/42stud.fbx"));
+	std::shared_ptr<Model>	test(new Model("Running/42stud.fbx", "textures/Boy01_diffuse.jpg"));
+	std::shared_ptr<Model>	test2(new Model("Pillar/LP_Pillar_Textured.obj"));
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
+	shadersPath[0] = "shaders/Vertex.vs.glsl";
+	std::shared_ptr<Shader> 	myShader2(new Shader(shadersPath, type));
 	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f)))));
+	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test2, myShader2, Transform(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f)))));
 	Transform trans(glm::vec3(10.0f, 0.1f, -20.0f),//position
 						glm::vec3(1.4f, 1.9f, 0.0f));//scale
 	Engine42::Engine::SetWindow(&win);
