@@ -5,7 +5,6 @@
 #include <map>
 #include "PrintGlm.hpp"
 
-
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
@@ -22,6 +21,13 @@ void            Engine42::Engine::AddRenderer(std::shared_ptr<Renderer> renderer
 {
 	if (renderer != nullptr)
 		_inst._renderers.push_back(renderer);
+}
+void            Engine42::Engine::AddRenderer(std::shared_ptr<Player> player) 
+{
+	if (player != nullptr)
+		_inst._renderers.push_back(player);
+	if (player != nullptr)
+		_inst._gameObjs.push_back(player);
 }
 
 void            Engine42::Engine::AddFramebuffer(std::shared_ptr<Framebuffer> fbo) 

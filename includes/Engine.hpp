@@ -12,6 +12,7 @@
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
 # include "Text.hpp"
+#include "Player.hpp"
 
 
 namespace Engine42
@@ -27,6 +28,7 @@ namespace Engine42
 			/*	public functions	*/
 			static void            AddRenderer(std::list<std::shared_ptr<Renderer>> renderers);
 			static void            AddRenderer(std::shared_ptr<Renderer> renderer);
+			static void            AddRenderer(std::shared_ptr<Player> renderer);
 			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);

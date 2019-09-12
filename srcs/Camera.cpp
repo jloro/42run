@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/07/29 12:07:39 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 16:37:25 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	Camera::FixedUpdate() {}
 
 void	Camera::Move(eCameraDirection dir, float deltaTime)
 {
-	float moveSpeed = _sprint ? _moveSpeed * 4 : _moveSpeed;
+	float moveSpeed = _sprint ? _moveSpeed * 20 : _moveSpeed;
 	if (dir == Forward)
 		_pos += moveSpeed * deltaTime * _dir;
 	else if (dir == Backward)
