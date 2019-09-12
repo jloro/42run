@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 16:37:25 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 18:29:23 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ Camera::Camera(float width, float height) : _moveSpeed(MOVE_SPEED), _mouseSensit
 {
 	if (Camera::instance == nullptr)
 		instance = this;
-	_pos = glm::vec3(0.0f, 0.0f, 8.0f);
-	_dir = glm::vec3(0.0f, 0.0f, -1.0f);
+	_pos = glm::vec3(-2.0f, 20.0f, -38.0f);
+	_dir = glm::vec3(0.0f, -0.2f, 1.0f);
 	_CalcMatrix();
 }
 
@@ -42,6 +42,7 @@ void 	Camera::Update()
 		LookAround(event.motion.xrel, -event.motion.yrel);*/
 	//else //if (event.type == SDL_KEYDOWN)
 	//{
+	/*
 		const Uint8 	*keys = Engine42::Engine::GetKeyInput();
 		if (keys[SDL_SCANCODE_W])
 			Move(eCameraDirection::Forward, Engine42::Time::GetDeltaTime());
@@ -62,7 +63,7 @@ void 	Camera::Update()
 		else
 			_sprint = false;
 
-	//}
+	//}*/
 }
 void	Camera::FixedUpdate() {}
 

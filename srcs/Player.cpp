@@ -1,10 +1,8 @@
 #include "Player.hpp"
 #include "Engine.hpp"
-Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _character(character)
+#include "gtx/compatibility.hpp"
+Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _character(character), _jump(false)
 {
-
-	_keyboard[SDL_SCANCODE_RIGHT] = KEY_UP;
-	_keyboard[SDL_SCANCODE_LEFT] = KEY_UP;
 }
 
 Player::~Player() {}
@@ -20,34 +18,32 @@ void        Player::Draw() const
 }
 void    Player::FixedUpdate(void)
 {
-
 }
 
-void	Player::_UpdateKeyboard(Uint8 scancode, const Uint8 *keys)
-{
-	if (keys[scancode] && _keyboard[scancode] == KEY_UP)
-		_keyboard[scancode] = KEY_PRESS;
-	else if (keys[scancode] && _keyboard[scancode] == KEY_PRESS)
-		_keyboard[scancode] = KEY_DOWN;
-	else if (!keys[scancode] && _keyboard[scancode] == KEY_DOWN)
-		_keyboard[scancode] = KEY_RELEASE;
-	else if (!keys[scancode] && _keyboard[scancode] == KEY_RELEASE)
-		_keyboard[scancode] = KEY_UP;
-}
 
 void    Player::Update(void)
 {
-	const Uint8 	*keys = Engine42::Engine::GetKeyInput();
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && transform.position.x > -25.0f)
+		transform.position.x = glm::lerp(transform.position.x, -25.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_UP)
+		transform.position.x = glm::lerp(transform.position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_DOWN && transform.position.x < 25.0f)
+		transform.position.x = glm::lerp(transform.position.x, 25.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_UP)
+		transform.position.x = glm::lerp(transform.position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS && _jump == false)
+	{
+		_jump = true;
+		_jumpState = JUMPING;
+	}
+	if (_jump && _jumpState == JUMPING)
+		transform.position.y = glm::lerp(transform.position.y, 20.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (_jump && transform.position.y > 19.9f)
+		_jumpState = FALLING;
+	if (_jump && _jumpState == FALLING)
+		transform.position.y = glm::lerp(transform.position.y, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (_jump && transform.position.y < 0.1f)
+		_jump = false;
 
-	_UpdateKeyboard(SDL_SCANCODE_RIGHT, keys);
-	_UpdateKeyboard(SDL_SCANCODE_LEFT, keys);
-	if (_keyboard[SDL_SCANCODE_RIGHT] == KEY_PRESS && transform.position.x > -5.0f)
-		transform.position.x -= 5.0f;
-	if (_keyboard[SDL_SCANCODE_RIGHT] == KEY_RELEASE)
-		transform.position.x += 5.0f;
-	if (_keyboard[SDL_SCANCODE_LEFT] == KEY_PRESS && transform.position.x < 5.0f)
-		transform.position.x += 5.0f;
-	if (_keyboard[SDL_SCANCODE_LEFT] == KEY_RELEASE)
-		transform.position.x -= 5.0f;
 	UpdateMatrix();
 }

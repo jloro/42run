@@ -14,6 +14,13 @@
 # include "Text.hpp"
 #include "Player.hpp"
 
+enum eKeyState {
+	KEY_PRESS, //key press during frame
+	KEY_RELEASE, //key release during frame
+	KEY_DOWN,
+	KEY_UP
+
+};
 
 namespace Engine42
 {
@@ -43,6 +50,7 @@ namespace Engine42
 			static void            Loop(void);
 			static const SDL_Event &GetEvent();
 			static const Uint8     *GetKeyInput();
+			static eKeyState		GetKeyState(Uint8 scancode);
 			static bool             Destroy(std::shared_ptr<Renderer> renderer);
 			static void             ReloadShaders(void);
 			void             ResizeWindow(int width, int height);
@@ -55,6 +63,8 @@ namespace Engine42
 			unsigned int quadVAO;
 			unsigned int quadVBO;
 			std::shared_ptr<PostProcess>	_shaderFbo;
+			std::map<Uint8, eKeyState>	_keyboard;
+			std::vector<Uint8>			_keyboardKeys;
 			/*  private constructor*/
 			Engine(void); 
 			/*	private variables	*/
@@ -73,6 +83,8 @@ namespace Engine42
 			void                                _RenderAll(void);
 			void                                _UpdateAll(void);
 			void                                _FixedUpdateAll(void);
+			void								_UpdateKeyboard(void);
+			void								_InitKeyboard(void);
 
 	};
 }
