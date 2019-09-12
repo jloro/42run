@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/11 15:05:30 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 15:48:11 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ Model::~Model() {}
 
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
 {
-	_BoneTransform((((float)SDL_GetTicks()) / 1000), shader);
+	if (_hasAnim)
+		_BoneTransform((((float)SDL_GetTicks()) / 1000), shader);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
 		_meshes[i].Draw(shader);
 }
@@ -79,11 +80,14 @@ void	Model::_LoadModel(std::string path)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
 	if (_scene->HasAnimations())
 	{
+		_hasAnim = true;
 		std::cout << "Model:" << path << " has anim" << std::endl;
 		std::cout << "nb anim: " <<_scene->mNumAnimations << std::endl;
 		std::cout << "duration: "<<_scene->mAnimations[0]->mDuration<< std::endl;
 		std::cout << "tick per sec: "<<_scene->mAnimations[0]->mTicksPerSecond<< std::endl;
 	}
+	else
+		_hasAnim = false;
 
 	_globalTransform = aiMat4ToGlmMat4(_scene->mRootNode->mTransformation.Inverse());
 
@@ -117,10 +121,8 @@ void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  sh
 const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName)
 {
 	for (uint i = 0 ; i < pAnimation->mNumChannels ; i++) {
-		const aiNodeAnim* nodeAnim = pAnimation->mChannels[i];
-
-		if (std::string(nodeAnim->mNodeName.data) == NodeName) {
-			return nodeAnim;
+		if (std::string(pAnimation->mChannels[i]->mNodeName.data) == NodeName) {
+			return pAnimation->mChannels[i];
 		}
 	}
 
@@ -219,16 +221,15 @@ void	Model::_ReadNodeHierarchy(float animationTime, const aiNode* node, const gl
 	glm::mat4	nodeTransform = aiMat4ToGlmMat4(node->mTransformation);
 	if (nodeAnim)
 	{
-		aiVector3D	scale = _CalcInterpolatedScaling(animationTime, nodeAnim);
-		glm::mat4	scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
+		//aiVector3D	scale = _CalcInterpolatedScaling(animationTime, nodeAnim);
+		//glm::mat4	scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
 
 		aiQuaternion rotate = _CalcInterpolatedRotation(animationTime, nodeAnim);
-		glm::mat4	rotateMat = glm::mat3(aiMat3ToGlmMat3(rotate.GetMatrix()));
+		glm::mat4	rotateMat = glm::mat4(aiMat3ToGlmMat3(rotate.GetMatrix()));
 
-		aiVector3D	position = _CalcInterpolatedTranslation(animationTime, nodeAnim);
-		glm::mat4	positionMat = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
-
-		nodeTransform = rotateMat * positionMat * scaleMat;
+		//aiVector3D	position = _CalcInterpolatedTranslation(animationTime, nodeAnim);
+		//glm::mat4	positionMat = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
+		nodeTransform *= rotateMat;
 	}
 
 	glm::mat4 globalTransform = parentTransform * nodeTransform;
@@ -276,8 +277,8 @@ void					Model::_AddBoneData(unsigned int id, float weight, Vertex& vertex)
 			vertex.ids[i] = id;
 			return;
 		}
+		}
 	}
-}
 
 
 Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
@@ -373,7 +374,7 @@ unsigned int 			Model::_TextureFromFile(const std::string &filename)
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
-	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	unsigned char *data = stbi_load("Running/textures/Boy01_diffuse.jpg", &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum format;

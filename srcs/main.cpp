@@ -39,9 +39,9 @@ bool InitModels(SdlWindow &win)
 
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
 
-	std::shared_ptr<Model>	test(new Model("test/boblampclean.md5mesh"));
+	std::shared_ptr<Model>	test(new Model("Running/42stud.fbx"));
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
-	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f)))));
+	Engine42::Engine::AddRenderer(std::shared_ptr<MeshRenderer>(new MeshRenderer(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f)))));
 	Transform trans(glm::vec3(10.0f, 0.1f, -20.0f),//position
 						glm::vec3(1.4f, 1.9f, 0.0f));//scale
 	Engine42::Engine::SetWindow(&win);

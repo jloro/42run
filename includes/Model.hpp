@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/11 11:23:34 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/12 14:23:49 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Model
 		std::vector<BoneInfo>	_boneInfo;
 		glm::mat4				_globalTransform;
 
+		bool					_hasAnim;
 		const aiScene*			_scene;
 		Assimp::Importer		_importer;
 /*  protected functions    */
