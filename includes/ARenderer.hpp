@@ -15,8 +15,8 @@ public:
 /*	constructors / destrucors	*/
     ARenderer();
     ARenderer(std::shared_ptr<GameObject> obj);
-    ARenderer(std::shared_ptr<Shader> shader, std::shared_ptr<GameObject> obj );//= nullptr);
-    ARenderer(std::shared_ptr<Shader> shader, Transform trans, std::shared_ptr<GameObject> obj);// = nullptr);
+    ARenderer(std::shared_ptr<Shader> shader, std::shared_ptr<GameObject> obj = nullptr);
+    ARenderer(std::shared_ptr<Shader> shader, Transform trans, std::shared_ptr<GameObject> obj = nullptr);
     virtual ~ARenderer();
 /*	public variables	*/
     Transform           transform;
