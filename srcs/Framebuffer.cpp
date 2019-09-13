@@ -4,9 +4,8 @@
 #include "gtc/type_ptr.hpp"
 #include "SdlWindow.hpp"
 
-Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans, std::shared_ptr<GameObject> obj = nullptr) : MeshRenderer(model, shader, trans, false, obj)
+Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, std::shared_ptr<GameObject> obj = nullptr) : MeshRenderer(model, shader, false, obj)
 {
-	UpdateMatrix();
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -86,7 +85,7 @@ void	Framebuffer::Draw(void) const
 	_shaderModel->use();
     _shaderModel->setMat4("view", Camera::instance->GetMatView());
     _shaderModel->setMat4("projection", Camera::instance->GetMatProj());
-    _shaderModel->setMat4("model", _modelMatrix);
+    _shaderModel->setMat4("model", _transform->GetMatrix());
 	_shaderModel->setInt("texture_diffuse0", 0);
 	_model->Draw(_shaderModel);
 }

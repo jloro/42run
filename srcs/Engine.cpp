@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "PrintGlm.hpp"
+//#include "PrintGlm.hpp"
 
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
@@ -175,8 +175,8 @@ bool      Engine42::Engine::Destroy(std::shared_ptr<ARenderer> renderer)
 }
 bool		_sort(const std::shared_ptr<ARenderer> first, const std::shared_ptr<ARenderer> sec)
 {
-	float d1 = glm::distance(first->transform.position, Camera::instance->GetPos());
-	float d2 = glm::distance(sec->transform.position, Camera::instance->GetPos());
+	float d1 = glm::distance(first->GetTransform()->position, Camera::instance->GetPos());
+	float d2 = glm::distance(sec->GetTransform()->position, Camera::instance->GetPos());
 	return d2 < d1;
 }
 void                         Engine42::Engine::_RenderAll(void)

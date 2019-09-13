@@ -1,4 +1,5 @@
 #include "MeshRenderer.hpp"
+#include "PrintGlm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include <iostream>
 #include "stb_image.h"
@@ -7,25 +8,30 @@
 #include "glm.hpp"
 #include <gtc/random.hpp>
 #include "Engine.hpp"
+#include <sstream>
 
 
 MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
 std::shared_ptr<Shader>  shader, bool useNoise, std::shared_ptr<GameObject> obj) : ARenderer(shader, obj), _model(model), _noise(useNoise)
 {
-    transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
-    UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
 }
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
-std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise, std::shared_ptr<GameObject> obj) 
-: ARenderer(shader, trans, obj), _model(model), _noise(useNoise)
+std::string printvec(glm::vec4 & vec)
 {
-    std::cout << "mesh01" << std::endl;
-    UpdateMatrix();
-	if (useNoise)
-		InitNoiseText();
-    std::cout << "mesh02" << std::endl;
+	std::stringstream ss("");
+	 ss << "x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << ", w: " << vec.w;
+	 return ss.str();
+}
+std::string printMat(glm::mat4 mat)
+{
+	std::stringstream ss("");
+
+	for (int i =0; i < 4; ++i)
+	{
+		ss << printvec(mat[i]) << std::endl;
+	}
+	return ss.str();
 }
 void        MeshRenderer::Draw(void) const
 {
@@ -34,11 +40,17 @@ void        MeshRenderer::Draw(void) const
 		std::cout << "MeshRenderer : Cannot Draw with whitout shader" << std::endl;
 		return;
 	}
+	else if (_transform == nullptr)
+	{ 
+		std::cout << "MeshRenderer : Cannot Draw with whitout gameObject" << std::endl;
+		return;
+	}
+	_transform->UpdateMatrix();
     _shader->use();
     _shader->setMat4("view", Camera::instance->GetMatView());
     _shader->setMat4("projection", Camera::instance->GetMatProj());
-    _shader->setMat4("model", _modelMatrix);
-	_shader->setVec3("uOrigin", transform.position);
+    _shader->setMat4("model", _transform->GetMatrix());
+	_shader->setVec3("uOrigin", _transform->position);
 	if (_noise)
 	{
 		glActiveTexture(GL_TEXTURE10);
@@ -55,7 +67,7 @@ void        MeshRenderer::Draw(void) const
 	_model->Draw(_shader);
 }
 
-MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, src.transform, src._gameObj)
+MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, src._gameObj)
 {
 	_model = src._model;
 }
@@ -66,8 +78,7 @@ MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 {
     this->_model = rhs._model;
     this->_shader = rhs._shader;
-    this->transform = rhs.transform;
-    UpdateMatrix();
+	this->SetGameObject(rhs._gameObj);
     return *this;
 }
 

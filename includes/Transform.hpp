@@ -4,6 +4,8 @@
 # include <glm.hpp>
 # include <iostream>
 # include <memory>
+//# include "glm.hpp"
+# include "gtc/matrix_transform.hpp"
 
 struct Transform
 {
@@ -20,10 +22,17 @@ struct Transform
     glm::vec3	rotation;
     glm::vec3	scale;
     std::shared_ptr<Transform> parent;
+    virtual glm::mat4       GetLocalMatrix(void) const;
+    virtual glm::mat4       GetMatrix(void) const;
+    virtual void            SetLocalMatrix(glm::mat4 matrix);
+    virtual void            UpdateMatrix(void);
+
 /*  public functions    */
-    std::string const toString(void) const;
+    std::string  toString(void) const;
     Transform &		operator=(const Transform & rhs);
-    private:
+    protected :
+    glm::mat4                  _localMatrix;
+    private :
         void    _Initialize(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, std::shared_ptr<Transform> parent = nullptr);
 };
 #endif

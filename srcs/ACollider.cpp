@@ -6,7 +6,7 @@
     _gameObj = nullptr;
 }*/
 
-ACollider::ACollider(std::shared_ptr<GameObject> obj) : AComponent(obj)
+ACollider::ACollider(std::shared_ptr<GameObject> obj) : AComponent(obj.get())
 {
 }
 /*ACollider::ACollider(GameObject *obj) : AComponent(obj)

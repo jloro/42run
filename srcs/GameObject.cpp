@@ -13,21 +13,14 @@ GameObject::GameObject(Transform trans)
 }
 void GameObject::AddComponent(std::shared_ptr<AComponent> component)
 {
-    std::cout << "add component called" << std::endl;
-
     if (find(_components.begin(), _components.end(), component) == _components.end())
     {
-        std::cout << "push back" << std::endl;
         _components.push_back(component);
+        component->SetGameObject(this);
     }
-
 }
-/*void GameObject::AddComponent(std::shared_ptr<AComponent> component)
-{
-    _components.push_back(component);
-}*/
 
-GameObject::~GameObject(void) { std::cout << "destructor GO"<<std::endl;}
+GameObject::~GameObject(void) { }
 
 std::shared_ptr<Transform> GameObject::GetTransform(void) const
 {

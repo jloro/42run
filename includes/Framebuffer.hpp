@@ -21,7 +21,7 @@
 class Framebuffer : public MeshRenderer
 {
 	public:
-		Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans, std::shared_ptr<GameObject> obj);
+		Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, std::shared_ptr<GameObject> obj);
 		void genTexture() const;
 		virtual void Draw() const;
 		virtual	~Framebuffer();

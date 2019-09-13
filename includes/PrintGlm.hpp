@@ -15,9 +15,12 @@
 
 # include <iostream>
 # include "glm.hpp"
-# include "gtc/matrix_transform.hpp"
+//# include "gtc/matrix_transform.hpp"
 # include "gtc/type_ptr.hpp"
 
 std::ostream &operator<<(std::ostream &o, glm::vec3 & vec);
+std::ostream &operator<<(std::ostream &o, glm::vec4 & vec);
 std::ostream &operator<<(std::ostream &o, glm::mat3 & mat);
+std::ostream &operator<<(std::ostream &o, glm::mat4 & mat);
+
 #endif

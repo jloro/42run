@@ -1,25 +1,38 @@
 #include "AComponent.hpp"
 
-AComponent::AComponent() : _gameObj(std::shared_ptr<GameObject>(nullptr))
+AComponent::AComponent() : _gameObj(nullptr), _transform(nullptr)
 {
 }
-AComponent::AComponent(std::shared_ptr<GameObject> obj) : _gameObj(obj)
+AComponent::AComponent(GameObject *obj) : _gameObj(obj)
 {
+    if (_gameObj != nullptr)
+    {
+        _transform = _gameObj->GetTransform();
+    }
 }
-/*AComponent::AComponent(GameObject *obj) 
+AComponent::AComponent(std::shared_ptr<GameObject> obj) : _gameObj(obj.get())
 {
-    _gameObj.reset(obj);
-}*/
+    if (_gameObj != nullptr)
+    {
+        _transform = _gameObj->GetTransform();
+    }
+}
     
-AComponent::~AComponent() {std::cout << "component destructor " << std::endl;}
+AComponent::~AComponent() {}
 
-void    AComponent::SetGameObject(std::shared_ptr<GameObject> obj)
+void    AComponent::SetGameObject(GameObject *obj)
 {
     _gameObj = obj;
-    /*if (_gameObj != nullptr)
+    if (_gameObj != nullptr)
     {
-        _gameObj->AddComponent(std::shared_ptr<AComponent>(this));
-    }*/
+        _transform = _gameObj->GetTransform();
+    }
+    else
+    {
+        _transform = nullptr;
+    }
+    
 }
 
-std::shared_ptr<GameObject>  AComponent::GetGameObj() const {return _gameObj;};
+GameObject  *AComponent::GetGameObj() const {return _gameObj;};
+std::shared_ptr<Transform>  AComponent::GetTransform() const {return _transform;};
