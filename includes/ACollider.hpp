@@ -12,7 +12,7 @@ class ACollider : public AComponent
 public: 
 /*	constructors / destrucors	*/
     ACollider(std::shared_ptr<GameObject> obj);
-    ACollider(GameObject *obj);
+    //ACollider(GameObject *obj);
 
     //ACollider(const ACollider & src); 
     virtual ~ACollider(void); 

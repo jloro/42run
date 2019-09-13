@@ -9,21 +9,23 @@
 #include "Engine.hpp"
 
 
-MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Model> model, 
-std::shared_ptr<Shader>  shader, bool useNoise) : ARenderer(obj, shader), _model(model), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
+std::shared_ptr<Shader>  shader, bool useNoise, std::shared_ptr<GameObject> obj) : ARenderer(shader, obj), _model(model), _noise(useNoise)
 {
     transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
     UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
 }
-MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Model> model, 
-std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise) 
-: ARenderer(obj, shader, trans), _model(model), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
+std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise, std::shared_ptr<GameObject> obj) 
+: ARenderer(shader, trans, obj), _model(model), _noise(useNoise)
 {
+    std::cout << "mesh01" << std::endl;
     UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
+    std::cout << "mesh02" << std::endl;
 }
 void        MeshRenderer::Draw(void) const
 {
@@ -53,7 +55,7 @@ void        MeshRenderer::Draw(void) const
 	_model->Draw(_shader);
 }
 
-MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._gameObj, src._shader, src.transform)
+MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, src.transform, src._gameObj)
 {
 	_model = src._model;
 }

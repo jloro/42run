@@ -15,6 +15,7 @@ class GameObject
 		// IGameObject(const IGameObject & src);
 		virtual ~GameObject(void);
 		virtual std::shared_ptr<Transform> GetTransform(void) const;
+		void AddComponent(std::shared_ptr<AComponent> component);
 		// IGameObject &	operator=(const IGameObject & rhs);
 
 		virtual void	Update(void);

@@ -1,12 +1,16 @@
 #include "ARenderer.hpp"
 
+ARenderer::ARenderer() : AComponent(), _shader(nullptr) {std::cout << "default Arenderer constructor" << std::endl;}
 ARenderer::ARenderer(std::shared_ptr<GameObject> obj) : AComponent(obj), _shader(nullptr) {}
-ARenderer::ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader>  shader) : AComponent(obj), _shader(shader) {}
-ARenderer::ARenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Shader>  shader, Transform trans) : AComponent(obj), _shader(shader) 
+ARenderer::ARenderer(std::shared_ptr<Shader>  shader, std::shared_ptr<GameObject> obj) : AComponent(obj), _shader(shader) { std::cout << "AAA constructor called" << std::endl; }
+ARenderer::ARenderer(std::shared_ptr<Shader>  shader, Transform trans, std::shared_ptr<GameObject> obj) : AComponent(obj), _shader(shader) 
 {
+    std::cout << "ARenderer this constructor called" << std::endl;
     transform = trans;
     UpdateMatrix();
 }
+ARenderer::~ARenderer() {std::cout << "ARenderer destructor called" << std::endl;}
+
 
 void    ARenderer::UpdateMatrix()
 {

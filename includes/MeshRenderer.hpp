@@ -13,8 +13,10 @@ class MeshRenderer : public ARenderer
 {
 public: 
 /*	constructors / destrucors	*/
-    MeshRenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise = false); 
-    MeshRenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &transform, bool useNoise = false); 
+    MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise /*= false*/, 
+    std::shared_ptr<GameObject> obj /*= std::shared_ptr<GameObject>(nullptr)*/);
+    MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, 
+    const Transform &transform, bool useNoise /*= false*/, std::shared_ptr<GameObject> obj /*=std::shared_ptr<GameObject>(nullptr)*/);
     MeshRenderer(const MeshRenderer & src); 
     virtual ~MeshRenderer(void); 
 

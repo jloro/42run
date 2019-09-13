@@ -4,7 +4,7 @@
 #include "gtc/type_ptr.hpp"
 #include "SdlWindow.hpp"
 
-Framebuffer::Framebuffer(int width, int height, std::shared_ptr<GameObject> obj, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans) : MeshRenderer(obj, model, shader, trans)
+Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans, std::shared_ptr<GameObject> obj = nullptr) : MeshRenderer(model, shader, trans, false, obj)
 {
 	UpdateMatrix();
 	glGenFramebuffers(1, &_fbo);
