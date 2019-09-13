@@ -16,6 +16,21 @@ class GameObject
 		virtual ~GameObject(void);
 		virtual std::shared_ptr<Transform> GetTransform(void) const;
 		void AddComponent(std::shared_ptr<AComponent> component);
+		template<class T>
+		std::shared_ptr<T> GetComponent()
+		{
+			std::shared_ptr<T>  dst;
+			for (auto it : _components)
+			{
+				try 
+				{ 
+					dst = std::dynamic_pointer_cast<T>(it);
+				}
+				catch (std::exception &e) { continue; }
+				return dst;
+			}
+			return dst;
+		}
 		// IGameObject &	operator=(const IGameObject & rhs);
 
 		virtual void	Update(void);

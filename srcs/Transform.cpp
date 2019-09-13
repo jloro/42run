@@ -21,23 +21,24 @@ Transform &	Transform::operator=(Transform const & rhs)
     scale = rhs.scale;
     return *this;
 }
-    Transform::Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+    Transform::Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, std::shared_ptr<Transform> parent)
     {
-        _Initialize(pos, rot, scale);
+        _Initialize(pos, rot, scale, parent);
     }
-    Transform::Transform(glm::vec3 pos, glm::vec3 scale)
+    Transform::Transform(glm::vec3 pos, glm::vec3 scale, std::shared_ptr<Transform> parent)
     {
-        _Initialize(pos, glm::vec3(0,0,0), scale);
+        _Initialize(pos, glm::vec3(0,0,0), scale, parent);
     }
-    Transform::Transform(glm::vec3 pos)
+    Transform::Transform(glm::vec3 pos, std::shared_ptr<Transform> parent)
     {
-        _Initialize(pos, glm::vec3(0,0,0), glm::vec3(1,1,1));
+        _Initialize(pos, glm::vec3(0,0,0), glm::vec3(1,1,1), parent);
     }
-    void    Transform::_Initialize(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+    void    Transform::_Initialize(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, std::shared_ptr<Transform> parent)
     {
         this->position = pos;
         this->rotation = rot;
         this->scale = scale;
+        this->parent = parent;
     }
 
 

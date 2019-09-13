@@ -48,11 +48,10 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::AddGameObject(cam);
 	std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
 	std::shared_ptr<GameObject> terrain(new GameObject());
-	//std::shared_ptr<MeshRenderer> terrainARenderer(new MeshRenderer(terrainModel, myShader, Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
 	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, myShader, Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
 	terrain->AddComponent(terrainARenderer);
+	Engine42::Engine::AddRenderer(terrain->GetComponent<ARenderer>());
 	Engine42::Engine::AddGameObject(terrain);
-	Engine42::Engine::AddRenderer(terrainARenderer);
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)

@@ -14,11 +14,12 @@ GameObject::GameObject(Transform trans)
 void GameObject::AddComponent(std::shared_ptr<AComponent> component)
 {
     std::cout << "add component called" << std::endl;
-    /*if (find(_components.begin(), _components.end(), component) != _components.end())
+
+    if (find(_components.begin(), _components.end(), component) == _components.end())
     {
-        std::cout << "push back" << std::endl;*/
+        std::cout << "push back" << std::endl;
         _components.push_back(component);
-    //}
+    }
 
 }
 /*void GameObject::AddComponent(std::shared_ptr<AComponent> component)
