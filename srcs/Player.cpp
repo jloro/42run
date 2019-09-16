@@ -23,12 +23,12 @@ void    Player::FixedUpdate(void)
 
 void    Player::Update(void)
 {
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && transform.position.x > -25.0f)
-		transform.position.x = glm::lerp(transform.position.x, -25.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && transform.position.x > -ROW_WIDTH * 2.0f)
+		transform.position.x = glm::lerp(transform.position.x, -ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
 	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_UP)
 		transform.position.x = glm::lerp(transform.position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_DOWN && transform.position.x < 25.0f)
-		transform.position.x = glm::lerp(transform.position.x, 25.0f, SPEED * Engine42::Time::GetDeltaTime());
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_DOWN && transform.position.x < ROW_WIDTH * 2.0f)
+		transform.position.x = glm::lerp(transform.position.x, ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
 	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_UP)
 		transform.position.x = glm::lerp(transform.position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
 	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS && _jump == false)

@@ -25,6 +25,4 @@ void	FpsDisplay::Update(void)
 
 void	FpsDisplay::FixedUpdate()
 {
-	_speed = glm::length(Camera::instance->GetPos() - _lastPos) / Engine42::Time::GetFixedDeltaTime();
-	_lastPos = Camera::instance->GetPos();
 }
