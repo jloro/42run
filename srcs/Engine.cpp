@@ -8,7 +8,7 @@
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
-	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP};
+	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_A};
 	_InitKeyboard();
 }
 

@@ -1,5 +1,5 @@
 -I inc/
 -I lib/glad/
--I lib/assimp/include/
+-I lib/assimp-4.1.0/include/
 -I lib/glm/glm/
-
+-I lib/sdl2/include/SDL2/

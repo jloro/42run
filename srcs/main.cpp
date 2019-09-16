@@ -2,20 +2,15 @@
 #include "SdlWindow.hpp"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
-#include "gtc/type_ptr.hpp"
-#include "assimp/Importer.hpp"      // C++ importer interface
-#include "assimp/scene.h"           // Output data structure
-#include "assimp/postprocess.h"     // Post processing flags
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Model.hpp"
 #include "Engine.hpp"
 #include "Terrain.hpp"
 #include "Skybox.hpp"
-#include "PrintGlm.hpp"
-#include "Framebuffer.hpp"
 #include "Player.hpp"
 #include "FpsDisplay.hpp"
+#include "GameManager.hpp"
 std::shared_ptr<Skybox> CreateSkyBox()
 {
 	std::vector<std::string>	texturesPath{
@@ -46,11 +41,7 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::AddRenderer(std::shared_ptr<Player>(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f)))));
 	Engine42::Engine::SetWindow(&win);
 	Engine42::Engine::AddGameObject(cam);
-	//std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
-	//std::shared_ptr<Renderer> terrainRenderer(new MeshRenderer((terrainModel), myShader, Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
-	//Engine42::Engine::AddRenderer(terrainRenderer);
-	std::shared_ptr<Skybox> sky = CreateSkyBox();
-	Engine42::Engine::SetSkybox(sky);
+	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager));
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)
@@ -84,7 +75,7 @@ int				main(int ac, char **av)
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 	try
 	{
-		std::shared_ptr<Text>	font(new Text("ressources/fonts/Arial.ttf", ft));
+		std::shared_ptr<Text>	font(new Text("ressources/fonts/SEASRN__.ttf", ft));
 		Engine42::Engine::ChangeFontUI(font);
 	 	InitModels(win);
 	}

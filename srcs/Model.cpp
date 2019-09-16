@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/16 10:40:33 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/16 15:50:27 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,8 +296,8 @@ void					Model::_AddBoneData(unsigned int id, float weight, Vertex& vertex)
 			vertex.ids[i] = id;
 			return;
 		}
-		}
 	}
+}
 
 
 Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
@@ -307,6 +307,8 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	std::vector<Texture>	textures;
 
 	std::cout <<  "Load mesh" << std::endl;
+	glm::vec3	min = glm::vec3(0.0f);
+	glm::vec3	max = glm::vec3(0.0f);
 	//Get vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -325,6 +327,19 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 			vertex.weights[j] = 0;
 			vertex.ids[j] = 0;
 		}
+		if (vertex.position.x > max.x)
+			max.x = vertex.position.x;
+		if (vertex.position.y > max.y)
+			max.y = vertex.position.y;
+		if (vertex.position.z > max.z)
+			max.z = vertex.position.z;
+
+		if (vertex.position.x < min.x)
+			min.x = vertex.position.x;
+		if (vertex.position.y < min.y)
+			min.y = vertex.position.y;
+		if (vertex.position.z < min.z)
+			min.z = vertex.position.z;
 		vertices.push_back(vertex);
 	}
 	//Get Bones
@@ -346,7 +361,7 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	}
 	//std::cout << "nb meshs" << std::endl;
-	return Mesh(vertices, faces, textures);// I think this line force push to timeto openGl, cause it call the constructor 2 times
+	return Mesh(vertices, faces, textures/*, max, min*/);// I think this line force push to timeto openGl, cause it call the constructor 2 times
 }
 
 std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName)

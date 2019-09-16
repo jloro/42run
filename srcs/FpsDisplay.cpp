@@ -19,8 +19,8 @@ void	FpsDisplay::Update(void)
 		_lastTime += 1.0f;
 	}
 	_nbFrame++;
-	Engine42::Engine::GetFontUI()->RenderText(std::string("FPS: ") + std::to_string(_fps), 10.0f, SdlWindow::GetMain()->GetHeight() - 24, 1.0f, glm::vec4(1.0f)); 
-	Engine42::Engine::GetFontUI()->RenderText(std::string("Score: ") + std::to_string((int)(((float)SDL_GetTicks()) / 1000)), 10.0f, SdlWindow::GetMain()->GetHeight() - 48, 1.0f, glm::vec4(1.0f)); 
+	//Engine42::Engine::GetFontUI()->RenderText(std::string("FPS: ") + std::to_string(_fps), 10.0f, SdlWindow::GetMain()->GetHeight() - 24, 1.0f, glm::vec4(1.0f)); 
+	Engine42::Engine::GetFontUI()->RenderText(std::string("Score: ") + std::to_string((int)(((float)SDL_GetTicks()) / 1000)), 10.0f, SdlWindow::GetMain()->GetHeight() - 24, 1.0f, glm::vec4(1.0f)); 
 }
 
 void	FpsDisplay::FixedUpdate()
