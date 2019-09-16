@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/12 16:55:11 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 19:13:28 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/16 10:30:58 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "Model.hpp"
 
 # define SPEED 3
+# define JUMP_SPEED 40
 
 enum eJumpState {
 	JUMPING,

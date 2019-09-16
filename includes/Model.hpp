@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 16:15:33 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/16 10:37:21 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ class Model
 		Model(const Model & rhs);
 		virtual~Model();
 /*  public functions    */
-		virtual void Draw(const std::shared_ptr<Shader>  shader);
+		virtual void	Draw(const std::shared_ptr<Shader>  shader);
+		void			PauseAnimation(void);
+		void			PlayAnimation(void);
         Model & operator=(const Model &rhs);
 	protected:
 /*  protected variables    */
@@ -45,6 +47,9 @@ class Model
 		std::vector<BoneInfo>	_boneInfo;
 		glm::mat4				_globalTransform;
 		std::string				_texture;
+		Uint32					_pauseTime;
+		Uint32					_tmpPauseTimer;
+		bool					_playing;
 
 		bool					_hasAnim;
 		const aiScene*			_scene;

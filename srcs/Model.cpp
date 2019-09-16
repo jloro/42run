@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/12 16:18:15 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/16 10:40:33 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,21 @@ Model::~Model() {}
 
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
 {
-	if (_hasAnim)
-		_BoneTransform((((float)SDL_GetTicks()) / 1000), shader);
+	if (_hasAnim &&_playing)
+		_BoneTransform((((float)SDL_GetTicks()) / 1000) - _pauseTime, shader);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
 		_meshes[i].Draw(shader);
+}
+void	Model::PauseAnimation()
+{
+	_playing = false;
+	_tmpPauseTimer = (((float)SDL_GetTicks()) / 1000);
+}
+void	Model::PlayAnimation()
+{
+	_playing = true;
+	_pauseTime += (((float)SDL_GetTicks()) / 1000) - _tmpPauseTimer;
+
 }
 Model & Model::operator=(const Model &rhs)
 {
@@ -80,6 +91,8 @@ glm::mat4	aiMat4ToGlmMat4(aiMatrix4x4 from)
 }
 void	Model::_LoadModel(std::string path)
 {
+	_pauseTime = 0.0f;
+	_playing = true;
 	_scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)

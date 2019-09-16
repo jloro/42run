@@ -35,15 +35,20 @@ void    Player::Update(void)
 	{
 		_jump = true;
 		_jumpState = JUMPING;
+		_character->PauseAnimation();
 	}
 	if (_jump && _jumpState == JUMPING)
-		transform.position.y = glm::lerp(transform.position.y, 20.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (_jump && transform.position.y > 19.9f)
+		transform.position.y += JUMP_SPEED * Engine42::Time::GetDeltaTime();
+	if (_jump && transform.position.y > 20.0f)
 		_jumpState = FALLING;
 	if (_jump && _jumpState == FALLING)
-		transform.position.y = glm::lerp(transform.position.y, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (_jump && transform.position.y < 0.1f)
+		transform.position.y -= JUMP_SPEED * Engine42::Time::GetDeltaTime();
+	if (_jump && transform.position.y <= 0.0f)
+	{
+		_character->PlayAnimation();
 		_jump = false;
+		transform.position.y = 0.0f;
+	}
 
 	UpdateMatrix();
 }
