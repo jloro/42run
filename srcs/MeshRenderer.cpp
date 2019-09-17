@@ -11,11 +11,13 @@
 
 MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool render) : Renderer(shader), _model(model), _render(render)
 {
+	InitCollider(_model->GetMin(), _model->GetMax());
     transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
     UpdateMatrix();
 }
 MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool render) : Renderer(shader, trans), _model(model), _render(render)
 {
+	InitCollider(_model->GetMin(), _model->GetMax());
     UpdateMatrix();
 }
 void        MeshRenderer::Draw(void) const
@@ -31,8 +33,12 @@ void        MeshRenderer::Draw(void) const
 		_shader->setMat4("view", Camera::instance->GetMatView());
 		_shader->setMat4("projection", Camera::instance->GetMatProj());
 		_shader->setMat4("model", _modelMatrix);
-		glCullFace(GL_BACK);
 		_model->Draw(_shader);
+		_shaderCollider->use();
+		_shaderCollider->setMat4("view", Camera::instance->GetMatView());
+		_shaderCollider->setMat4("projection", Camera::instance->GetMatProj());
+		_shaderCollider->setMat4("model", _modelMatrix);
+		DrawCollider();
 	}
 }
 

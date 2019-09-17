@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/16 10:37:21 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 11:49:01 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ class Model
 		void			PauseAnimation(void);
 		void			PlayAnimation(void);
         Model & operator=(const Model &rhs);
+		std::shared_ptr<Shader>	_shaderCollider;
+		glm::vec3 GetMin(void) const;
+		glm::vec3 GetMax(void) const;
 	protected:
 /*  protected variables    */
 		std::vector<Mesh>	_meshes;
@@ -50,6 +53,8 @@ class Model
 		Uint32					_pauseTime;
 		Uint32					_tmpPauseTimer;
 		bool					_playing;
+		glm::vec3				_min;
+		glm::vec3				_max;
 
 		bool					_hasAnim;
 		const aiScene*			_scene;

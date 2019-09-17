@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/16 15:50:27 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 12:02:19 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,17 @@ glm::mat4	aiMat4ToGlmMat4(aiMatrix4x4 from)
 	to[3][0] = (GLfloat)from.a4; to[3][1] = (GLfloat)from.b4;  to[3][2] = (GLfloat)from.c4; to[3][3] = (GLfloat)from.d4;
 	return to;
 }
+
+glm::vec3 Model::GetMin(void) const { return _min; }
+glm::vec3 Model::GetMax(void) const { return _max; }
+
 void	Model::_LoadModel(std::string path)
 {
 	_pauseTime = 0.0f;
 	_playing = true;
 	_scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	_min = glm::vec3(0.0f);
+	_max = glm::vec3(0.0f);
 
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
@@ -112,7 +118,7 @@ void	Model::_LoadModel(std::string path)
 
 	_dir = path.substr(0, path.find_last_of('/'));
 	_ProcessNode(_scene->mRootNode, _scene);
-	
+
 }
 
 void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
@@ -307,8 +313,6 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	std::vector<Texture>	textures;
 
 	std::cout <<  "Load mesh" << std::endl;
-	glm::vec3	min = glm::vec3(0.0f);
-	glm::vec3	max = glm::vec3(0.0f);
 	//Get vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -327,19 +331,24 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 			vertex.weights[j] = 0;
 			vertex.ids[j] = 0;
 		}
-		if (vertex.position.x > max.x)
-			max.x = vertex.position.x;
-		if (vertex.position.y > max.y)
-			max.y = vertex.position.y;
-		if (vertex.position.z > max.z)
-			max.z = vertex.position.z;
+		if (_min == glm::vec3(0.0f))
+			_min = vertex.position;
+		if (_max == glm::vec3(0.0f))
+			_max = vertex.position;
 
-		if (vertex.position.x < min.x)
-			min.x = vertex.position.x;
-		if (vertex.position.y < min.y)
-			min.y = vertex.position.y;
-		if (vertex.position.z < min.z)
-			min.z = vertex.position.z;
+		if (vertex.position.x > _max.x)
+			_max.x = vertex.position.x;
+		if (vertex.position.y > _max.y)
+			_max.y = vertex.position.y;
+		if (vertex.position.z > _max.z)
+			_max.z = vertex.position.z;
+
+		if (vertex.position.x < _min.x)
+			_min.x = vertex.position.x;
+		if (vertex.position.y < _min.y)
+			_min.y = vertex.position.y;
+		if (vertex.position.z < _min.z)
+			_min.z = vertex.position.z;
 		vertices.push_back(vertex);
 	}
 	//Get Bones

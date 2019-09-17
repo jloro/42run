@@ -3,6 +3,7 @@
 #include "gtx/compatibility.hpp"
 Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _character(character), _jump(false)
 {
+	InitCollider(_character->GetMin(), _character->GetMax());
 }
 
 Player::~Player() {}
@@ -15,6 +16,11 @@ void        Player::Draw() const
     _shader->setMat4("projection", Camera::instance->GetMatProj());
     _shader->setMat4("model", _modelMatrix);
 	_character->Draw(_shader);
+    _shaderCollider->use();
+    _shaderCollider->setMat4("view", Camera::instance->GetMatView());
+    _shaderCollider->setMat4("projection", Camera::instance->GetMatProj());
+    _shaderCollider->setMat4("model", _modelMatrix);
+	DrawCollider();
 }
 void    Player::FixedUpdate(void)
 {
