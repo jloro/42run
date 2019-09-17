@@ -3,7 +3,7 @@
 #include "gtx/compatibility.hpp"
 Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _character(character), _jump(false)
 {
-	InitCollider(_character->GetMin(), _character->GetMax());
+	InitCollider(_character->GetMin(), _character->GetMax(), glm::vec3(0.5f, 1.0f, 1.0f));
 }
 
 Player::~Player() {}
@@ -19,7 +19,7 @@ void        Player::Draw() const
     _shaderCollider->use();
     _shaderCollider->setMat4("view", Camera::instance->GetMatView());
     _shaderCollider->setMat4("projection", Camera::instance->GetMatProj());
-    _shaderCollider->setMat4("model", _modelMatrix);
+    _shaderCollider->setMat4("model", _modelMatrixCollider);
 	DrawCollider();
 }
 void    Player::FixedUpdate(void)
@@ -45,7 +45,7 @@ void    Player::Update(void)
 	}
 	if (_jump && _jumpState == JUMPING)
 		transform.position.y += JUMP_SPEED * Engine42::Time::GetDeltaTime();
-	if (_jump && transform.position.y > 20.0f)
+	if (_jump && transform.position.y > 40.0f)
 		_jumpState = FALLING;
 	if (_jump && _jumpState == FALLING)
 		transform.position.y -= JUMP_SPEED * Engine42::Time::GetDeltaTime();

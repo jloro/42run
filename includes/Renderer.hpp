@@ -18,24 +18,27 @@ public:
     virtual ~Renderer() {};
 /*	public variables	*/
     Transform           transform;
+	glm::vec3			scaleCollider;
 	glm::vec3			min;
 	glm::vec3			max;
 /*	public functions	*/
     virtual glm::mat4       GetModelMatrix(void) const;
     virtual void            SetModelMatrix(glm::mat4 matrix);
     virtual void            UpdateMatrix(void);
+	void            UpdateMatrixCollider(void);
 
     virtual std::shared_ptr<Shader> GetShader(void) const;
     //void                    Destroy(void);
     virtual void                    SetShader(std::shared_ptr<Shader>  shader);
     virtual void        Draw() const = 0;
 	void				DrawCollider() const;
-	void				InitCollider(glm::vec3 min, glm::vec3 max);
+	void				InitCollider(glm::vec3 min, glm::vec3 max, glm::vec3 scale);
 protected:
     std::shared_ptr<Shader>    _shader;
     std::shared_ptr<Shader>    _shaderCollider;
     std::shared_ptr<Mesh>    _meshCollider;
     glm::mat4                  _modelMatrix;
+    glm::mat4                  _modelMatrixCollider;
 
 };
 #endif

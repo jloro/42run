@@ -38,10 +38,11 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx", "textures/Boy01_diffuse.jpg"));
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
-	Engine42::Engine::AddRenderer(std::shared_ptr<Player>(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f)))));
+	std::shared_ptr<Player> player(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
+	Engine42::Engine::AddRenderer(player);
 	Engine42::Engine::SetWindow(&win);
 	Engine42::Engine::AddGameObject(cam);
-	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager));
+	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager(player)));
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)

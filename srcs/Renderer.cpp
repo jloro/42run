@@ -8,8 +8,9 @@ Renderer::Renderer(std::shared_ptr<Shader>  shader, Transform trans) : _shader(s
     UpdateMatrix();
 }
 
-void	Renderer::InitCollider(glm::vec3 min, glm::vec3 max)
+void	Renderer::InitCollider(glm::vec3 min, glm::vec3 max, glm::vec3 scale)
 {
+	scaleCollider = scale;
 	this->min = min;
 	this->max = max;
 	std::vector<float>	vertices = {
@@ -67,6 +68,16 @@ void    Renderer::UpdateMatrix()
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _modelMatrix = glm::scale(_modelMatrix, transform.scale);
+	UpdateMatrixCollider();
+};
+void    Renderer::UpdateMatrixCollider()
+{
+    _modelMatrixCollider = glm::mat4(1.0f);
+    _modelMatrixCollider = glm::translate(_modelMatrixCollider, transform.position);
+    _modelMatrixCollider = glm::rotate(_modelMatrixCollider, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    _modelMatrixCollider = glm::rotate(_modelMatrixCollider, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    _modelMatrixCollider = glm::rotate(_modelMatrixCollider, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    _modelMatrixCollider = glm::scale(_modelMatrixCollider, scaleCollider * transform.scale);
 };
 
 glm::mat4       Renderer::GetModelMatrix(void) const  {return _modelMatrix;}
