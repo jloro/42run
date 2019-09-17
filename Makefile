@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/16 11:57:02 by jloro            ###   ########.fr        #
+#    Updated: 2019/09/17 18:26:59 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,15 +23,16 @@ ORANGE = [038;2;239;138;5
 ## Sources ##
 SRCS_DIR = srcs
 
-SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
+SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
-		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp Renderer.cpp \
-		FpsDisplay.cpp Player.cpp GameManager.cpp
+		AComponent.cpp ACollider.cpp GameObject.cpp ARenderer.cpp \
+		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp \
+		FpsDisplay.cpp main.cpp  Player.cpp GameManager.cpp
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
-		IGameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
-		PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp GameManager.hpp \
-		Text.hpp FpsDisplay.hpp Renderer.hpp Model.hpp Player.hpp 
+		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
+		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
+		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)

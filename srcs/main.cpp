@@ -39,10 +39,16 @@ bool InitModels(SdlWindow &win)
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx", "textures/Boy01_diffuse.jpg"));
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
 	std::shared_ptr<Player> player(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
-	Engine42::Engine::AddRenderer(player);
+	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::SetWindow(&win);
 	Engine42::Engine::AddGameObject(cam);
 	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager(player)));
+	/*std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
+	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
+	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, myShader));
+	terrain->AddComponent(terrainARenderer);
+	Engine42::Engine::AddRenderer(terrain->GetComponent<ARenderer>());
+	Engine42::Engine::AddGameObject(terrain);*/
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)

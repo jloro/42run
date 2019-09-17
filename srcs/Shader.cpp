@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 14:24:02 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/11 13:29:17 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 18:37:05 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <fstream>
 #include <string>
 #include <glm.hpp>
+#include "Camera.hpp"
+#include "SdlWindow.hpp"
 #include <gtc/type_ptr.hpp>
 
 Shader::Shader(std::vector<const char *> shaderSource, std::vector<GLenum> shaderType) : _shaderSource(shaderSource),

@@ -6,18 +6,19 @@
 # include "Camera.hpp"
 # include "Transform.hpp"
 # include "Time.hpp"
-# include "Renderer.hpp"
+# include "ARenderer.hpp"
 # include <memory>
 
-class MeshRenderer : public Renderer
+class MeshRenderer : public ARenderer
 {
 public: 
 /*	constructors / destrucors	*/
-    MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool render = true); 
-    MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &transform, bool render = true); 
+    MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, 
+    std::shared_ptr<GameObject> obj = std::shared_ptr<GameObject>(nullptr), bool render = true);
     MeshRenderer(const MeshRenderer & src); 
     virtual ~MeshRenderer(void); 
 
+/*	public variables	*/
 /*	public functions	*/
     void                    Destroy(void);
 	MeshRenderer &		    operator=(const MeshRenderer & rhs);

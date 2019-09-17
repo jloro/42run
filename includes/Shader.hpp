@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 14:19:23 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/11 11:18:13 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 18:31:32 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 # include <vector>
 # include "glad.h"
 # include <glm.hpp>
-# include "Camera.hpp"
-# include "SdlWindow.hpp"
-# include <vector>
+class Camera;
+class SdlWindow;
 
 class Shader
 {

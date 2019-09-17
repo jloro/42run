@@ -2,10 +2,10 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
+#include "SdlWindow.hpp"
 
-Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, Transform trans) : MeshRenderer(model, shader, trans)
+Framebuffer::Framebuffer(int width, int height, std::shared_ptr<Shader> shader, std::shared_ptr<Model> model, std::shared_ptr<GameObject> obj = nullptr) : MeshRenderer(model, shader, obj)
 {
-	UpdateMatrix();
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -66,7 +66,7 @@ void	Framebuffer::genTexture() const
 
 	glBindVertexArray(_quadVAO);
 	_shader->use();
-    _shader->SetUpUniforms(*Camera::instance, *SdlWindow::GetMain(), ((float)SDL_GetTicks()) / 1000.f);
+    _shader->SetUpUniforms(*Camera::instance, *(SdlWindow::GetMain()), ((float)SDL_GetTicks()) / 1000.f);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -85,7 +85,7 @@ void	Framebuffer::Draw(void) const
 	_shaderModel->use();
     _shaderModel->setMat4("view", Camera::instance->GetMatView());
     _shaderModel->setMat4("projection", Camera::instance->GetMatProj());
-    _shaderModel->setMat4("model", _modelMatrix);
+    _shaderModel->setMat4("model", _transform->GetMatrix());
 	_shaderModel->setInt("texture_diffuse0", 0);
 	_model->Draw(_shaderModel);
 }

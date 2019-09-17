@@ -1,4 +1,5 @@
 #include "MeshRenderer.hpp"
+#include "PrintGlm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include <iostream>
 #include "stb_image.h"
@@ -7,18 +8,29 @@
 #include "glm.hpp"
 #include <gtc/random.hpp>
 #include "Engine.hpp"
+#include <sstream>
 
 
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool render) : Renderer(shader), _model(model), _render(render)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
+std::shared_ptr<Shader>  shader, std::shared_ptr<GameObject> obj, bool render) : ARenderer(shader, obj), _model(model), _render(render)
 {
-    transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
 	InitCollider(_model->GetMin(), _model->GetMax(), glm::vec3(1.0f));
-    UpdateMatrix();
 }
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool render) : Renderer(shader, trans), _model(model), _render(render)
+std::string printvec(glm::vec4 & vec)
 {
-	InitCollider(_model->GetMin(), _model->GetMax(), glm::vec3(1.0f));
-    UpdateMatrix();
+	std::stringstream ss("");
+	 ss << "x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << ", w: " << vec.w;
+	 return ss.str();
+}
+std::string printMat(glm::mat4 mat)
+{
+	std::stringstream ss("");
+
+	for (int i =0; i < 4; ++i)
+	{
+		ss << printvec(mat[i]) << std::endl;
+	}
+	return ss.str();
 }
 void        MeshRenderer::Draw(void) const
 {
@@ -29,20 +41,21 @@ void        MeshRenderer::Draw(void) const
 			std::cout << "MeshRenderer : Cannot Draw with whitout shader" << std::endl;
 			return;
 		}
+		_transform->UpdateMatrix();
 		_shader->use();
 		_shader->setMat4("view", Camera::instance->GetMatView());
 		_shader->setMat4("projection", Camera::instance->GetMatProj());
-		_shader->setMat4("model", _modelMatrix);
+		_shader->setMat4("model", _transform->GetMatrix());
 		_model->Draw(_shader);
 		_shaderCollider->use();
 		_shaderCollider->setMat4("view", Camera::instance->GetMatView());
 		_shaderCollider->setMat4("projection", Camera::instance->GetMatProj());
-		_shaderCollider->setMat4("model", _modelMatrixCollider);
+		_shaderCollider->setMat4("model", _transform->GetMatrix());
 		DrawCollider();
 	}
 }
 
-MeshRenderer::MeshRenderer(MeshRenderer const & src) : Renderer(src._shader, src.transform)
+MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, src._gameObj)
 {
 	_model = src._model;
 }
@@ -53,8 +66,7 @@ MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 {
     this->_model = rhs._model;
     this->_shader = rhs._shader;
-    this->transform = rhs.transform;
-    UpdateMatrix();
+	this->SetGameObject(rhs._gameObj);
     return *this;
 }
 

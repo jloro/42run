@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 11:49:01 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 18:42:35 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <gtx/quaternion.hpp>
 # include <map>
 # include <assimp/Importer.hpp>
+# include "SDL.h"
 
 # define ROTATION 0
 # define SCALING 1

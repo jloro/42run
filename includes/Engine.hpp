@@ -4,11 +4,11 @@
 # include <iostream>
 # include <list>
 
-# include "IGameObject.hpp"
+# include "GameObject.hpp"
 # include "SdlWindow.hpp"
 # include "Time.hpp"
 # include "Skybox.hpp"
-# include "Renderer.hpp"
+# include "ARenderer.hpp"
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
 # include "Text.hpp"
@@ -33,14 +33,13 @@ namespace Engine42
 
 			/*	public variables	*/
 			/*	public functions	*/
-			static void            AddRenderer(std::list<std::shared_ptr<Renderer>> renderers);
-			static void            AddRenderer(std::shared_ptr<Renderer> renderer);
-			static void            AddRenderer(std::shared_ptr<Player> renderer);
+			static void            AddRenderer(std::list<std::shared_ptr<ARenderer>> renderers);
+			static void            AddRenderer(std::shared_ptr<ARenderer> renderer);
 			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);
 			static void            SetWindow(const SdlWindow *win);
-			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);
-			static void            AddGameObject(std::list<std::shared_ptr<Engine42::IGameObject>> objects);
-			static void            AddUIElement(std::shared_ptr<Engine42::IGameObject> object);
+			static void            AddGameObject(std::shared_ptr<GameObject> object);
+			static void            AddGameObject(std::list<std::shared_ptr<GameObject>> objects);
+			static void            AddUIElement(std::shared_ptr<GameObject> object);
 			static void            ChangeFontUI(std::shared_ptr<Text> font);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
@@ -51,7 +50,7 @@ namespace Engine42
 			static const SDL_Event &GetEvent();
 			static const Uint8     *GetKeyInput();
 			static eKeyState		GetKeyState(Uint8 scancode);
-			static bool             Destroy(std::shared_ptr<Renderer> renderer);
+			static bool             Destroy(std::shared_ptr<ARenderer> renderer);
 			static void             ReloadShaders(void);
 			void             ResizeWindow(int width, int height);
 
@@ -69,10 +68,10 @@ namespace Engine42
 			Engine(void); 
 			/*	private variables	*/
 			static Engine                       _inst;
-			std::list<std::shared_ptr<Renderer>>           _renderers;
+			std::list<std::shared_ptr<ARenderer>>           _renderers;
 			std::list<std::shared_ptr<Framebuffer>>			_framebuffers;
-			std::list<std::shared_ptr<Engine42::IGameObject>>   _gameObjs;
-			std::list<std::shared_ptr<Engine42::IGameObject>>   _UI;
+			std::list<std::shared_ptr<GameObject>>   _gameObjs;
+			std::list<std::shared_ptr<GameObject>>   _UI;
 			std::shared_ptr<Text>					_fontUI;
 
 			SDL_Event                           _event;

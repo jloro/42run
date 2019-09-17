@@ -13,8 +13,13 @@ GameManager::GameManager(std::shared_ptr<Player> player) : _player(player), _sco
 	srand(time(0));
 	Transform trans(glm::vec3(0.0f, 0.0f, 30.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(14.0f, 14.0f, 14.0f));
 	for (int i = 0; i < 10; i++)
-		_pillar.push_back(std::shared_ptr<MeshRenderer>(new MeshRenderer(_modelPillar, myShader, trans, false)));
-	Engine42::Engine::AddRenderer(_pillar);
+	{
+		std::shared_ptr<GameObject> go(new GameObject(trans));
+		std::shared_ptr<ARenderer> renderer(new MeshRenderer(_modelPillar, myShader, std::shared_ptr<GameObject>(nullptr), false));
+		Engine42::Engine::AddRenderer(renderer);
+		go->AddComponent(renderer);
+		_pillar.push_back(go);
+	}
 }
 
 GameManager::~GameManager() {}
@@ -30,25 +35,23 @@ void	GameManager::Update()
 		_canAdd = true;
 	for (auto it = _pillar.begin(); it != _pillar.end(); it++)
 	{
-		std::cout <<std::dynamic_pointer_cast<MeshRenderer>(*it)->IsRender() << " ";
-		if (std::dynamic_pointer_cast<MeshRenderer>(*it)->IsRender())
+		//std::cout <<std::dynamic_pointer_cast<MeshRenderer>(*it)->IsRender() << " ";
+		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
-			if ((*it)->transform.position.z < -30.0f)
-				std::dynamic_pointer_cast<MeshRenderer>(*it)->SetRender(false);
-			(*it)->transform.position.z -= _obstacleSpeed * Engine42::Time::GetDeltaTime();
-			(*it)->UpdateMatrix();
+			if ((*it)->GetTransform()->position.z < -30.0f)
+				(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+			(*it)->GetTransform()->position.z -= _obstacleSpeed * Engine42::Time::GetDeltaTime();
 		}
 		else if (addNew)
 		{
-			(*it)->transform.position.z = 30.0f;
-			(*it)->transform.position.x = ROW_WIDTH * (rand() % 3 - 1);
+			(*it)->GetTransform()->position.z = 30.0f;
+			(*it)->GetTransform()->position.x = ROW_WIDTH * (rand() % 3 - 1);
 			addNew = false;
 			_canAdd = false;
-			std::dynamic_pointer_cast<MeshRenderer>(*it)->SetRender(true);
-			(*it)->UpdateMatrix();
+			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 		}
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 void	GameManager::FixedUpdate()
@@ -58,13 +61,13 @@ void	GameManager::FixedUpdate()
 
 void	GameManager::_CheckCollision()
 {
-	glm::vec3 playerMinWorld = _player->min * _player->transform.scale + _player->transform.position;
-	glm::vec3 playerMaxWorld = _player->max * _player->transform.scale + _player->transform.position;
+	glm::vec3 playerMinWorld = _player->GetComponent<ARenderer>()->min * _player->GetTransform()->scale + _player->GetTransform()->position;
+	glm::vec3 playerMaxWorld = _player->GetComponent<ARenderer>()->max * _player->GetTransform()->scale + _player->GetTransform()->position;
 	for (auto it = _pillar.begin(); it != _pillar.end(); it++)
 	{
-		glm::vec3 obsMaxWorldPos = (*it)->max * (*it)->transform.scale + (*it)->transform.position;
-		glm::vec3 obsMinWorldPos = (*it)->min * (*it)->transform.scale + (*it)->transform.position;
-		if (std::dynamic_pointer_cast<MeshRenderer>(*it)->IsRender())
+		glm::vec3 obsMaxWorldPos = (*it)->GetComponent<ARenderer>()->max * (*it)->GetTransform()->scale + (*it)->GetTransform()->position;
+		glm::vec3 obsMinWorldPos = (*it)->GetComponent<ARenderer>()->min * (*it)->GetTransform()->scale + (*it)->GetTransform()->position;
+		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
 			if (obsMinWorldPos.z < playerMaxWorld.z && obsMaxWorldPos.z > playerMaxWorld.z
 					&& ((obsMinWorldPos.x > playerMinWorld.x && obsMinWorldPos.x < playerMaxWorld.x) || (obsMaxWorldPos.x > playerMinWorld.x && obsMaxWorldPos.x < playerMaxWorld.x))

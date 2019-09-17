@@ -13,10 +13,10 @@
 #ifndef FPSDISPLAY_HPP
 # define FPSDISPLAY_HPP
 
-# include "IGameObject.hpp"
+# include "GameObject.hpp"
 # include "glm.hpp"
 
-class FpsDisplay : public Engine42::IGameObject
+class FpsDisplay : public GameObject
 {
 	public:
 		FpsDisplay(void);

@@ -6,14 +6,13 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 13:06:40 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/17 19:22:55 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GAMEMANAGER_HPP
 # define GAMEMANAGER_HPP
 
-# include "IGameObject.hpp"
 # include "Model.hpp"
 # include "Renderer.hpp"
 # include <list>
@@ -22,7 +21,7 @@
 
 # define OBSTACLE_SPEED_DEFAULT 20
 
-class GameManager : public Engine42::IGameObject
+class GameManager : public GameObject
 {
 	public:
 		GameManager(std::shared_ptr<Player> player);
@@ -37,7 +36,7 @@ class GameManager : public Engine42::IGameObject
 		int						_obstacleSpeed;
 		bool					_canAdd;
 		std::shared_ptr<Model>	_modelPillar;
-		std::list<std::shared_ptr<Renderer>>	_pillar;
+		std::list<std::shared_ptr<GameObject>>	_pillar;
 };
 
 #endif
