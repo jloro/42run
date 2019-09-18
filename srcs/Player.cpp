@@ -8,7 +8,7 @@ Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader,
 	std::shared_ptr<ARenderer> render(new MeshRenderer(character, shader));
 	Engine42::Engine::AddRenderer(render);
 	AddComponent(render);
-	std::shared_ptr<ACollider> collider(new ACollider(this, _character->GetMin(), _character->GetMax(), glm::vec3(0.5f, 1.0f, 1.0f), glm::vec3(0.0f), true));
+	std::shared_ptr<ACollider> collider(new ACollider(this, _character->GetMin(), _character->GetMax(), glm::vec3(0.5f, 1.0f, 1.0f), glm::vec3(0.0f), false));
 	AddComponent(collider);
 
 }

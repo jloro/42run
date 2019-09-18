@@ -17,7 +17,7 @@ void	GameManager::Update()
 	for (auto it = _obstacle->_obstacles.begin(); it != _obstacle->_obstacles.end(); it++)
 	{
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender() && _player->GetComponent<ACollider>()->IsCollindingWith(*(*it)->GetComponent<ACollider>()))
-			exit(0);//std::cout << "hit" << std::endl;
+			exit(0);
 	}
 }
 

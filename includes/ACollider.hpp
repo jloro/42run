@@ -24,6 +24,7 @@ public:
 
 	glm::vec3	center; //offset with pos of transform
 	glm::vec3	size;
+	glm::vec3	scale;
 
 private:
 /*	private variables	*/
