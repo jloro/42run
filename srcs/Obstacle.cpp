@@ -1,6 +1,6 @@
 #include "Obstacle.hpp"
 #include "Engine.hpp"
-#include "ACollider.hpp"
+#include "BoxCollider.hpp"
 
 Obstacle::Obstacle() : _obstacleSpeed(OBSTACLE_SPEED_DEFAULT), _canAdd(true)
 {
@@ -17,7 +17,7 @@ Obstacle::Obstacle() : _obstacleSpeed(OBSTACLE_SPEED_DEFAULT), _canAdd(true)
 		std::shared_ptr<GameObject> go(new GameObject(trans));
 		std::shared_ptr<ARenderer> renderer(new MeshRenderer(_modelPillar, myShader, std::shared_ptr<GameObject>(nullptr), false));
 		Engine42::Engine::AddRenderer(renderer);
-		std::shared_ptr<ACollider> collider(new ACollider(go.get(), _modelPillar->GetMin(), _modelPillar->GetMax(), glm::vec3(1.0f), glm::vec3(0.0f), false));
+		std::shared_ptr<ACollider> collider(new BoxCollider(go.get(), _modelPillar->GetMin(), _modelPillar->GetMax(), glm::vec3(1.0f), glm::vec3(0.0f), true));
 		go->AddComponent(collider);
 		go->AddComponent(renderer);
 		_obstacles.push_back(go);

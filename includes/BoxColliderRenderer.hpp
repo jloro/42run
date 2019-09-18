@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ColliderRenderer.hpp                               :+:      :+:    :+:   */
+/*   BoxColliderRenderer.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/18 11:35:27 by jules             #+#    #+#             */
-/*   Updated: 2019/09/18 13:50:07 by jules            ###   ########.fr       */
+/*   Created: 2019/09/18 16:21:46 by jules             #+#    #+#             */
+/*   Updated: 2019/09/18 16:21:47 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLLIDERRENDERER_HPP
-# define COLLIDERRENDERER_HPP
+#ifndef BOXCOLLIDERRENDERER_HPP
+# define BOXCOLLIDERRENDERER_HPP
 
 # include "ARenderer.hpp"
-# include "ACollider.hpp"
+# include "BoxCollider.hpp"
 # include "GameObject.hpp"
 
-class ColliderRenderer : public ARenderer
+class BoxColliderRenderer : public ARenderer
 {
 	public:
-		ColliderRenderer(GameObject* obj, ACollider* collider);
-		virtual	~ColliderRenderer();
+		BoxColliderRenderer(GameObject* obj, BoxCollider* collider);
+		virtual	~BoxColliderRenderer();
 
 		virtual void        Draw() const;
 	private:
 		std::shared_ptr<Mesh>		_mesh;
 		std::shared_ptr<Shader>		_shader;
 		GameObject*					_go;
-		ACollider*					_collider;
+		BoxCollider*					_collider;
 };
 
 #endif

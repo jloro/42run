@@ -1,7 +1,8 @@
-#include "ColliderRenderer.hpp"
+#include "BoxColliderRenderer.hpp"
 #include "Camera.hpp"
 #include "MeshRenderer.hpp"
-ColliderRenderer::ColliderRenderer(GameObject* obj, ACollider* collider) : _go(obj), _collider(collider)
+
+BoxColliderRenderer::BoxColliderRenderer(GameObject* obj, BoxCollider* collider) : _go(obj), _collider(collider)
 {
 	glm::vec3 min = _collider->center - _collider->size / 2.0f;;
 	glm::vec3 max = _collider->center + _collider->size / 2.0f;;
@@ -45,9 +46,9 @@ ColliderRenderer::ColliderRenderer(GameObject* obj, ACollider* collider) : _go(o
 	_mesh->SendToOpenGL();
 }
 
-ColliderRenderer::~ColliderRenderer() {}
+BoxColliderRenderer::~BoxColliderRenderer() {}
 
-void	ColliderRenderer::Draw() const
+void	BoxColliderRenderer::Draw() const
 {
 	if (_go->GetComponent<MeshRenderer>()->IsRender())
 	{

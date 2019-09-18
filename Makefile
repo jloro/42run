@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/18 11:54:42 by jules            ###   ########.fr        #
+#    Updated: 2019/09/18 16:22:48 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,16 +25,16 @@ SRCS_DIR = srcs
 
 SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
-		AComponent.cpp ACollider.cpp GameObject.cpp ARenderer.cpp \
+		AComponent.cpp GameObject.cpp ARenderer.cpp ACollider.cpp\
 		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp \
 		FpsDisplay.cpp main.cpp  Player.cpp GameManager.cpp Obstacle.cpp \
-		ColliderRenderer.cpp
+		BoxColliderRenderer.cpp BoxCollider.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
 		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
-		Obstacle.hpp ColliderRenderer.hpp
+		Obstacle.hpp BoxColliderRenderer.hpp BoxCollider.hpp \
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
