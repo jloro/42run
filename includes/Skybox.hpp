@@ -16,7 +16,7 @@ public:
 /*	constructors / Destructor*/	
     Skybox(const std::vector<std::string> &texFilenames,const std::vector< const char *> &shadersFilenames, const std::vector<GLenum> &shaderType);
     //Skybox(Skybox const & src); 
-    ~Skybox(void); 
+    virtual ~Skybox(void); 
 /*	public variables*/	
 /*	public functions*/	
     virtual void            Draw() const;

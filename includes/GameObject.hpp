@@ -25,12 +25,30 @@ class GameObject
 				try 
 				{ 
 					dst = std::dynamic_pointer_cast<T>(it);
+					if (dst == nullptr)
+						continue;
 				}
 				catch (std::exception &e) { continue; }
 				return dst;
 			}
 			return dst;
 		}
+		/*
+		template<class T>
+		std::list<std::shared_ptr<T>> GetComponents()
+		{
+			std::list<std::shared_ptr<T>>  lst;
+			for (auto it : _components)
+			{
+				try 
+				{ 
+					std::shared_ptr<T> dst = std::dynamic_pointer_cast<T>(it);
+					lst.push_back(dst);
+				}
+				catch (std::exception &e) { continue; }
+			}
+			return lst;
+		}*/
 		// IGameObject &	operator=(const IGameObject & rhs);
 
 		virtual void	Update(void);

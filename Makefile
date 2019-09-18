@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/17 18:26:59 by jloro            ###   ########.fr        #
+#    Updated: 2019/09/18 11:54:42 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +27,14 @@ SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
 		AComponent.cpp ACollider.cpp GameObject.cpp ARenderer.cpp \
 		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp \
-		FpsDisplay.cpp main.cpp  Player.cpp GameManager.cpp
+		FpsDisplay.cpp main.cpp  Player.cpp GameManager.cpp Obstacle.cpp \
+		ColliderRenderer.cpp
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
-		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp
+		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
+		Obstacle.hpp ColliderRenderer.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)

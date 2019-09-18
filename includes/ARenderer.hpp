@@ -24,15 +24,7 @@ public:
     //void                    Destroy(void);
     virtual void                    SetShader(std::shared_ptr<Shader>  shader);
     virtual void        Draw() const = 0;
-	void				DrawCollider() const;
-	void				InitCollider(glm::vec3 min, glm::vec3 max, glm::vec3 scale);
-	glm::vec3			scaleCollider;
-	glm::vec3			min;
-	glm::vec3			max;
 protected:
     std::shared_ptr<Shader>    _shader;
-	std::shared_ptr<Shader>    _shaderCollider;
-	std::shared_ptr<Mesh>    _meshCollider;
-	glm::mat4                  _modelMatrixCollider;
 };
 #endif

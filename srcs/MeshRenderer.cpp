@@ -14,8 +14,8 @@
 MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, 
 std::shared_ptr<Shader>  shader, std::shared_ptr<GameObject> obj, bool render) : ARenderer(shader, obj), _model(model), _render(render)
 {
-	InitCollider(_model->GetMin(), _model->GetMax(), glm::vec3(1.0f));
 }
+
 std::string printvec(glm::vec4 & vec)
 {
 	std::stringstream ss("");
@@ -47,11 +47,6 @@ void        MeshRenderer::Draw(void) const
 		_shader->setMat4("projection", Camera::instance->GetMatProj());
 		_shader->setMat4("model", _transform->GetMatrix());
 		_model->Draw(_shader);
-		_shaderCollider->use();
-		_shaderCollider->setMat4("view", Camera::instance->GetMatView());
-		_shaderCollider->setMat4("projection", Camera::instance->GetMatProj());
-		_shaderCollider->setMat4("model", _transform->GetMatrix());
-		DrawCollider();
 	}
 }
 

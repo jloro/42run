@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 19:22:55 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/18 13:19:32 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 # include <list>
 # include "MeshRenderer.hpp"
 # include "Player.hpp"
-
-# define OBSTACLE_SPEED_DEFAULT 20
+# include "Obstacle.hpp"
 
 class GameManager : public GameObject
 {
@@ -33,10 +32,8 @@ class GameManager : public GameObject
 		void					_CheckCollision();
 		std::shared_ptr<Player>	_player;
 		int						_score;
-		int						_obstacleSpeed;
-		bool					_canAdd;
 		std::shared_ptr<Model>	_modelPillar;
-		std::list<std::shared_ptr<GameObject>>	_pillar;
+		std::shared_ptr<Obstacle>	_obstacle;
 };
 
 #endif
