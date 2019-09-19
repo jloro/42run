@@ -36,7 +36,7 @@ bool InitModels(SdlWindow &win)
 
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
-	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx", "textures/Boy01_diffuse.jpg"));
+	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx"));
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
 	std::shared_ptr<Player> player(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
 	Engine42::Engine::AddGameObject(player);
