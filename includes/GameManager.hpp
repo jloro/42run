@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/18 13:19:32 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/19 18:09:50 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "MeshRenderer.hpp"
 # include "Player.hpp"
 # include "Obstacle.hpp"
+# include "RoomManager.hpp"
 
 class GameManager : public GameObject
 {
@@ -34,6 +35,7 @@ class GameManager : public GameObject
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<Obstacle>	_obstacle;
+		std::shared_ptr<RoomManager>	_roomManager;
 };
 
 #endif

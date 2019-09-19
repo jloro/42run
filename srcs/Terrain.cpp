@@ -12,7 +12,6 @@ Terrain::Terrain(unsigned int x, unsigned int z) : Model(), _x(x * _size), _z(z 
     _tilingX = 1.0f;
     _tilingY = 1.0f;
     _meshes.push_back(_GenerateTerrain(x, z));
-    std::cout << "terrain has anim : " << _hasAnim << std::endl;
 
 }
 Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path) : Model(), _x (x * _size), _z(z * _size)
@@ -21,7 +20,6 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path) : Mode
     _tilingY = 1.0f;
     _meshes.push_back(_GenerateTerrain(x, z));
     LoadTexture(path);
-    std::cout << "terrain has anim : " << _hasAnim << std::endl;
    _meshes[0].SendToOpenGL();
 }
 Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float tilingX, float tilingY) : Model(), _x (x * _size), _z(z * _size)
@@ -31,7 +29,6 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float 
     _meshes.push_back(_GenerateTerrain(x, z));
     LoadTexture(path);
    _meshes[0].SendToOpenGL();
-    std::cout << "terrain has anim : " << _hasAnim << std::endl;
 
 }
 Terrain::Terrain(Terrain const & src) : Model(src), _x(src._x), _z(src._z)
