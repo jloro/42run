@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 18:42:35 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/19 12:18:19 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Model
 /*  constructors / Destructor*/
 		Model(void);
 		Model(const char* path);
-		Model(const char* path, const char* texture);
 		Model(const Model & rhs);
 		virtual~Model();
 /*  public functions    */
@@ -50,7 +49,6 @@ class Model
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
 		glm::mat4				_globalTransform;
-		std::string				_texture;
 		Uint32					_pauseTime;
 		Uint32					_tmpPauseTimer;
 		bool					_playing;
@@ -78,6 +76,7 @@ class Model
 		static Texture			_LoadSimpleTexture(eTextureType typeName, const std::string filename);
 		static unsigned int 	_TextureFromFile(const char *path, const std::string &directory);
 		static unsigned int 	_TextureFromFile(const std::string &filename) ;
+		unsigned int 	_TextureFromFile(const std::string &filename, aiTexture** textureArray) ;
 		static std::string 		_GetFilename(const char *path, const std::string &directory);
 };
 

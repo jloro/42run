@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 18:42:16 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/19 12:27:21 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,13 @@
 # endif
 #include "stb_image.h"
 #include <cmath>
-
+#include <cstdlib>
 #include "PrintGlm.hpp"
 Model::Model(void)
 {
 }
 
-Model::Model(const char* path) : _texture("")
-{
-	_LoadModel(path);
-	for (unsigned int i = 0; i < _meshes.size(); i++)
-		_meshes[i].SendToOpenGL();
-}
-Model::Model(const char* path, const char* texture) : _texture(texture)
+Model::Model(const char* path)
 {
 	_LoadModel(path);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
@@ -104,16 +98,19 @@ void	Model::_LoadModel(std::string path)
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
 	if (_scene->HasAnimations())
-	{
 		_hasAnim = true;
-		std::cout << "Model:" << path << " has anim" << std::endl;
-		std::cout << "nb anim: " <<_scene->mNumAnimations << std::endl;
-		std::cout << "duration: "<<_scene->mAnimations[0]->mDuration<< std::endl;
-		std::cout << "tick per sec: "<<_scene->mAnimations[0]->mTicksPerSecond<< std::endl;
-	}
 	else
 		_hasAnim = false;
 
+	std::cout << "Model: " << path<< std::endl;
+	if (_scene->HasAnimations())
+		std::cout << "Has animations"<< std::endl;
+	if (_scene->HasMaterials())
+		std::cout << "Has material"<< std::endl;
+	if (_scene->HasMeshes())
+		std::cout << "Has meshes"<< std::endl;
+	if (_scene->HasTextures())
+		std::cout << "Has textures"<< std::endl;
 	_globalTransform = aiMat4ToGlmMat4(_scene->mRootNode->mTransformation.Inverse());
 
 	_dir = path.substr(0, path.find_last_of('/'));
@@ -370,7 +367,7 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	}
 	//std::cout << "nb meshs" << std::endl;
-	return Mesh(vertices, faces, textures/*, max, min*/);// I think this line force push to timeto openGl, cause it call the constructor 2 times
+	return Mesh(vertices, faces, textures);
 }
 
 std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName)
@@ -381,10 +378,10 @@ std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType 
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		Texture texture;
-		if (_texture == "")
+		if (str.C_Str()[0] && str.C_Str()[0] != '*')
 			texture.id = _TextureFromFile(str.C_Str(), _dir);
 		else
-			texture.id = _TextureFromFile(_texture.c_str(), _dir);
+			texture.id = _TextureFromFile(str.C_Str(), _scene->mTextures);
 		texture.type = typeName;
 		textures.push_back(texture);
 	}
@@ -411,6 +408,45 @@ unsigned int 			Model::_TextureFromFile(const char *path, const std::string &dir
 	return (_TextureFromFile(filename));
 	/*/std::string filename = std::string(path);
 	  filename = directory + '/' + filename;*/
+}
+
+unsigned int 			Model::_TextureFromFile(const std::string &filename, aiTexture** textureArray)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int i, width, height, nrComponents;
+	i = atoi(filename.substr(1, 1).c_str());
+
+	unsigned char *data = stbi_load_from_memory((stbi_uc *)textureArray[i]->pcData, textureArray[i]->mWidth, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "failed to load texture " << filename << std::endl;
+		stbi_image_free(data);
+	}
+
+	return textureID;
 }
 unsigned int 			Model::_TextureFromFile(const std::string &filename)
 {

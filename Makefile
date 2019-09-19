@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/18 16:22:48 by jules            ###   ########.fr        #
+#    Updated: 2019/09/19 12:18:50 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
 		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
-		Obstacle.hpp BoxColliderRenderer.hpp BoxCollider.hpp \
+		Obstacle.hpp BoxColliderRenderer.hpp BoxCollider.hpp Model.hpp\
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
