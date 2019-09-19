@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 12:27:21 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/19 14:31:45 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Model::Model(void)
 {
 }
 
-Model::Model(const char* path)
+Model::Model(const char* path) : _hasAnim(false)
 {
 	_LoadModel(path);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
@@ -96,13 +96,16 @@ void	Model::_LoadModel(std::string path)
 	_max = glm::vec3(0.0f);
 
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
+	{
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
+	}
 	if (_scene->HasAnimations())
+	{
 		_hasAnim = true;
-	else
-		_hasAnim = false;
+		std::cout <<"tick per sec: "<<_scene->mAnimations[0]->mTicksPerSecond<< std::endl;
+	}
 
-	std::cout << "Model: " << path<< std::endl;
+	/*
 	if (_scene->HasAnimations())
 		std::cout << "Has animations"<< std::endl;
 	if (_scene->HasMaterials())
@@ -111,6 +114,8 @@ void	Model::_LoadModel(std::string path)
 		std::cout << "Has meshes"<< std::endl;
 	if (_scene->HasTextures())
 		std::cout << "Has textures"<< std::endl;
+	*/
+
 	_globalTransform = aiMat4ToGlmMat4(_scene->mRootNode->mTransformation.Inverse());
 
 	_dir = path.substr(0, path.find_last_of('/'));
