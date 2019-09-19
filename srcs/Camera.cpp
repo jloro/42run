@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 15:35:43 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/19 15:48:37 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 
 Camera		*Camera::instance = nullptr;
 
-Camera::Camera(float width, float height) : _moveSpeed(MOVE_SPEED), _mouseSensitivity(MOUSE_SENSITIVITY), _pitch(0.0f), _yaw(-90.0f), _width(width), _height(height)
+Camera::Camera(float width, float height, bool freeFlight) : _moveSpeed(MOVE_SPEED), _mouseSensitivity(MOUSE_SENSITIVITY), _pitch(0.0f), _yaw(-90.0f), _width(width), _height(height), _freeFlight(freeFlight)
 {
 	if (Camera::instance == nullptr)
 		instance = this;
 	_pos = glm::vec3(-2.0f, 60.0f, -55.0f);
-	_dir = glm::vec3(0.0f, 0.0f, -1.0f);
+	if (!freeFlight)
+		_dir = glm::vec3(0.0f, -0.5f, 1.0f);
+	else
+		_dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	_CalcMatrix();
 }
 
@@ -33,16 +36,12 @@ glm::vec3	Camera::GetUp(void) const { return _up; }
 float		Camera::GetMoveSpeed(void) const { return _moveSpeed; }
 float		Camera::GetXRotation(void) const { return _yaw; }
 float		Camera::GetYRotation(void) const { return _pitch; }
+bool		Camera::GetFreeFlight() const { return _freeFlight; }
 
 void 	Camera::Update()
 {
-	const SDL_Event	&event = Engine42::Engine::GetEvent();
-	
-	 if (event.type == SDL_MOUSEMOTION)
-		LookAround(event.motion.xrel, -event.motion.yrel);
-	//else //if (event.type == SDL_KEYDOWN)
-	//{
-	
+	if (_freeFlight)
+	{
 		const Uint8 	*keys = Engine42::Engine::GetKeyInput();
 		if (keys[SDL_SCANCODE_W])
 			Move(eCameraDirection::Forward, Engine42::Time::GetDeltaTime());
@@ -62,8 +61,7 @@ void 	Camera::Update()
 			_sprint = true;
 		else
 			_sprint = false;
-
-	//}
+	}
 }
 void	Camera::FixedUpdate() {}
 

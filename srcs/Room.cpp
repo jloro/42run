@@ -1,8 +1,10 @@
 #include "Room.hpp"
 #include <iostream>
 
+#include"PrintGlm.hpp"
 Room::Room(Transform trans) : GameObject(trans)
 {}
+
 Room::Room(Transform trans, std::vector<std::shared_ptr<GameObject>> walls) : GameObject(trans), _walls(walls)
 {}
 
@@ -18,11 +20,15 @@ Room::~Room(void)
 void    Room::AddWall(std::vector<std::shared_ptr<GameObject>> walls)
 {
     _walls.insert(_walls.end(), walls.begin(), walls.end());
+	_Parenting();
 }
 void    Room::AddWall(std::shared_ptr<GameObject> wall)
 {
     _walls.push_back(wall);
+	_Parenting();
 }
+
+
 void Room::_Parenting()
 {
     std::for_each(_walls.begin(), _walls.end(), [this](std::shared_ptr<GameObject> go) {go->GetTransform()->parent = this->_transform;});

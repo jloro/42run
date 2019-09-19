@@ -31,13 +31,28 @@ std::shared_ptr<Skybox> CreateSkyBox()
 std::shared_ptr<GameObject> MakeRoom(std::shared_ptr<Shader> shader)
 {
 	std::shared_ptr<Room> room(new Room(Transform(glm::vec3(0.0f))));
-	std::shared_ptr<Model> terrainModel(new Terrain(15, 20, "ressources/textures/grass.png", 1, 1));
-	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(0, 1.0f, -1.0f))));
-	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, shader));
-	terrain->AddComponent(terrainARenderer);
-	Engine42::Engine::AddRenderer(terrain->GetComponent<ARenderer>());
-	Engine42::Engine::AddGameObject(terrain);
-	room->AddWall(terrain);
+	std::shared_ptr<Model> floor(new Terrain(15, 20, "ressources/textures/grass.png", 1, 1));
+	std::shared_ptr<GameObject> terrainFloor(new GameObject(Transform(glm::vec3(0, 1.0f, -1.0f))));
+	std::shared_ptr<ARenderer> terrainFloorARenderer(new MeshRenderer(floor, shader));
+	terrainFloor->AddComponent(terrainFloorARenderer);
+	Engine42::Engine::AddRenderer(terrainFloor->GetComponent<ARenderer>());
+	Engine42::Engine::AddGameObject(terrainFloor);
+	room->AddWall(terrainFloor);
+
+	std::shared_ptr<Model> wall(new Terrain(15, 20, "ressources/textures/wood.tga", 1, 1));
+	std::shared_ptr<GameObject> terrainWall(new GameObject(Transform(glm::vec3(70, 1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 90.0f), glm::vec3(1.0f, 1.0f, 1.0f))));
+	std::shared_ptr<ARenderer> terrainWallARenderer(new MeshRenderer(wall, shader));
+	terrainWall->AddComponent(terrainWallARenderer);
+	Engine42::Engine::AddRenderer(terrainWall->GetComponent<ARenderer>());
+	Engine42::Engine::AddGameObject(terrainWall);
+	room->AddWall(terrainWall);
+
+	std::shared_ptr<GameObject> terrainWall2(new GameObject(Transform(glm::vec3(-70, 1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -90.0f), glm::vec3(1.0f, 1.0f, 1.0f))));
+	std::shared_ptr<ARenderer> terrainWallARenderer2(new MeshRenderer(wall, shader));
+	terrainWall2->AddComponent(terrainWallARenderer2);
+	Engine42::Engine::AddRenderer(terrainWall2->GetComponent<ARenderer>());
+	Engine42::Engine::AddGameObject(terrainWall2);
+	room->AddWall(terrainWall2);
 
 	return room;
 }
@@ -47,7 +62,7 @@ bool InitModels(SdlWindow &win)
 	std::vector<const char *>	shadersPath{ "shaders/Skeletical.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
-	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
+	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight(), true));
 
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
