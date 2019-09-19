@@ -6,19 +6,20 @@
 GameManager::GameManager(std::shared_ptr<Player> player) : _player(player), _score(0)
 {
 	_score = 0;
-	_obstacle.reset(new Obstacle);
-	Engine42::Engine::AddGameObject(_obstacle);
+	//_obstacle.reset(new Obstacle);
+	//Engine42::Engine::AddGameObject(_obstacle);
 }
 
 GameManager::~GameManager() {}
 
 void	GameManager::Update()
 {
+	/*
 	for (auto it = _obstacle->_obstacles.begin(); it != _obstacle->_obstacles.end(); it++)
 	{
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender() && _player->GetComponent<ACollider>()->IsCollindingWith(*(*it)->GetComponent<ACollider>()))
 			exit(0);
-	}
+	}*/
 }
 
 void	GameManager::FixedUpdate()

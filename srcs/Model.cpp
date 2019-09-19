@@ -20,11 +20,11 @@
 #include <cmath>
 #include <cstdlib>
 #include "PrintGlm.hpp"
-Model::Model(void)
+Model::Model(void) : _playing(false), _hasAnim(false)
 {
 }
 
-Model::Model(const char* path) : _hasAnim(false)
+Model::Model(const char* path) : _playing(false), _hasAnim(false)
 {
 	_LoadModel(path);
 	for (unsigned int i = 0; i < _meshes.size(); i++)

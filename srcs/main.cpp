@@ -11,6 +11,8 @@
 #include "Player.hpp"
 #include "FpsDisplay.hpp"
 #include "GameManager.hpp"
+#include "Room.hpp"
+
 std::shared_ptr<Skybox> CreateSkyBox()
 {
 	std::vector<std::string>	texturesPath{
@@ -26,6 +28,19 @@ std::shared_ptr<Skybox> CreateSkyBox()
 	std::shared_ptr<Skybox> skybox(new Skybox(texturesPath, shadersPath, type));
 	return skybox;
 }
+std::shared_ptr<GameObject> MakeRoom(std::shared_ptr<Shader> shader)
+{
+	std::shared_ptr<Room> room(new Room(Transform(glm::vec3(0.0f))));
+	std::shared_ptr<Model> terrainModel(new Terrain(15, 20, "ressources/textures/grass.png", 1, 1));
+	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(0, 1.0f, -1.0f))));
+	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, shader));
+	terrain->AddComponent(terrainARenderer);
+	Engine42::Engine::AddRenderer(terrain->GetComponent<ARenderer>());
+	Engine42::Engine::AddGameObject(terrain);
+	room->AddWall(terrain);
+
+	return room;
+}
 
 bool InitModels(SdlWindow &win)
 {
@@ -37,18 +52,21 @@ bool InitModels(SdlWindow &win)
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx"));
-	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
-	std::shared_ptr<Player> player(new Player(test, myShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
+	std::shared_ptr<Shader> 	skeletalShader(new Shader(shadersPath, type));
+	shadersPath[0] = "shaders/Vertex.vs.glsl";
+	std::shared_ptr<Shader> 	stdShader(new Shader(shadersPath, type));
+	std::shared_ptr<Player> player(new Player(test, skeletalShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::SetWindow(&win);
 	Engine42::Engine::AddGameObject(cam);
 	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager(player)));
-	/*std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
-	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
-	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, myShader));
+	/*std::shared_ptr<Model> terrainModel(new Terrain(15, 20, "ressources/textures/grass.png", 1, 1));
+	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(-70.0f, 1.0f, -1.0f))));
+	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, stdShader));
 	terrain->AddComponent(terrainARenderer);
 	Engine42::Engine::AddRenderer(terrain->GetComponent<ARenderer>());
 	Engine42::Engine::AddGameObject(terrain);*/
+	Engine42::Engine::AddGameObject(MakeRoom(stdShader));
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)

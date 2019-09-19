@@ -36,7 +36,7 @@ void	Obstacle::Update()
 		_canAdd = true;
 	for (auto it = _obstacles.begin(); it != _obstacles.end(); it++)
 	{
-		std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
+		//std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
 			if ((*it)->GetTransform()->position.z < -30.0f)
@@ -52,7 +52,7 @@ void	Obstacle::Update()
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 		}
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 void	Obstacle::FixedUpdate()

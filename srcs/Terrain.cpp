@@ -1,4 +1,5 @@
 #include "Terrain.hpp"
+#include <iostream>
 const unsigned int Terrain::_size = 10;
 
 Terrain::Terrain() : Model(), _x(_size), _z(_size)//protected
@@ -6,11 +7,13 @@ Terrain::Terrain() : Model(), _x(_size), _z(_size)//protected
     _meshes.push_back(Mesh());
     _dir = "";
 }
-Terrain::Terrain(unsigned int x, unsigned int z) : Model(), _x (x * _size), _z(z * _size)// the mesh will not send his variables to openGL
+Terrain::Terrain(unsigned int x, unsigned int z) : Model(), _x(x * _size), _z(z * _size)// the mesh will not send his variables to openGL
 {
     _tilingX = 1.0f;
     _tilingY = 1.0f;
     _meshes.push_back(_GenerateTerrain(x, z));
+    std::cout << "terrain has anim : " << _hasAnim << std::endl;
+
 }
 Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path) : Model(), _x (x * _size), _z(z * _size)
 {
@@ -18,6 +21,7 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path) : Mode
     _tilingY = 1.0f;
     _meshes.push_back(_GenerateTerrain(x, z));
     LoadTexture(path);
+    std::cout << "terrain has anim : " << _hasAnim << std::endl;
    _meshes[0].SendToOpenGL();
 }
 Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float tilingX, float tilingY) : Model(), _x (x * _size), _z(z * _size)
@@ -27,6 +31,8 @@ Terrain::Terrain(unsigned int x, unsigned int z, const std::string &path, float 
     _meshes.push_back(_GenerateTerrain(x, z));
     LoadTexture(path);
    _meshes[0].SendToOpenGL();
+    std::cout << "terrain has anim : " << _hasAnim << std::endl;
+
 }
 Terrain::Terrain(Terrain const & src) : Model(src), _x(src._x), _z(src._z)
 {
@@ -45,14 +51,16 @@ Mesh       Terrain::_GenerateTerrain(unsigned int xSize, unsigned int zSize)
     const unsigned int nb_vert = (xSize) * (zSize);
     std::vector<unsigned int>   faces((nb_vert)* 6);
     std::vector<Vertex>     vertices;
+    float halfX = xSize / 2.0f;
+    float halfZ = zSize / 2.0f;
     for (unsigned int i = 0,  z = 0; z <= zSize; z++)
     {
         for (unsigned int x = 0; x <= xSize; x++)
         {
             Vertex vert;
-            vert.position.x = (static_cast<float>(x) *_size);
+            vert.position.x = ((static_cast<float>(x) - halfX) *_size);
             vert.position.y = 0;
-            vert.position.z = static_cast<float>(z) * _size;
+            vert.position.z = (static_cast<float>(z) - halfZ) * _size;
             vert.texCoord.x = static_cast<float>(x) / _tilingX;
             vert.texCoord.y = static_cast<float>(z) / _tilingY;
             vertices.push_back(vert);
