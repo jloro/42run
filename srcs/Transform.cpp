@@ -16,9 +16,7 @@ Transform::~Transform(void) {}
 
 Transform &	Transform::operator=(Transform const & rhs)
 {
-    position = rhs.position;
-    rotation = rhs.rotation;
-    scale = rhs.scale;
+    _Initialize(rhs.position, rhs.rotation, rhs.scale, rhs.parent);
     return *this;
 }
 Transform::Transform(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, std::shared_ptr<Transform> parent)
@@ -57,7 +55,7 @@ glm::mat4       Transform::GetLocalMatrix(void) const
 glm::mat4       Transform::GetMatrix(void) const
 {
     if (parent != nullptr)
-        return _localMatrix * parent->GetMatrix();
+        return parent->GetMatrix() * _localMatrix;
     return _localMatrix ;
 }
 void            Transform::SetLocalMatrix(glm::mat4 matrix)
