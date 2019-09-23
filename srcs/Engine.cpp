@@ -158,6 +158,8 @@ void            Engine42::Engine::Loop(void)
 		_inst._event.type = SDL_USEREVENT;
 		while (SDL_PollEvent(&_inst._event) != 0)
 		{
+			if (Camera::instance->GetFreeFlight() && _inst._event.type == SDL_MOUSEMOTION)
+				Camera::instance->LookAround(_inst._event.motion.xrel, -_inst._event.motion.yrel);
 			if ((_inst._event.type == SDL_WINDOWEVENT 
 						&& _inst._event.window.event == SDL_WINDOWEVENT_CLOSE)
 					|| (_inst._event.type == SDL_KEYDOWN 
@@ -181,12 +183,19 @@ void            Engine42::Engine::Loop(void)
 	}
 }
 
-bool      Engine42::Engine::Destroy(std::shared_ptr<ARenderer> renderer)
+bool      Engine42::Engine::Destroy(ARenderer *renderer)
 {
     if (renderer == nullptr)
         return false;
-    _inst._renderers.erase(std::find(_inst._renderers.begin(), _inst._renderers.end(), renderer));
-    return true;
+	for (auto it = _inst._renderers.begin(); it != _inst._renderers.end(); it++)
+	{
+		if ((*it).get() == renderer)
+		{
+			_inst._renderers.erase(it);
+			return true;
+		}
+	}
+    return false;
 }
 bool		_sort(const std::shared_ptr<ARenderer> first, const std::shared_ptr<ARenderer> sec)
 {

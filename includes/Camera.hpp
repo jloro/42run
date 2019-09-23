@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:47:43 by jloro             #+#    #+#             */
-/*   Updated: 2019/07/29 12:10:15 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/23 11:39:57 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ enum eCameraDirection { Forward, Backward, Right, Left, Up, Down};
 class Camera : public GameObject
 {
 	public:
-		Camera(float width, float height);
+		Camera(float width, float heigh, bool freeFlightt);
 
 		glm::mat4		GetMatView(void) const;
 		glm::mat4		GetMatProj(void) const;
@@ -45,6 +45,7 @@ class Camera : public GameObject
 		float			GetXRotation(void) const;
 		float			GetYRotation(void) const;
 
+		bool			GetFreeFlight() const;
 
 		static Camera	*instance;
 	private:
@@ -68,6 +69,8 @@ class Camera : public GameObject
 		//Size of window
 		float		_width;
 		float		_height;
+
+		bool		_freeFlight;
 };
 
 #endif

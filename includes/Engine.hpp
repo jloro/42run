@@ -50,7 +50,7 @@ namespace Engine42
 			static const SDL_Event &GetEvent();
 			static const Uint8     *GetKeyInput();
 			static eKeyState		GetKeyState(Uint8 scancode);
-			static bool             Destroy(std::shared_ptr<ARenderer> renderer);
+			static bool             Destroy(ARenderer* renderer);
 			static void             ReloadShaders(void);
 			void             ResizeWindow(int width, int height);
 

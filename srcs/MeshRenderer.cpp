@@ -55,7 +55,7 @@ MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, sr
 	_model = src._model;
 }
 
-MeshRenderer::~MeshRenderer(void) {std::cout << "destrucotr" << std::endl;}
+MeshRenderer::~MeshRenderer(void) {}
 
 MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 {
@@ -67,7 +67,7 @@ MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 
 void MeshRenderer::Destroy(void)
 {
-	Engine42::Engine::Destroy(std::shared_ptr<MeshRenderer>(this));
+	Engine42::Engine::Destroy(this);
 }
 
 bool				MeshRenderer::IsRender() const { return _render; }

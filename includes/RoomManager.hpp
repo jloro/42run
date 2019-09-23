@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/22 22:25:52 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/23 11:58:27 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define ROOMMANAGER_HPP
 
 # include "GameObject.hpp"
-# include "Room.hpp"
+# include "Model.hpp"
 class RoomManager : public GameObject
 {
 	public:
@@ -26,7 +26,8 @@ class RoomManager : public GameObject
 		void	Update();
 		void	FixedUpdate();
 	private:
-		glm::vec3	_way;
+		glm::vec3				_nextPos;
+		glm::vec3				_nextRot;
 		std::shared_ptr<Model>	_corridor;
 		std::shared_ptr<Model>	_corner;
 

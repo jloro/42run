@@ -3,7 +3,8 @@
 #include "Engine.hpp"
 RoomManager::RoomManager()
 {
-	_way = glm::vec3(1.0f);
+	_nextPos = glm::vec3(40.0f, 0.0f, 0.0f);
+	_nextRot = glm::vec3(0.0f, 90.0f, 0.0f);
 
 	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
@@ -11,12 +12,10 @@ RoomManager::RoomManager()
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
 	_corridor.reset(new Model("corridor/couloir.obj"));
 	_corner.reset(new Model("corridor/corner.obj"));
-	Transform trans(glm::vec3(40.0f, 0.0f, 0.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(20.0f, 20.0f, 40.0f), _transform);
+	Transform trans(glm::vec3(40.0f, 0.0f, 0.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(40.0f, 20.0f, 40.0f), _transform);
 	for (int i = 0; i < 10; i++)
 	{
-		trans.position.z = i * 40.0f;
-		if (i == 9)
-			trans.scale.x = 40.0f;
+		trans.position.z = i * 80.0f;
 		std::shared_ptr<GameObject> go(new GameObject(trans));
 		std::shared_ptr<ARenderer> renderer;
 		if (i != 9)
@@ -40,16 +39,25 @@ void	RoomManager::Update()
 {
 	//_transform->rotation.y += 2;
 	//_transform->UpdateMatrix();
-	for (auto it = _rooms.begin(); it != _rooms.end(); it++)
+	/*for (auto it = _rooms.begin(); it != _rooms.end(); it++)
 	{
 		if ((*it)->GetTransform()->position.z < -50)
 		{
-			(*it)->GetTransform()->position.z = _rooms.back()->GetTransform()->position.z + 40.0f;
+			(*it)->GetTransform()->position.z = _rooms.back()->GetTransform()->position.z + 80.0f;
 		}
 		(*it)->GetTransform()->position.z -= 60 * Engine42::Time::GetDeltaTime();
 		(*it)->GetTransform()->UpdateMatrix();
 	}
 	_rooms.sort(_sort);
+	*/
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_PRESS)
+	{
+		std::cout <<_rooms.front()->GetComponent<MeshRenderer>().use_count() << std::endl;
+		_rooms.front()->GetComponent<MeshRenderer>()->Destroy();
+		std::cout <<_rooms.front()->GetComponent<MeshRenderer>().use_count() << std::endl;
+	}
+	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_RELEASE)
+		Engine42::Engine::AddRenderer(_rooms.front()->GetComponent<MeshRenderer>());
 }
 
 void	RoomManager::FixedUpdate()

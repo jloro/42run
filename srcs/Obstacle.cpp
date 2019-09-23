@@ -17,7 +17,7 @@ Obstacle::Obstacle() : _obstacleSpeed(OBSTACLE_SPEED_DEFAULT), _canAdd(true)
 		std::shared_ptr<GameObject> go(new GameObject(trans));
 		std::shared_ptr<ARenderer> renderer(new MeshRenderer(_modelPillar, myShader, std::shared_ptr<GameObject>(nullptr), false));
 		Engine42::Engine::AddRenderer(renderer);
-		std::shared_ptr<ACollider> collider(new BoxCollider(go.get(), _modelPillar->GetMin(), _modelPillar->GetMax(), glm::vec3(1.0f), glm::vec3(0.0f), true));
+		std::shared_ptr<ACollider> collider(new BoxCollider(go.get(), _modelPillar->GetMin(), _modelPillar->GetMax(), glm::vec3(1.0f), glm::vec3(0.0f), false));
 		go->AddComponent(collider);
 		go->AddComponent(renderer);
 		_obstacles.push_back(go);
@@ -36,7 +36,7 @@ void	Obstacle::Update()
 		_canAdd = true;
 	for (auto it = _obstacles.begin(); it != _obstacles.end(); it++)
 	{
-		std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
+		//std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
 			if ((*it)->GetTransform()->position.z < -30.0f)
@@ -52,7 +52,7 @@ void	Obstacle::Update()
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 		}
 	}
-	std::cout << std::endl;
+//	std::cout << std::endl;
 }
 
 void	Obstacle::FixedUpdate()
