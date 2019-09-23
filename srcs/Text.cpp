@@ -100,5 +100,5 @@ void	Text::RenderText(const std::string text, float x, float y, float scale, glm
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 }

@@ -185,7 +185,7 @@ bool      Engine42::Engine::Destroy(std::shared_ptr<ARenderer> renderer)
 {
     if (renderer == nullptr)
         return false;
-    _inst._renderers.remove(renderer);
+    _inst._renderers.erase(std::find(_inst._renderers.begin(), _inst._renderers.end(), renderer));
     return true;
 }
 bool		_sort(const std::shared_ptr<ARenderer> first, const std::shared_ptr<ARenderer> sec)

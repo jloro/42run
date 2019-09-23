@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 10:16:08 by jules             #+#    #+#             */
-/*   Updated: 2019/09/18 13:14:50 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/22 19:11:45 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "Model.hpp"
 # include "Shader.hpp"
 
-# define OBSTACLE_SPEED_DEFAULT 20
+# define OBSTACLE_SPEED_DEFAULT 70
 
 class Obstacle : public GameObject
 {

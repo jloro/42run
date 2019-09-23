@@ -55,7 +55,7 @@ MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, sr
 	_model = src._model;
 }
 
-MeshRenderer::~MeshRenderer(void) {}
+MeshRenderer::~MeshRenderer(void) {std::cout << "destrucotr" << std::endl;}
 
 MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 {

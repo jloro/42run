@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 14:31:45 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/22 18:05:50 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,15 @@ Model::Model(const Model &src)
 }
 
 Model::~Model() {}
+
+void	Model::AddAnimation(const char* path)
+{
+	const aiScene* scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	if (!_scene || !scene->HasAnimations())
+		throw std::runtime_error(std::string("No animations"));
+
+		//std::shared_ptr<const aiAnimation*> t(_scene->mAnimations[0]);
+}
 
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
 {
@@ -95,14 +104,14 @@ void	Model::_LoadModel(std::string path)
 	_min = glm::vec3(0.0f);
 	_max = glm::vec3(0.0f);
 
+	if (_scene->HasAnimations())
+		std::cout << "Has animations"<< std::endl;
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
-	{
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
-	}
 	if (_scene->HasAnimations())
 	{
+		//_animations.push_back(std::shared_ptr<aiAnimation*>(_scene->mAnimations[0]));
 		_hasAnim = true;
-		std::cout <<"tick per sec: "<<_scene->mAnimations[0]->mTicksPerSecond<< std::endl;
 	}
 
 	/*
