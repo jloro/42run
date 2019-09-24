@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/12 16:55:11 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 19:07:32 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/24 16:54:08 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Player : public GameObject
 		std::shared_ptr<Model>	_character;
 		bool					_jump;
 		eJumpState				_jumpState;
+		float					_velocityY;
 
 };
 
