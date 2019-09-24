@@ -2,10 +2,11 @@
 #include "ARenderer.hpp"
 #include "Engine.hpp"
 #include <gtx/rotate_vector.hpp>
-
+#include "gtx/compatibility.hpp"
+#include "GameManager.hpp"
 const unsigned int	RoomManager::maxRooms = 10;
 
-RoomManager::RoomManager() : _nbRooms(0)
+RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _cornerSpawned(true)
 {
 	_rotate = false;
 	_nextRot = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -21,45 +22,6 @@ RoomManager::RoomManager() : _nbRooms(0)
 	_corner.reset(new Model("corridor/corner.obj"));
 	Transform trans(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(40.0f, 20.0f, 40.0f), _transform);
 	srand(time(0));
-	/*
-	for (int i = 0; i < 30; i++)
-	{
-		float p = rand() % 100;
-		if (p < 90)
-		{
-			tag = eTags::Corridor;
-			trans.position += _way * 80.0f;
-			trans.rotation = _nextRot;
-		} else
-		{
-			tag = eTags::Corner;
-			trans.position += _way * 160.0f;
-			_nextRot += glm::vec3(0.0f, 90.0f, 0.0f);
-			_way = glm::rotate(_way, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		}
-		std::shared_ptr<GameObject> go(new GameObject(trans, tag));
-		if (p >= 90)
-		{
-			if (glm::distance(_way, glm::vec3(1.0f, 0.0f, 0.0f)) < 0.1f || glm::distance(_way, glm::vec3(-1.0f, 0.0f, 0.0f)) < 0.1f)
-				trans.position.x += _way.x < 0.0f ? -80.0f : 80.0f;
-			else
-				trans.position.z += _way.z < 0.0f ? -80.0f : 80.0f;
-		}
-		std::shared_ptr<ARenderer> renderer;
-		if (p < 90)
-		{
-			renderer.reset(new MeshRenderer(_corridor, myShader, std::shared_ptr<GameObject>(nullptr), true));
-		}
-		else
-		{
-			renderer.reset(new MeshRenderer(_corner, myShader, std::shared_ptr<GameObject>(nullptr), true));
-		}
-		Engine42::Engine::AddRenderer(renderer);
-		go->AddComponent(renderer);
-		_rooms.push_back(go);
-	}
-	_way = glm::vec3(0.0f, 0.0f, 1.0f);
-	*/
 	for (unsigned int i = 0; i < 20; i++)
 	{
 		std::shared_ptr<GameObject> go(new GameObject(trans, eTags::Corridor));
@@ -69,13 +31,12 @@ RoomManager::RoomManager() : _nbRooms(0)
 	}
 	for (unsigned int i = 0; i < 10; i++)
 	{
-		std::shared_ptr<GameObject> go(new GameObject(trans, eTags::Corner));
+		std::shared_ptr<GameObject> go(new GameObject(trans, eTags::CornerLeft));
 		std::shared_ptr<ARenderer> renderer(new MeshRenderer(_corner, myShader, std::shared_ptr<GameObject>(nullptr), false));
 		go->AddComponent(renderer);
 		corners.push_back(go);
 	}
 
-	//_lastRoom.reset(new Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(40.0f, 20.0f, 40.0f), _transform));
 	for (auto it = corridors.begin(); it != corridors.end() && _nbRooms < maxRooms - 1; it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
@@ -86,7 +47,6 @@ RoomManager::RoomManager() : _nbRooms(0)
 			_nbRooms++;
 			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
-			//_lastRoom = (*it)->GetTransform();
 		}
 	}
 	for (auto it = corners.begin(); it != corners.end() && _nbRooms < maxRooms; it++)
@@ -121,45 +81,43 @@ void	RoomManager::Update()
 {
 	if (_nbRooms < maxRooms)
 	{
-		if (rand() % 100 < 95)
-			_AddCorridor();
+		if (rand() % 100 > 90 && !_cornerSpawned)
+			_AddCorner(static_cast<bool>(rand() % 2));
 		else
-			_AddCorner();
+			_AddCorridor();
 	}
 	if (_rotate)
 	{
-		_transform->rotation.y -= 1;
+		_transform->rotation.y -= _rotateWay;
 		_transform->UpdateMatrix();
 	}
 	for (auto it = _rooms.begin(); it != _rooms.end(); it++)
 	{
 		glm::vec3 tmp = (*it)->GetTransform()->position * _way;
-		if (tmp.x + tmp.y + tmp.z < 40 && (*it)->GetTag() == eTags::Corner)
+		if (tmp.x + tmp.y + tmp.z < 40 && ((*it)->GetTag() == eTags::CornerLeft || (*it)->GetTag() == eTags::CornerRight))
 		{
-			if (_transform->rotation.y > -90)
+			if (_transform->rotation.y < _rotationMax || _transform->rotation.y > _rotationMax)
 			{
 				_rotate = true;
-				_way = glm::rotate(_way, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				std::cout <<_way << std::endl;
+				_way = glm::rotate(_way, glm::radians(_rotateWay), glm::vec3(0.0f, 1.0f, 0.0f));
 			}
 			else
 				_rotate = false;
-			//(*it)->GetTransform()->position.z = _rooms.back()->GetTransform()->position.z + 80.0f;
 		}
-		//if (!_rotate)
-		(*it)->GetTransform()->position -= _way * 90.0f * Engine42::Time::GetDeltaTime();
 		if (tmp.x + tmp.y + tmp.z < -160)
 		{
+			if ((*it)->GetTag() == eTags::CornerLeft || (*it)->GetTag() == eTags::CornerRight)
+				_cornerSpawned = false;
 			(*it)->GetComponent<MeshRenderer>()->SetRender(false);
 			(*it)->GetComponent<MeshRenderer>()->Destroy();
 			_rooms.erase(it);
 			_nbRooms--;
 			continue;
 		}
+		(*it)->GetTransform()->position -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
 		(*it)->GetTransform()->UpdateMatrix();
 	}
-	_nextPos -= _way * 90.0f * Engine42::Time::GetDeltaTime();
-	//_rooms.sort(_sort);
+	_nextPos -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
 }
 
 void	RoomManager::FixedUpdate()
@@ -167,47 +125,57 @@ void	RoomManager::FixedUpdate()
 
 }
 
-glm::vec3	RoomManager::rotate(glm::vec3& vec, float angle, glm::vec3 normal)
-{
-	glm::vec3 ret = glm::rotate(vec, glm::radians(angle), normal);
-
-	if (ret.x < 0.1f)
-		ret.x = 0.0f;
-	if (ret.y < 0.1f)
-		ret.y = 0.0f;
-	if (ret.z < 0.1f)
-		ret.z = 0.0f;
-
-	if (ret.x > 0.9f)
-		ret.x = 1.0f;
-	if (ret.y > 0.9f)
-		ret.y = 1.0f;
-	if (ret.z > 0.9f)
-		ret.z = 1.0f;
-	return ret;
-}
-
-void	RoomManager::_AddCorner()
+void	RoomManager::_AddCorner(bool left)
 {
 	for (auto it = corners.begin(); it != corners.end(); it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
-			_rooms.push_back((*it));
-			(*it)->GetTransform()->position = _nextPos + _wayPlacement * 80.0f;
-			(*it)->GetTransform()->rotation = _nextRot;
-			_nextPos += _wayPlacement * 80.0f;
-			_nextRot += glm::vec3(0.0f, 90.0f, 0.0f);
-			_wayPlacement = glm::rotate(_wayPlacement, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			_nextPos += _wayPlacement * 80.0f;
-			_nbRooms++;
-			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
-			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
-			if (glm::distance(_wayPlacement, glm::vec3(1.0f, 0.0f, 0.0f)) < 0.1f || glm::distance(_wayPlacement, glm::vec3(-1.0f, 0.0f, 0.0f)) < 0.1f)
-				_nextPos.x += _wayPlacement.x < 0.0f ? -80.0f : 80.0f;
+			if (left)
+			{
+				_rotateWay = 2.0f;
+				(*it)->SetTag(eTags::CornerLeft);
+				_cornerSpawned = true;
+				_rotationMax -= 90;
+				_rooms.push_back((*it));
+				(*it)->GetTransform()->position = _nextPos + _wayPlacement * 80.0f;
+				(*it)->GetTransform()->rotation = _nextRot;
+				_nextPos += _wayPlacement * 80.0f;
+				_nextRot += glm::vec3(0.0f, 90.0f, 0.0f);
+				_wayPlacement = glm::rotate(_wayPlacement, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				_nextPos += _wayPlacement * 80.0f;
+				_nbRooms++;
+				Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
+				(*it)->GetComponent<MeshRenderer>()->SetRender(true);
+				if (glm::distance(_wayPlacement, glm::vec3(1.0f, 0.0f, 0.0f)) < 0.1f || glm::distance(_wayPlacement, glm::vec3(-1.0f, 0.0f, 0.0f)) < 0.1f)
+					_nextPos.x += _wayPlacement.x < 0.0f ? -80.0f : 80.0f;
+				else
+					_nextPos.z += _wayPlacement.z < 0.0f ? -80.0f : 80.0f;
+				break;
+			}
 			else
-				_nextPos.z += _wayPlacement.z < 0.0f ? -80.0f : 80.0f;
-			break;
+			{
+				_rotateWay = -2.0f;
+				(*it)->SetTag(eTags::CornerRight);
+				_cornerSpawned = true;
+				_rotationMax += 90;
+				_rooms.push_back((*it));
+				(*it)->GetTransform()->position = _nextPos + _wayPlacement * 80.0f;
+				(*it)->GetTransform()->rotation = _nextRot;
+				(*it)->GetTransform()->rotation.y += 90.0f;
+				_nextPos += _wayPlacement * 80.0f;
+				_nextRot -= glm::vec3(0.0f, 90.0f, 0.0f);
+				_wayPlacement = glm::rotate(_wayPlacement, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				_nextPos += _wayPlacement * 80.0f;
+				_nbRooms++;
+				Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
+				(*it)->GetComponent<MeshRenderer>()->SetRender(true);
+				if (glm::distance(_wayPlacement, glm::vec3(1.0f, 0.0f, 0.0f)) < 0.1f || glm::distance(_wayPlacement, glm::vec3(-1.0f, 0.0f, 0.0f)) < 0.1f)
+					_nextPos.x += _wayPlacement.x < 0.0f ? -80.0f : 80.0f;
+				else
+					_nextPos.z += _wayPlacement.z < 0.0f ? -80.0f : 80.0f;
+				break;
+			}
 		}
 	}
 }
@@ -225,7 +193,6 @@ void	RoomManager::_AddCorridor()
 			_nbRooms++;
 			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
-			//_lastRoom = (*it)->GetTransform();
 			break;
 		}
 	}

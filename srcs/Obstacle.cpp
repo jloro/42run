@@ -1,8 +1,9 @@
 #include "Obstacle.hpp"
 #include "Engine.hpp"
 #include "BoxCollider.hpp"
+#include "GameManager.hpp"
 
-Obstacle::Obstacle() : _obstacleSpeed(OBSTACLE_SPEED_DEFAULT), _canAdd(true)
+Obstacle::Obstacle() : _canAdd(true)
 {
 
 	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
@@ -28,7 +29,7 @@ Obstacle::~Obstacle() {}
 
 void	Obstacle::Update()
 {
-	float timer = 4;
+	float timer = 2;
 	bool addNew = false;
 	if (fmod(((float)SDL_GetTicks()) / 1000, timer) < 0.1 && _canAdd)
 		addNew = true;
@@ -41,7 +42,7 @@ void	Obstacle::Update()
 		{
 			if ((*it)->GetTransform()->position.z < -30.0f)
 				(*it)->GetComponent<MeshRenderer>()->SetRender(false);
-			(*it)->GetTransform()->position.z -= _obstacleSpeed * Engine42::Time::GetDeltaTime();
+			(*it)->GetTransform()->position.z -= GameManager::speedWorld * Engine42::Time::GetDeltaTime();
 		}
 		else if (addNew)
 		{

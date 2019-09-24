@@ -3,11 +3,12 @@
 #include <cmath>
 #include "ACollider.hpp"
 
+const unsigned int	GameManager::speedWorld = 80.0f;
 GameManager::GameManager(std::shared_ptr<Player> player) : _player(player), _score(0)
 {
 	_score = 0;
-	//_obstacle.reset(new Obstacle);
-	//Engine42::Engine::AddGameObject(_obstacle);
+	_obstacle.reset(new Obstacle);
+	Engine42::Engine::AddGameObject(_obstacle);
 	_rooms.reset(new RoomManager);
 	Engine42::Engine::AddGameObject(_rooms);
 }

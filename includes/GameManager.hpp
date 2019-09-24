@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/23 11:35:37 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/24 13:38:11 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ class GameManager : public GameObject
 
 		virtual void	Update();
 		virtual void	FixedUpdate();
+
+		const static unsigned int	speedWorld;
 	private:
 		void					_CheckCollision();
 		std::shared_ptr<Player>	_player;

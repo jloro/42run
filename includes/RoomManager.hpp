@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/24 12:35:24 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/24 13:53:23 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ class RoomManager : public GameObject
 		std::shared_ptr<Model>	_corridor;
 		std::shared_ptr<Model>	_corner;
 		unsigned int			_nbRooms;
+		int	_rotationMax;
+		float	_rotateWay;
+
+		bool					_cornerSpawned;
 
 		void					_AddCorridor();
-		void					_AddCorner();
+		void					_AddCorner(bool left);
 
 };
 
