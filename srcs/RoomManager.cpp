@@ -31,7 +31,7 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 	}
 	for (unsigned int i = 0; i < 10; i++)
 	{
-		std::shared_ptr<GameObject> go(new GameObject(trans, eTags::CornerLeft));
+		std::shared_ptr<GameObject> go(new GameObject(trans, eTags::Corner));
 		std::shared_ptr<ARenderer> renderer(new MeshRenderer(_corner, myShader, std::shared_ptr<GameObject>(nullptr), false));
 		go->AddComponent(renderer);
 		corners.push_back(go);
@@ -94,7 +94,7 @@ void	RoomManager::Update()
 	for (auto it = _rooms.begin(); it != _rooms.end(); it++)
 	{
 		glm::vec3 tmp = (*it)->GetTransform()->position * _way;
-		if (tmp.x + tmp.y + tmp.z < 40 && ((*it)->GetTag() == eTags::CornerLeft || (*it)->GetTag() == eTags::CornerRight))
+		if (tmp.x + tmp.y + tmp.z < 40 && (*it)->GetTag() == eTags::Corner)
 		{
 			if (_transform->rotation.y < _rotationMax || _transform->rotation.y > _rotationMax)
 			{
@@ -106,7 +106,7 @@ void	RoomManager::Update()
 		}
 		if (tmp.x + tmp.y + tmp.z < -160)
 		{
-			if ((*it)->GetTag() == eTags::CornerLeft || (*it)->GetTag() == eTags::CornerRight)
+			if ((*it)->GetTag() == eTags::Corner)
 				_cornerSpawned = false;
 			(*it)->GetComponent<MeshRenderer>()->SetRender(false);
 			(*it)->GetComponent<MeshRenderer>()->Destroy();
@@ -134,7 +134,6 @@ void	RoomManager::_AddCorner(bool left)
 			if (left)
 			{
 				_rotateWay = 2.0f;
-				(*it)->SetTag(eTags::CornerLeft);
 				_cornerSpawned = true;
 				_rotationMax -= 90;
 				_rooms.push_back((*it));
@@ -156,7 +155,6 @@ void	RoomManager::_AddCorner(bool left)
 			else
 			{
 				_rotateWay = -2.0f;
-				(*it)->SetTag(eTags::CornerRight);
 				_cornerSpawned = true;
 				_rotationMax += 90;
 				_rooms.push_back((*it));
