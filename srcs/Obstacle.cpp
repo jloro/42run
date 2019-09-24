@@ -28,7 +28,7 @@ Obstacle::~Obstacle() {}
 
 void	Obstacle::Update()
 {
-	float timer = (rand() % 15 + 5) / 10;
+	float timer = 4;
 	bool addNew = false;
 	if (fmod(((float)SDL_GetTicks()) / 1000, timer) < 0.1 && _canAdd)
 		addNew = true;
@@ -36,7 +36,7 @@ void	Obstacle::Update()
 		_canAdd = true;
 	for (auto it = _obstacles.begin(); it != _obstacles.end(); it++)
 	{
-		//std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
+		std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
 			if ((*it)->GetTransform()->position.z < -30.0f)
@@ -45,14 +45,14 @@ void	Obstacle::Update()
 		}
 		else if (addNew)
 		{
-			(*it)->GetTransform()->position.z = 100.0f;
+			(*it)->GetTransform()->position.z = 500.0f;
 			(*it)->GetTransform()->position.x = ROW_WIDTH * (rand() % 3 - 1);
 			addNew = false;
 			_canAdd = false;
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 		}
 	}
-//	std::cout << std::endl;
+	std::cout << std::endl;
 }
 
 void	Obstacle::FixedUpdate()
