@@ -4,7 +4,7 @@
 #include <gtx/rotate_vector.hpp>
 #include "gtx/compatibility.hpp"
 #include "GameManager.hpp"
-const unsigned int	RoomManager::maxRooms = 10;
+const unsigned int	RoomManager::maxRooms = 15;
 
 RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _cornerSpawned(true)
 {
@@ -20,7 +20,7 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
 	_corridor.reset(new Model("corridor/couloir.obj"));
 	_corner.reset(new Model("corridor/corner.obj"));
-	Transform trans(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(40.0f, 20.0f, 40.0f), _transform);
+	Transform trans(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(40.0f, 40.0f, 40.0f), _transform);
 	srand(time(0));
 	for (unsigned int i = 0; i < 20; i++)
 	{
@@ -104,7 +104,7 @@ void	RoomManager::Update()
 			else
 				_rotate = false;
 		}
-		if (tmp.x + tmp.y + tmp.z < -160)
+		if (tmp.x + tmp.y + tmp.z < -240)
 		{
 			if ((*it)->GetTag() == eTags::Corner)
 				_cornerSpawned = false;
