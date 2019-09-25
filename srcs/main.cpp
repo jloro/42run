@@ -32,7 +32,7 @@ bool InitModels(SdlWindow &win)
 	std::vector<const char *>	shadersPath{ "shaders/Skeletical.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
-	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight(), true));
+	Camera* cam = new Camera(win.GetWidth(), win.GetHeight(), false);
 
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
@@ -44,8 +44,10 @@ bool InitModels(SdlWindow &win)
 	std::shared_ptr<Player> player(new Player(test, skeletalShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::SetWindow(&win);
-	Engine42::Engine::AddGameObject(cam);
-	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager(player)));
+	Engine42::Engine::AddGameObject(cam->instance);
+	std::cout << cam->instance.use_count()<< std::endl;
+	GameManager *gm = new GameManager(player);
+	Engine42::Engine::AddGameObject(gm->instance);
 	/*std::shared_ptr<Model> terrainModel(new Terrain(10, 10, "ressources/textures/grass.png", 1, 1));
 	std::shared_ptr<GameObject> terrain(new GameObject(Transform(glm::vec3(-50.0f, -7.5f, -50.0f))));
 	std::shared_ptr<ARenderer> terrainARenderer(new MeshRenderer(terrainModel, myShader));

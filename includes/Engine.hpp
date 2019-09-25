@@ -52,6 +52,7 @@ namespace Engine42
 			static eKeyState		GetKeyState(Uint8 scancode);
 			static bool             Destroy(ARenderer* renderer);
 			static void             ReloadShaders(void);
+			static void             Clear(void);
 			void             ResizeWindow(int width, int height);
 
 			static void	createFBO();
@@ -74,6 +75,7 @@ namespace Engine42
 			std::list<std::shared_ptr<GameObject>>   _UI;
 			std::shared_ptr<Text>					_fontUI;
 
+			bool								_clear;
 			SDL_Event                           _event;
 			const Uint8                         *_keys;
 			const SdlWindow                     *_win;

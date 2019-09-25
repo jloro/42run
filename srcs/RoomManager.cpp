@@ -37,6 +37,43 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 		corners.push_back(go);
 	}
 
+	_Init();
+}
+
+void	RoomManager::Reset()
+{
+	_nbRooms = 0;
+	_rooms.clear();
+	_rotate = false;
+	_nextRot = glm::vec3(0.0f, 0.0f, 0.0f);
+	_nextPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	_way = glm::vec3(0.0f, 0.0f, 1.0f);
+	_wayPlacement = glm::vec3(0.0f, 0.0f, 1.0f);
+	_rotationMax = -90;
+	_rotateWay = 2.0f;
+	_cornerSpawned = true;
+	_transform->rotation.y = 0.0f;
+	_transform->UpdateMatrix();
+	for (auto it = corridors.begin(); it != corridors.end(); it++)
+	{
+		(*it)->GetTransform()->position = glm::vec3(0.0f);
+		(*it)->GetTransform()->rotation = glm::vec3(0.0f);
+		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+		(*it)->GetTransform()->UpdateMatrix();
+	}
+	for (auto it = corners.begin(); it != corners.end(); it++)
+	{
+		(*it)->GetTransform()->position = glm::vec3(0.0f);
+		(*it)->GetTransform()->rotation = glm::vec3(0.0f);
+		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+		(*it)->GetTransform()->UpdateMatrix();
+	}
+	_Init();
+}
+
+void	RoomManager::_Init()
+{
+
 	for (auto it = corridors.begin(); it != corridors.end() && _nbRooms < maxRooms - 1; it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
@@ -69,13 +106,7 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 		}
 	}
 }
-
 RoomManager::~RoomManager() {}
-
-bool		_sort(const std::shared_ptr<GameObject> first, const std::shared_ptr<GameObject> sec)
-{
-	return first->GetTransform()->position.z < sec->GetTransform()->position.z;
-}
 
 void	RoomManager::Update()
 {

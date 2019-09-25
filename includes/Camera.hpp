@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:47:43 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/23 13:39:43 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 13:05:20 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Camera : public GameObject
 
 		bool			GetFreeFlight() const;
 
-		static Camera	*instance;
+		static std::shared_ptr<Camera>	instance;
 	private:
 		void	_CalcMatrix();
 

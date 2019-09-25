@@ -38,6 +38,16 @@ Obstacle::Obstacle() : _canAdd(true)
 
 Obstacle::~Obstacle() {}
 
+void	Obstacle::Reset()
+{
+	_canAdd = true;
+	_obstacles.clear();
+	for (auto it = _pillar.begin(); it != _pillar.end(); it++)
+	{
+		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+	}
+}
+
 void	Obstacle::Update()
 {
 	float timer = 2;
@@ -50,7 +60,7 @@ void	Obstacle::Update()
 		_canAdd = true;
 	for (auto it = _obstacles.begin(); it != _obstacles.end(); it++)
 	{
-		std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
+		//std::cout << (*it)->GetComponent<MeshRenderer>()->IsRender() << " ";
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
 			if ((*it)->GetTransform()->position.z < -80.0f)
@@ -63,7 +73,7 @@ void	Obstacle::Update()
 			(*it)->GetTransform()->position.z -= GameManager::speedWorld * Engine42::Time::GetDeltaTime();
 		}
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 void	Obstacle::FixedUpdate()

@@ -8,6 +8,7 @@
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
+	_clear = false;
 	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_A};
 	_InitKeyboard();
 }
@@ -93,6 +94,13 @@ void	Engine42::Engine::_UpdateKeyboard()
 	}
 }
 
+void            Engine42::Engine::Clear(void)
+{
+	_inst._renderers.clear();
+	_inst._gameObjs.clear();
+	_inst._framebuffers.clear();
+	_inst._clear = true;
+}
 void            Engine42::Engine::createFBO(void)
 {
 	glGenFramebuffers(1, &_inst._fbo);
@@ -254,7 +262,10 @@ void                          Engine42::Engine::_UpdateAll(void)
 	for (it = _gameObjs.begin(); it != _gameObjs.end(); it++)
 	{
 		(*it)->Update();
+		if (_clear)
+			break;
 	}
+	_clear = false;
 }
 void                       Engine42::Engine::ReloadShaders(void)
 {

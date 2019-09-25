@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/23 11:41:14 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 13:55:18 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "Engine.hpp"
 #include <gtc/matrix_transform.hpp>
 
-Camera		*Camera::instance = nullptr;
+std::shared_ptr<Camera>		Camera::instance = nullptr;
 
 Camera::Camera(float width, float height, bool freeFlight) : _moveSpeed(MOVE_SPEED), _mouseSensitivity(MOUSE_SENSITIVITY), _pitch(0.0f), _yaw(-90.0f), _width(width), _height(height), _freeFlight(freeFlight)
 {
 	if (Camera::instance == nullptr)
-		instance = this;
+		instance = std::shared_ptr<Camera>(this);
 	_pos = glm::vec3(-2.0f, 60.0f, -55.0f);
 	if (!freeFlight)
 		_dir = glm::vec3(0.0f, -0.5f, 1.0f);
