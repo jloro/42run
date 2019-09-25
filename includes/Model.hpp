@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 15:02:05 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 15:18:55 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ class Model
 		void					_LoadBones(aiMesh *mesh, std::vector<Vertex>& vertices);
 		void					_AddBoneData(unsigned int id, float weight, Vertex& vertex);
 		void					_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader);
-		void					_ReadNodeHierarchy(float animationTime, const aiNode* node, const glm::mat4 parentTransform);
-		aiQuaternion			_CalcInterpolatedRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
-		aiVector3D				_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
-		aiVector3D				_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const;
-		unsigned int			_FindKeys(float animationTime, const aiNodeAnim* nodeAnim, int state) const;
+		void					_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, const glm::mat4 parentTransform);
+		glm::quat				_CalcInterpolatedRotation(float animationTime, std::shared_ptr<NodeAnim> nodeAnim) const;
+		//aiVector3D				_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
+		//aiVector3D				_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int			_FindKeys(float animationTime, std::shared_ptr<NodeAnim> nodeAnim, int state) const;
 
 		Mesh					_ProcessMesh(aiMesh *mesh, const aiScene *scene);
 		std::vector<Texture>	_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName);

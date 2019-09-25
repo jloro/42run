@@ -9,7 +9,7 @@ Animation::Animation(aiAnimation* anim)
 
 	for (unsigned int i = 0; i < numChannels; i++)
 	{
-		NodeAnim node(anim->mChannels[i]);
+		std::shared_ptr<NodeAnim> node(new NodeAnim(anim->mChannels[i]));
 		channels.push_back(node);
 	}
 }
