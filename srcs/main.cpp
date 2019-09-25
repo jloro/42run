@@ -37,7 +37,7 @@ bool InitModels(SdlWindow &win)
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx"));
-	//test->AddAnimation("die.fbx");
+	test->AddAnimation("Dying Backwards.fbx");
 	std::shared_ptr<Shader> 	skeletalShader(new Shader(shadersPath, type));
 	shadersPath[0] = "shaders/Vertex.vs.glsl";
 	std::shared_ptr<Shader> 	stdShader(new Shader(shadersPath, type));

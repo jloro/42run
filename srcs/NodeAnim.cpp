@@ -29,7 +29,7 @@ NodeAnim::NodeAnim(aiNodeAnim* infos)
 	{
 		quatKey	key;
 		key.time = infos->mRotationKeys[i].mTime;
-		key.value = glm::quat(_aiMat3ToGlmMat3(infos->mRotationKeys[i].mValue.GetMatrix()));
+		key.value = glm::quat(infos->mRotationKeys[i].mValue.w, infos->mRotationKeys[i].mValue.x, infos->mRotationKeys[i].mValue.y, infos->mRotationKeys[i].mValue.z);
 		rotationKeys.push_back(key);
 	}
 }

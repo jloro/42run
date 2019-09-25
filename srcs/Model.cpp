@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 15:39:16 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 16:02:04 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,18 @@ Model::~Model() {}
 
 void	Model::AddAnimation(const char* path)
 {
-	const aiScene* scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-	if (!_scene || !scene->HasAnimations())
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path, 0);
+	if (!scene || !scene->HasAnimations())
 		throw std::runtime_error(std::string("No animations"));
 
-	//std::shared_ptr<const aiAnimation*> t(_scene->mAnimations[0]);
+	_animations.push_back(std::shared_ptr<Animation>(new Animation(scene->mAnimations[0])));
 }
 
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
 {
 	if (_hasAnim &&_playing)
-		_BoneTransform(((((float)SDL_GetTicks()) / 1000) - _pauseTime) / 4.0f, shader);
+		_BoneTransform((((float)SDL_GetTicks()) / 1000) - _pauseTime, shader);
 	for (unsigned int i = 0; i < _meshes.size(); i++)
 		_meshes[i].Draw(shader);
 }
@@ -73,15 +74,6 @@ Model & Model::operator=(const Model &rhs)
 	return *this;
 }
 
-glm::mat3	aiMat3ToGlmMat3(aiMatrix3x3 from)
-{
-	glm::mat3	to;
-
-	to[0][0] = (GLfloat)from.a1; to[0][1] = (GLfloat)from.b1;  to[0][2] = (GLfloat)from.c1;
-	to[1][0] = (GLfloat)from.a2; to[1][1] = (GLfloat)from.b2;  to[1][2] = (GLfloat)from.c2;
-	to[2][0] = (GLfloat)from.a3; to[2][1] = (GLfloat)from.b3;  to[2][2] = (GLfloat)from.c3;
-	return to;
-}
 glm::mat4	aiMat4ToGlmMat4(aiMatrix4x4 from)
 {
 	glm::mat4	to;
@@ -199,7 +191,6 @@ glm::quat	Model::_CalcInterpolatedRotation(float animationTime, std::shared_ptr<
 		return nodeAnim->rotationKeys[0].value;
 
 	unsigned int rotationIndex = _FindKeys(animationTime, nodeAnim, ROTATION);
-	std::cout << rotationIndex<< std::endl;
 	unsigned int nextRotationIndex = rotationIndex + 1;
 
 	float delta = nodeAnim->rotationKeys[nextRotationIndex].time - nodeAnim->rotationKeys[rotationIndex].time;
