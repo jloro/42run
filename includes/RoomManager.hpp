@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 13:02:29 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 16:31:20 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class RoomManager : public GameObject
 		const static unsigned int	maxRooms;
 
 		void	Reset();
+		void	Stop();
 	private:
 		glm::vec3		_nextPos;
 		glm::vec3				_nextRot;
@@ -47,6 +48,7 @@ class RoomManager : public GameObject
 		float	_rotateWay;
 
 		bool					_cornerSpawned;
+		bool	_stop;
 
 		void					_AddCorridor();
 		void					_AddCorner(bool left);

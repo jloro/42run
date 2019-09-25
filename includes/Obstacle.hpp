@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 10:16:08 by jules             #+#    #+#             */
-/*   Updated: 2019/09/25 13:18:53 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 16:46:54 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ class Obstacle : public GameObject
 		std::list<std::shared_ptr<GameObject>>  _obstacles;
 
 		void	Reset();
+		void	Stop();
 	private:
 		bool					_canAdd;
 		std::list<std::shared_ptr<GameObject>>  _pillar;
 		std::list<std::shared_ptr<GameObject>>  _jumpOver;
+		bool					_stop;
 
 		void					_AddObstacle(bool pillar);
 };

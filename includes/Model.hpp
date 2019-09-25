@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 15:18:55 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 16:42:38 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Model
 		void			PauseAnimation(void);
 		void			PlayAnimation(void);
 		void			AddAnimation(const char* path);
+		void			ChangeAnimation(unsigned int anim);
         Model & operator=(const Model &rhs);
 		glm::vec3 GetMin(void) const;
 		glm::vec3 GetMax(void) const;
@@ -51,10 +52,10 @@ class Model
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
 		std::vector<std::shared_ptr<Animation>>	_animations;
+		unsigned int			_currentAnimation;
+		float					_chrono;
 		std::shared_ptr<Node>	_skeleton;
 		glm::mat4				_globalTransform;
-		Uint32					_pauseTime;
-		Uint32					_tmpPauseTimer;
 		bool					_playing;
 		glm::vec3				_min;
 		glm::vec3				_max;

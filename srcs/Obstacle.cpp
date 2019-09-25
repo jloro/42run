@@ -3,7 +3,7 @@
 #include "BoxCollider.hpp"
 #include "GameManager.hpp"
 
-Obstacle::Obstacle() : _canAdd(true)
+Obstacle::Obstacle() : _canAdd(true), _stop(false)
 {
 	std::vector<const char *>	shadersPath{ "shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
@@ -38,8 +38,13 @@ Obstacle::Obstacle() : _canAdd(true)
 
 Obstacle::~Obstacle() {}
 
+void	Obstacle::Stop()
+{
+	_stop = true;
+}
 void	Obstacle::Reset()
 {
+	_stop = false;
 	_canAdd = true;
 	_obstacles.clear();
 	for (auto it = _pillar.begin(); it != _pillar.end(); it++)
@@ -70,7 +75,8 @@ void	Obstacle::Update()
 				_obstacles.erase(it);
 				continue;
 			}
-			(*it)->GetTransform()->position.z -= GameManager::speedWorld * Engine42::Time::GetDeltaTime();
+			if (!_stop)
+				(*it)->GetTransform()->position.z -= GameManager::speedWorld * Engine42::Time::GetDeltaTime();
 		}
 	}
 	//std::cout << std::endl;

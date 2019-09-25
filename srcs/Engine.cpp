@@ -220,7 +220,11 @@ void                         Engine42::Engine::_RenderAll(void)
     if (_skybox != nullptr)
         _skybox->Draw();
     for (auto it = _renderers.begin(); it != _renderers.end(); it++)
+	{
          (*it)->Draw();
+		 if (_clear)
+			 return;
+	}
     for (auto it = _UI.begin(); it != _UI.end(); it++)
          (*it)->Update();
 	_win->Swap();

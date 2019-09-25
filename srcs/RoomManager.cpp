@@ -6,7 +6,7 @@
 #include "GameManager.hpp"
 const unsigned int	RoomManager::maxRooms = 15;
 
-RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _cornerSpawned(true)
+RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _cornerSpawned(true), _stop(false)
 {
 	_rotate = false;
 	_nextRot = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -42,6 +42,7 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 
 void	RoomManager::Reset()
 {
+	_stop = false;
 	_nbRooms = 0;
 	_rooms.clear();
 	_rotate = false;
@@ -108,6 +109,10 @@ void	RoomManager::_Init()
 }
 RoomManager::~RoomManager() {}
 
+void	RoomManager::Stop()
+{
+	_stop = true;
+}
 void	RoomManager::Update()
 {
 	if (_nbRooms < maxRooms)
@@ -145,10 +150,12 @@ void	RoomManager::Update()
 			_nbRooms--;
 			continue;
 		}
-		(*it)->GetTransform()->position -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
+		if (!_stop)
+			(*it)->GetTransform()->position -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
 		(*it)->GetTransform()->UpdateMatrix();
 	}
-	_nextPos -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
+	if (!_stop)
+		_nextPos -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
 }
 
 void	RoomManager::FixedUpdate()

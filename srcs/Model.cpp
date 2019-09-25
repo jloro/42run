@@ -6,20 +6,22 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 16:02:04 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 17:15:30 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Model.hpp"
 #include <iostream>
 #include <assimp/postprocess.h>
+#include <cmath>
 # ifndef STB_IMAGE_IMPLEMENTATION
 #  define STB_IMAGE_IMPLEMENTATION
 # endif
-#include "stb_image.h"
-#include <cmath>
 #include <cstdlib>
 #include "PrintGlm.hpp"
+#include "Engine.hpp"
+#include "GameManager.hpp"
+
 Model::Model(void)
 {
 }
@@ -52,20 +54,28 @@ void	Model::AddAnimation(const char* path)
 void	Model::Draw(const std::shared_ptr<Shader>  shader)
 {
 	if (_hasAnim &&_playing)
-		_BoneTransform((((float)SDL_GetTicks()) / 1000) - _pauseTime, shader);
+	{
+		_BoneTransform(_chrono, shader);
+		_chrono += Engine42::Time::GetDeltaTime();
+		if (_currentAnimation == 1 && _chrono >= _animations[_currentAnimation]->duration / _animations[_currentAnimation]->ticksPerSecond)
+			GameManager::instance->Reset();
+	}
 	for (unsigned int i = 0; i < _meshes.size(); i++)
 		_meshes[i].Draw(shader);
 }
 void	Model::PauseAnimation()
 {
 	_playing = false;
-	_tmpPauseTimer = (((float)SDL_GetTicks()) / 1000);
 }
 void	Model::PlayAnimation()
 {
 	_playing = true;
-	_pauseTime += (((float)SDL_GetTicks()) / 1000) - _tmpPauseTimer;
 
+}
+void	Model::ChangeAnimation(unsigned int anim)
+{
+	_chrono = 0;
+	_currentAnimation = anim;
 }
 Model & Model::operator=(const Model &rhs)
 {
@@ -90,11 +100,11 @@ glm::vec3 Model::GetMax(void) const { return _max; }
 
 void	Model::_LoadModel(std::string path)
 {
-	_pauseTime = 0.0f;
 	_playing = true;
 	_scene = _importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 	_min = glm::vec3(0.0f);
 	_max = glm::vec3(0.0f);
+	_chrono = 0.0f;
 
 	if (_scene->HasAnimations())
 		std::cout << "Has animations"<< std::endl;
@@ -105,6 +115,7 @@ void	Model::_LoadModel(std::string path)
 		_skeleton.reset(new Node(_scene->mRootNode));
 		_animations.push_back(std::shared_ptr<Animation>(new Animation(_scene->mAnimations[0])));
 		_hasAnim = true;
+		_currentAnimation = 0;
 	}
 
 	/*
@@ -135,9 +146,9 @@ void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
 #include "PrintGlm.hpp"
 void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader)
 {
-	float ticksPerSecond = _animations[0]->ticksPerSecond != 0 ? _animations[0]->ticksPerSecond : 25.0f;
+	float ticksPerSecond = _animations[_currentAnimation]->ticksPerSecond != 0 ? _animations[_currentAnimation]->ticksPerSecond : 25.0f;
 	float timeInTicks = timeInSecond * ticksPerSecond;
-	float animationTime = fmod(timeInTicks, _animations[0]->duration);
+	float animationTime = fmod(timeInTicks, _animations[_currentAnimation]->duration);
 
 	_ReadNodeHierarchy(animationTime, _skeleton, glm::mat4(1.0f));
 
@@ -242,7 +253,7 @@ aiVector3D		Model::_CalcInterpolatedScaling(float animationTime, const aiNodeAni
 void	Model::_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, const glm::mat4 parentTransform)
 {
 	std::string nodeName = node->name;
-	std::shared_ptr<Animation> animation = _animations[0];
+	std::shared_ptr<Animation> animation = _animations[_currentAnimation];
 	std::shared_ptr<NodeAnim> nodeAnim = FindNodeAnim(animation, nodeName);
 
 	glm::mat4	nodeTransform = node->transform;

@@ -25,8 +25,13 @@ void	GameManager::Update()
 	{
 		if ((*it)->GetComponent<MeshRenderer>()->IsRender() && _player->GetComponent<ACollider>()->IsCollindingWith(*(*it)->GetComponent<ACollider>()))
 		{
-			Engine42::Engine::Clear();
-			_Start();
+			(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+			(*it)->GetComponent<MeshRenderer>()->Destroy();
+			_obstacle->_obstacles.erase(it);
+			_player->_character->ChangeAnimation(1);
+			_player->SetDead(true);
+			_rooms->Stop();
+			_obstacle->Stop();
 			break;
 		}
 	}
@@ -37,8 +42,11 @@ void	GameManager::FixedUpdate()
 	
 }
 
-void	GameManager::_Start()
+void	GameManager::Reset()
 {
+	Engine42::Engine::Clear();
+	_player->SetDead(false);
+	_player->_character->ChangeAnimation(0);
 	_rooms->Reset();
 	Engine42::Engine::AddGameObject(_rooms);
 	Engine42::Engine::AddGameObject(Camera::instance);
@@ -48,11 +56,4 @@ void	GameManager::_Start()
 	Engine42::Engine::AddGameObject(_player);
 	Engine42::Engine::AddRenderer(_player->GetComponent<MeshRenderer>());
 	Engine42::Engine::AddGameObject(instance);
-	/*
-	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
-	Engine42::Engine::AddUIElement(fps);
-	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight(), false));
-	Engine42::Engine::AddGameObject(player);
-	Engine42::Engine::AddGameObject(cam);
-	*/
 }
