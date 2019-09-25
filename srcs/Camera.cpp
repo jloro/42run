@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 13:55:18 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 14:10:54 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ Camera::Camera(float width, float height, bool freeFlight) : _moveSpeed(MOVE_SPE
 		_dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	_CalcMatrix();
 }
+
+Camera::~Camera() {}
 
 glm::mat4	Camera::GetMatView(void) const { return _view; }
 glm::mat4	Camera::GetMatProj(void) const { return _projection; }

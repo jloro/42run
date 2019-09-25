@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/22 18:05:50 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/25 15:02:34 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ void	Model::_LoadModel(std::string path)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
 	if (_scene->HasAnimations())
 	{
-		//_animations.push_back(std::shared_ptr<aiAnimation*>(_scene->mAnimations[0]));
+		_skeleton.reset(new Node(_scene->mRootNode));
+		_animations.push_back(std::shared_ptr<Animation>(new Animation(_scene->mAnimations[0])));
 		_hasAnim = true;
 	}
 
@@ -142,9 +143,9 @@ void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
 #include "PrintGlm.hpp"
 void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader)
 {
-	float ticksPerSecond = _scene->mAnimations[0]->mTicksPerSecond != 0 ? _scene->mAnimations[0]->mTicksPerSecond : 25.0f;
+	float ticksPerSecond = _animations[0]->ticksPerSecond != 0 ? _animations[0]->ticksPerSecond : 25.0f;
 	float timeInTicks = timeInSecond * ticksPerSecond;
-	float animationTime = fmod(timeInTicks, _scene->mAnimations[0]->mDuration);
+	float animationTime = fmod(timeInTicks, _animations[0]->duration);
 
 	_ReadNodeHierarchy(animationTime, _scene->mRootNode, glm::mat4(1.0f));
 
@@ -157,86 +158,86 @@ void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  sh
 const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName)
 {
 	for (uint i = 0 ; i < pAnimation->mNumChannels ; i++) {
-		if (std::string(pAnimation->mChannels[i]->mNodeName.data) == NodeName) {
-			return pAnimation->mChannels[i];
-		}
-	}
-
-	return NULL;
-}
-
-unsigned int	Model::_FindKeys(float animationTime, const aiNodeAnim* nodeAnim, int state) const
-{
-	if (state == ROTATION)
-	{
-		for (unsigned int i = 0 ; i < nodeAnim->mNumRotationKeys - 1 ; i++) {
-			if (animationTime < (float)nodeAnim->mRotationKeys[i + 1].mTime) {
-				return i;
+			if (std::string(pAnimation->mChannels[i]->mNodeName.data) == NodeName) {
+				return pAnimation->mChannels[i];
 			}
 		}
+
+		return NULL;
 	}
-	else if (state == TRANSLATION)
+
+	unsigned int	Model::_FindKeys(float animationTime, const aiNodeAnim* nodeAnim, int state) const
 	{
-		for (unsigned int i = 0 ; i < nodeAnim->mNumPositionKeys - 1 ; i++) {
-			if (animationTime < (float)nodeAnim->mPositionKeys[i + 1].mTime) {
-				return i;
+		if (state == ROTATION)
+		{
+			for (unsigned int i = 0 ; i < nodeAnim->mNumRotationKeys - 1 ; i++) {
+				if (animationTime < (float)nodeAnim->mRotationKeys[i + 1].mTime) {
+					return i;
+				}
 			}
 		}
-	}
-	else
-	{
-		for (unsigned int i = 0 ; i < nodeAnim->mNumScalingKeys - 1 ; i++) {
-			if (animationTime < (float)nodeAnim->mScalingKeys[i + 1].mTime) {
-				return i;
+		else if (state == TRANSLATION)
+		{
+			for (unsigned int i = 0 ; i < nodeAnim->mNumPositionKeys - 1 ; i++) {
+				if (animationTime < (float)nodeAnim->mPositionKeys[i + 1].mTime) {
+					return i;
+				}
 			}
 		}
+		else
+		{
+			for (unsigned int i = 0 ; i < nodeAnim->mNumScalingKeys - 1 ; i++) {
+				if (animationTime < (float)nodeAnim->mScalingKeys[i + 1].mTime) {
+					return i;
+				}
+			}
+		}
+		return 0;
 	}
-	return 0;
-}
-aiQuaternion	Model::_CalcInterpolatedRotation(float animationTime, const aiNodeAnim* nodeAnim) const
-{
-	if (nodeAnim->mNumRotationKeys == 1)
-		return nodeAnim->mRotationKeys[0].mValue;
+	aiQuaternion	Model::_CalcInterpolatedRotation(float animationTime, const aiNodeAnim* nodeAnim) const
+	{
+		if (nodeAnim->mNumRotationKeys == 1)
+			return nodeAnim->mRotationKeys[0].mValue;
 
-	unsigned int rotationIndex = _FindKeys(animationTime, nodeAnim, ROTATION);
-	unsigned int nextRotationIndex = rotationIndex + 1;
+		unsigned int rotationIndex = _FindKeys(animationTime, nodeAnim, ROTATION);
+		unsigned int nextRotationIndex = rotationIndex + 1;
 
-	float delta = nodeAnim->mRotationKeys[nextRotationIndex].mTime - nodeAnim->mRotationKeys[rotationIndex].mTime;
-	float factor = (animationTime - (float)nodeAnim->mRotationKeys[rotationIndex].mTime) / delta;
+		float delta = nodeAnim->mRotationKeys[nextRotationIndex].mTime - nodeAnim->mRotationKeys[rotationIndex].mTime;
+		float factor = (animationTime - (float)nodeAnim->mRotationKeys[rotationIndex].mTime) / delta;
 
-	const aiQuaternion start = nodeAnim->mRotationKeys[rotationIndex].mValue;
-	const aiQuaternion end = nodeAnim->mRotationKeys[nextRotationIndex].mValue;
+		const aiQuaternion start = nodeAnim->mRotationKeys[rotationIndex].mValue;
+		const aiQuaternion end = nodeAnim->mRotationKeys[nextRotationIndex].mValue;
 
-	aiQuaternion ret;
-	aiQuaternion::Interpolate(ret, start, end, factor);
-	return ret.Normalize();
-}
+		aiQuaternion ret;
+		aiQuaternion::Interpolate(ret, start, end, factor);
+		return ret.Normalize();
+	}
 
-aiVector3D		Model::_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const
-{
-	if (nodeAnim->mNumPositionKeys == 1)
-		return nodeAnim->mPositionKeys[0].mValue;
+	aiVector3D		Model::_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const
+	{
+		if (nodeAnim->mNumPositionKeys == 1)
+			return nodeAnim->mPositionKeys[0].mValue;
 
-	unsigned int positionIndex = _FindKeys(animationTime, nodeAnim, TRANSLATION);
-	unsigned int nextPositionIndex = positionIndex + 1;
+		unsigned int positionIndex = _FindKeys(animationTime, nodeAnim, TRANSLATION);
+		unsigned int nextPositionIndex = positionIndex + 1;
 
-	float delta = nodeAnim->mPositionKeys[nextPositionIndex].mTime - nodeAnim->mPositionKeys[positionIndex].mTime;
-	float factor = (animationTime - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / delta;
+		float delta = nodeAnim->mPositionKeys[nextPositionIndex].mTime - nodeAnim->mPositionKeys[positionIndex].mTime;
+		float factor = (animationTime - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / delta;
 
-	const aiVector3D start = nodeAnim->mPositionKeys[positionIndex].mValue;
-	const aiVector3D end = nodeAnim->mPositionKeys[nextPositionIndex].mValue;
+		const aiVector3D start = nodeAnim->mPositionKeys[positionIndex].mValue;
+		const aiVector3D end = nodeAnim->mPositionKeys[nextPositionIndex].mValue;
 
-	aiVector3D	vec = end - start;
-	return (start + vec * factor).Normalize();
-}
+		aiVector3D	vec = end - start;
+		return (start + vec * factor).Normalize();
+	}
 
-aiVector3D		Model::_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const
-{
-	if (nodeAnim->mNumScalingKeys == 1)
-		return nodeAnim->mScalingKeys[0].mValue;
+	aiVector3D		Model::_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const
+	{
+		if (nodeAnim->mNumScalingKeys == 1)
+			return nodeAnim->mScalingKeys[0].mValue;
 
-	unsigned int scalingIndex = _FindKeys(animationTime, nodeAnim, SCALING);
-	unsigned int nextScalingIndex = scalingIndex + 1;
+		unsigned int scalingIndex = _FindKeys(animationTime, nodeAnim, SCALING);
+		unsigned int nextScalingIndex = scalingIndex + 1;
 
 	float delta = nodeAnim->mScalingKeys[nextScalingIndex].mTime - nodeAnim->mScalingKeys[scalingIndex].mTime;
 	float factor = (animationTime - (float)nodeAnim->mScalingKeys[scalingIndex].mTime) / delta;
@@ -323,7 +324,7 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	std::vector<unsigned int>	faces;
 	std::vector<Texture>	textures;
 
-	std::cout <<  "Load mesh" << std::endl;
+//	std::cout <<  "Load mesh" << std::endl;
 	//Get vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{

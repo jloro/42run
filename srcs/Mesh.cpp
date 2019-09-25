@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 11:31:23 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/17 11:44:11 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/25 14:11:44 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	Mesh::SendToOpenGL()
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
 	glBindVertexArray(0);
-	std::cout << "send to opengl" << std::endl;
+//	std::cout << "send to opengl" << std::endl;
 }
 
 void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const

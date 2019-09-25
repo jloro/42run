@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/22 15:52:39 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/25 15:02:05 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <map>
 # include <assimp/Importer.hpp>
 # include "SDL.h"
+# include "Animation.hpp"
+# include "Node.hpp"
 
 # define ROTATION 0
 # define SCALING 1
@@ -40,7 +42,6 @@ class Model
 		void			PlayAnimation(void);
 		void			AddAnimation(const char* path);
         Model & operator=(const Model &rhs);
-		std::shared_ptr<Shader>	_shaderCollider;
 		glm::vec3 GetMin(void) const;
 		glm::vec3 GetMax(void) const;
 	protected:
@@ -49,7 +50,8 @@ class Model
 		std::string			_dir;
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
-		std::vector<std::shared_ptr<const aiAnimation*>>	_animations;
+		std::vector<std::shared_ptr<Animation>>	_animations;
+		std::shared_ptr<Node>	_skeleton;
 		glm::mat4				_globalTransform;
 		Uint32					_pauseTime;
 		Uint32					_tmpPauseTimer;
