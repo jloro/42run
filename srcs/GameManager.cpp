@@ -13,9 +13,21 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	_score = 0;
 	_rooms.reset(new RoomManager);
 	Engine42::Engine::AddGameObject(_rooms);
+	if ((_music = Mix_LoadMUS("ressources/music01.wav")) == NULL)
+	{
+		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
+	}
+	else if (Mix_PlayMusic(_music, -1) < 0)
+	{
+		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
+	}
 }
 
-GameManager::~GameManager() {}
+GameManager::~GameManager() 
+{
+	Mix_FreeMusic(_music);
+	_music = NULL;
+}
 
 void	GameManager::Update()
 {
@@ -55,4 +67,8 @@ void	GameManager::Reset()
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
 	Engine42::Engine::AddGameObject(instance);
+	if (_music != NULL)
+	{
+		Mix_PlayMusic(_music, -1);
+	}
 }

@@ -11,6 +11,7 @@
 #include "Player.hpp"
 #include "FpsDisplay.hpp"
 #include "GameManager.hpp"
+#include "SDL_mixer.h"
 
 std::shared_ptr<Skybox> CreateSkyBox()
 {
@@ -57,15 +58,30 @@ int ErrorQuit(std::string txt1, std::string txt2)
 	SDL_Quit();
 	return (EXIT_SUCCESS);
 }
-
-int				main(int ac, char **av)
+bool initSDL()
 {
-	if (ac < -1 && av == nullptr)
-		return 1;
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
-		return ErrorQuit("Erreur lors de l'initialisation de la SDL :", SDL_GetError() );
+		ErrorQuit("Erreur lors de l'initialisation de la SDL :", SDL_GetError());
+		return false;
 	}
+	if (Mix_Init(MIX_INIT_OGG) == -1)
+	{
+		ErrorQuit("SDL_Mixer  error :", Mix_GetError());
+		return false;
+	}
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048))
+	{
+		ErrorQuit("SDL_Mixer error :", Mix_GetError());
+		return false;
+	}
+	return true;
+}
+
+int				main(void)
+{
+	if (!initSDL())
+		return EXIT_SUCCESS;
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 	{
