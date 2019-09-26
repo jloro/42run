@@ -24,7 +24,7 @@ Obstacle::Obstacle()
 		go->AddComponent(renderer);
 		_pillar.push_back(go);
 	}
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 40; i++)
 	{
 		std::shared_ptr<GameObject> go(new GameObject(croissantTransform));
 		std::shared_ptr<ARenderer> renderer(new MeshRenderer(modelCroissant, myShader, nullptr, false));
@@ -69,6 +69,8 @@ void	Obstacle::FixedUpdate()
 void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 {
 	std::list<std::shared_ptr<GameObject>>::iterator it, end;
+	int max = 0;
+	int i = 0;
 	if (pillar)
 	{
 		it = _pillar.begin();
@@ -78,6 +80,7 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 	{
 		it = _jumpOver.begin();
 		end = _jumpOver.end();
+		max = 2;
 	}
 
 	for (;it != end; it++)
@@ -86,11 +89,16 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 		{
 			(*it)->GetTransform()->parent = parent;
 			(*it)->GetTransform()->position.z = 0.0f;
-			(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* (rand() % 3 - 1);
+			if (pillar)
+				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* (rand() % 3 - 1);
+			else
+				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* (i - 1);
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
 			obstacles.push_back(*it);
-			break;
+			if (pillar || i == max)
+				break;
+			i++;
 		}
 	}
 }
