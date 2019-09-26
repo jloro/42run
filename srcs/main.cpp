@@ -11,7 +11,6 @@
 #include "Player.hpp"
 #include "FpsDisplay.hpp"
 #include "GameManager.hpp"
-#include "Room.hpp"
 
 std::shared_ptr<Skybox> CreateSkyBox()
 {

@@ -14,7 +14,6 @@
 #ifndef CHARACTER_HPP
 # define CHARACTER_HPP
 
-# include "Renderer.hpp"
 # include "GameObject.hpp"
 # include "Model.hpp"
 

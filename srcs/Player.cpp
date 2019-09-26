@@ -22,7 +22,11 @@ void    Player::FixedUpdate(void)
 }
 
 bool	Player::GetDead() const { return _dead; }
-void	Player::SetDead(bool dead) { _dead = dead; }
+void	Player::SetDead(bool dead)
+{
+	_dead = dead;
+	_character->PlayAnimation();
+}
 int		Player::GetRow() const
 {
 	if (_transform->position.x < ROW_WIDTH && _transform->position.x > -ROW_WIDTH)

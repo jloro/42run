@@ -14,7 +14,6 @@
 # define GAMEMANAGER_HPP
 
 # include "Model.hpp"
-# include "Renderer.hpp"
 # include <list>
 # include "MeshRenderer.hpp"
 # include "Player.hpp"
