@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 17:15:30 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 10:17:29 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <cstdlib>
 #include "PrintGlm.hpp"
 #include "Engine.hpp"
-#include "GameManager.hpp"
 
 Model::Model(void)
 {
@@ -57,8 +56,6 @@ void	Model::Draw(const std::shared_ptr<Shader>  shader)
 	{
 		_BoneTransform(_chrono, shader);
 		_chrono += Engine42::Time::GetDeltaTime();
-		if (_currentAnimation == 1 && _chrono >= _animations[_currentAnimation]->duration / _animations[_currentAnimation]->ticksPerSecond)
-			GameManager::instance->Reset();
 	}
 	for (unsigned int i = 0; i < _meshes.size(); i++)
 		_meshes[i].Draw(shader);
@@ -95,8 +92,11 @@ glm::mat4	aiMat4ToGlmMat4(aiMatrix4x4 from)
 	return to;
 }
 
-glm::vec3 Model::GetMin(void) const { return _min; }
-glm::vec3 Model::GetMax(void) const { return _max; }
+glm::vec3	Model::GetMin(void) const { return _min; }
+glm::vec3	Model::GetMax(void) const { return _max; }
+float		Model::GetChrono(void) const { return _chrono; }
+unsigned int	Model::GetCurrentAnimation(void) const { return _currentAnimation; }
+const std::shared_ptr<Animation>	Model::GetAnimation(unsigned int i) const { return _animations[i]; }
 
 void	Model::_LoadModel(std::string path)
 {

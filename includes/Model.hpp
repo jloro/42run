@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 16:42:38 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 10:13:56 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,11 @@ class Model
 		void			AddAnimation(const char* path);
 		void			ChangeAnimation(unsigned int anim);
         Model & operator=(const Model &rhs);
-		glm::vec3 GetMin(void) const;
-		glm::vec3 GetMax(void) const;
+		glm::vec3		GetMin(void) const;
+		glm::vec3		GetMax(void) const;
+		float			GetChrono() const;
+		unsigned int	GetCurrentAnimation() const;
+		const std::shared_ptr<Animation>	GetAnimation(unsigned int i) const;
 	protected:
 /*  protected variables    */
 		std::vector<Mesh>	_meshes;

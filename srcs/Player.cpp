@@ -2,6 +2,7 @@
 #include "Engine.hpp"
 #include "gtx/compatibility.hpp"
 #include "BoxCollider.hpp"
+#include "GameManager.hpp"
 
 Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : GameObject(transform), _character(character), _jump(false), _dead(false)
 {
@@ -49,6 +50,11 @@ void    Player::Update(void)
 			_jumpState = FALLING;
 			_velocityY = 30.0f;
 		}
+	}
+	else
+	{
+		if (_character->GetCurrentAnimation() == 1 && _character->GetChrono() >= _character->GetAnimation(1)->duration / _character->GetAnimation(1)->ticksPerSecond)
+			GameManager::instance->Reset();
 	}
 	if (_jump && _jumpState == FALLING)
 		_transform->position.y -= _velocityY * Engine42::Time::GetDeltaTime();
