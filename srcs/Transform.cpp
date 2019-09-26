@@ -53,6 +53,17 @@ glm::mat4       Transform::GetLocalMatrix(void) const
     return _localMatrix;
 }
 
+glm::vec3		Transform::GetWorldPos(void) const
+{
+	return GetMatrix()[3];
+}
+
+glm::vec3		Transform::GetWorldScale(void) const
+{
+    if (parent != nullptr)
+        return parent->GetWorldScale() * scale;
+    return scale;
+}
 glm::mat4       Transform::GetMatrix(void) const
 {
     if (parent != nullptr)

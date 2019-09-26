@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/26 14:21:08 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 17:59:21 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "GameObject.hpp"
 # include "Model.hpp"
+# include "Obstacle.hpp"
 
 class RoomManager : public GameObject
 {
@@ -38,12 +39,13 @@ class RoomManager : public GameObject
 		void	Stop();
 
 		bool	GetCornerSpawned() const;
+		std::shared_ptr<Obstacle>	obstacles;
 	private:
 		glm::vec3		_nextPos;
 		glm::vec3				_nextRot;
 		glm::vec3				_wayPlacement;
 		glm::vec3				_way;
-		bool	_rotate;
+		int			_rotate;//0 = not rotate, 1 = rotating, 2 = has rotate
 		std::shared_ptr<Model>	_corridor;
 		std::shared_ptr<Model>	_corner;
 		unsigned int			_nbRooms;

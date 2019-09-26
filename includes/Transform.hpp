@@ -26,6 +26,8 @@ struct Transform
     virtual glm::mat4       GetMatrix(void) const;
     virtual void            SetLocalMatrix(glm::mat4 matrix);
     virtual void            UpdateMatrix(void);
+	virtual	glm::vec3		GetWorldPos(void) const;
+	virtual	glm::vec3		GetWorldScale(void) const;
 
 /*  public functions    */
     std::string  toString(void) const;

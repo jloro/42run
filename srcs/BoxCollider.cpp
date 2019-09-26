@@ -21,17 +21,15 @@ BoxCollider::~BoxCollider(void)
 {
     
 }
-
+#include "PrintGlm.hpp"
 bool BoxCollider::IsCollindingWith(ACollider &other) const
 {
-	glm::vec3 scale = _transform->scale * this->scale;
-	glm::vec3 otherScale = other.GetTransform()->scale * other.scale;
-	glm::vec3 centerWorldPos = center * scale + _transform->position;
-	glm::vec3 otherCenterWorldPos = other.center * otherScale + other.GetTransform()->position;
+	glm::vec3 scale = _transform->GetWorldScale() * this->scale;
+	glm::vec3 otherScale = other.GetTransform()->GetWorldScale() * other.scale;
+	glm::vec3 centerWorldPos = center * scale + _transform->GetWorldPos();
+	glm::vec3 otherCenterWorldPos = other.center * otherScale + other.GetTransform()->GetWorldPos();
 	glm::vec3 sizeWorld = (size * scale) / 2.0f;
-	sizeWorld = glm::rotate(sizeWorld, glm::radians(_transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	sizeWorld = glm::rotate(sizeWorld, glm::radians(_transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	sizeWorld = glm::rotate(sizeWorld, glm::radians(_transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	sizeWorld = glm::abs(glm::rotate(glm::vec3(sizeWorld.x, 0.0f, 0.0f), glm::radians(_transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) + glm::rotate(glm::vec3(0.0f, sizeWorld.y, 0.0f), glm::radians(_transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) + glm::rotate(glm::vec3(0.0f, 0.0f, sizeWorld.z), glm::radians(_transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)));
 	glm::vec3 otherSizeWorld = (other.size * otherScale) / 2.0f;
 	otherSizeWorld = glm::abs(glm::rotate(glm::vec3(otherSizeWorld.x, 0.0f, 0.0f), glm::radians(other.GetTransform()->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) + glm::rotate(glm::vec3(0.0f, otherSizeWorld.y, 0.0f), glm::radians(other.GetTransform()->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) + glm::rotate(glm::vec3(0.0f, 0.0f, otherSizeWorld.z), glm::radians(other.GetTransform()->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)));
 	if (abs(centerWorldPos.x - otherCenterWorldPos.x) < sizeWorld.x + otherSizeWorld.x)

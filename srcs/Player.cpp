@@ -29,9 +29,9 @@ void	Player::SetDead(bool dead)
 }
 int		Player::GetRow() const
 {
-	if (_transform->position.x < ROW_WIDTH && _transform->position.x > -ROW_WIDTH)
+	if (_transform->position.x < ROW_WIDTH / 2.0f && _transform->position.x > -ROW_WIDTH / 2.0f)
 		return 1;
-	else if (_transform->position.x < -ROW_WIDTH)
+	else if (_transform->position.x > ROW_WIDTH / 2.0f)
 		return 0;
 	else
 		return 2;
@@ -39,7 +39,6 @@ int		Player::GetRow() const
 
 void    Player::Update(void)
 {
-	std::cout << GetRow()<< std::endl;
 	if (!_dead)
 	{
 		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && _transform->position.x > -ROW_WIDTH * 2.0f)

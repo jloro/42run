@@ -13,6 +13,8 @@ enum class eTags
 	Corner = 1 << 1,
 	Corridor = 1 << 2,
 	Player = 1 << 3,
+	CornerLeft = 1 << 4,
+	CornerRight = 1 << 5,
 };
 
 class GameObject

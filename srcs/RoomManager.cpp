@@ -8,7 +8,9 @@ const unsigned int	RoomManager::maxRooms = 15;
 
 RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _cornerSpawned(true), _stop(false)
 {
-	_rotate = false;
+	obstacles.reset(new Obstacle);
+	Engine42::Engine::AddGameObject(obstacles);
+	_rotate = 0;
 	_nextRot = glm::vec3(0.0f, 0.0f, 0.0f);
 	_nextPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	_way = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -42,10 +44,12 @@ RoomManager::RoomManager() : _nbRooms(0), _rotationMax(-90), _rotateWay(2.0f), _
 
 void	RoomManager::Reset()
 {
+	obstacles->Reset();
+	Engine42::Engine::AddGameObject(obstacles);
 	_stop = false;
 	_nbRooms = 0;
 	_rooms.clear();
-	_rotate = false;
+	_rotate = 0;
 	_nextRot = glm::vec3(0.0f, 0.0f, 0.0f);
 	_nextPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	_way = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -75,7 +79,7 @@ void	RoomManager::Reset()
 void	RoomManager::_Init()
 {
 
-	for (auto it = corridors.begin(); it != corridors.end() && _nbRooms < maxRooms - 1; it++)
+	for (auto it = corridors.begin(); it != corridors.end() && _nbRooms < 3; it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
@@ -87,10 +91,11 @@ void	RoomManager::_Init()
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 		}
 	}
-	for (auto it = corners.begin(); it != corners.end() && _nbRooms < maxRooms; it++)
+	for (auto it = corners.begin(); it != corners.end(); it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
 		{
+			(*it)->SetTag(static_cast<eTags>(static_cast<int>(eTags::Corner) | static_cast<int>(eTags::CornerLeft)));
 			_rooms.push_back((*it));
 			(*it)->GetTransform()->position = _nextPos + _wayPlacement * 80.0f;
 			_nextPos += _wayPlacement * 80.0f;
@@ -104,6 +109,7 @@ void	RoomManager::_Init()
 				_nextPos.x += _wayPlacement.x < 0.0f ? -80.0f : 80.0f;
 			else
 				_nextPos.z += _wayPlacement.z < 0.0f ? -80.0f : 80.0f;
+			break;
 		}
 	}
 }
@@ -115,47 +121,52 @@ void	RoomManager::Stop()
 }
 void	RoomManager::Update()
 {
-	if (_nbRooms < maxRooms)
-	{
-		if (rand() % 100 > 90 && !_cornerSpawned)
-			_AddCorner(static_cast<bool>(rand() % 2));
-		else
-			_AddCorridor();
-	}
-	if (_rotate)
-	{
-		_transform->rotation.y -= _rotateWay;
-		_transform->UpdateMatrix();
-	}
-	for (auto it = _rooms.begin(); it != _rooms.end(); it++)
-	{
-		glm::vec3 tmp = (*it)->GetTransform()->position * _way;
-		if (tmp.x + tmp.y + tmp.z < 40 && (*it)->GetTag() == eTags::Corner)
-		{
-			if (_transform->rotation.y < _rotationMax || _transform->rotation.y > _rotationMax)
-			{
-				_rotate = true;
-				_way = glm::rotate(_way, glm::radians(_rotateWay), glm::vec3(0.0f, 1.0f, 0.0f));
-			}
-			else
-				_rotate = false;
-		}
-		if (tmp.x + tmp.y + tmp.z < -240)
-		{
-			if ((*it)->GetTag() == eTags::Corner)
-				_cornerSpawned = false;
-			(*it)->GetComponent<MeshRenderer>()->SetRender(false);
-			(*it)->GetComponent<MeshRenderer>()->Destroy();
-			_rooms.erase(it);
-			_nbRooms--;
-			continue;
-		}
-		if (!_stop)
-			(*it)->GetTransform()->position -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
-		(*it)->GetTransform()->UpdateMatrix();
-	}
 	if (!_stop)
+	{
+		if (_nbRooms < maxRooms)
+		{
+			if (rand() % 100 > 90 && !_cornerSpawned)
+				_AddCorner(static_cast<bool>(rand() % 2));
+			else
+				_AddCorridor();
+		}
+		if (_rotate == 1)
+		{
+			_transform->rotation.y -= _rotateWay;
+			_transform->UpdateMatrix();
+		}
+		for (auto it = _rooms.begin(); it != _rooms.end(); it++)
+		{
+			glm::vec3 tmp = (*it)->GetTransform()->position * _way;
+			if (tmp.x + tmp.y + tmp.z < 40 && (static_cast<int>((*it)->GetTag()) & static_cast<int>(eTags::Corner)) != 0)
+			{
+				if (((GameManager::instance->player->GetRow() != 0 && (static_cast<int>((*it)->GetTag()) & static_cast<int>(eTags::CornerLeft)) != 0) || (GameManager::instance->player->GetRow() != 2 && (static_cast<int>((*it)->GetTag()) & static_cast<int>(eTags::CornerRight)) != 0)) && _rotate == 0)
+					GameManager::instance->Die();
+				if ((_transform->rotation.y < _rotationMax || _transform->rotation.y > _rotationMax) && !GameManager::instance->player->GetDead())
+				{
+					_rotate = 1;
+					_way = glm::rotate(_way, glm::radians(_rotateWay), glm::vec3(0.0f, 1.0f, 0.0f));
+				}
+				else
+					_rotate = 2;
+			}
+			if (tmp.x + tmp.y + tmp.z < -240)
+			{
+				if ((static_cast<int>((*it)->GetTag()) & static_cast<int>(eTags::Corner)) != 0)
+				{
+					_cornerSpawned = false;
+					_rotate = 0;
+				}
+				(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+				(*it)->GetComponent<MeshRenderer>()->Destroy();
+				_rooms.erase(it);
+				_nbRooms--;
+				continue;
+			}
+			(*it)->GetTransform()->position -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
+		}
 		_nextPos -= _way * static_cast<float>(GameManager::speedWorld) * Engine42::Time::GetDeltaTime();
+	}
 }
 
 void	RoomManager::FixedUpdate()
@@ -171,6 +182,7 @@ void	RoomManager::_AddCorner(bool left)
 		{
 			if (left)
 			{
+				(*it)->SetTag(static_cast<eTags>(static_cast<int>(eTags::Corner) | static_cast<int>(eTags::CornerLeft)));
 				_rotateWay = 2.0f;
 				_cornerSpawned = true;
 				_rotationMax -= 90;
@@ -192,6 +204,7 @@ void	RoomManager::_AddCorner(bool left)
 			}
 			else
 			{
+				(*it)->SetTag(static_cast<eTags>(static_cast<int>(eTags::Corner) | static_cast<int>(eTags::CornerRight)));
 				_rotateWay = -2.0f;
 				_cornerSpawned = true;
 				_rotationMax += 90;
@@ -229,6 +242,8 @@ void	RoomManager::_AddCorridor()
 			_nbRooms++;
 			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
+			(*it)->GetTransform()->UpdateMatrix();
+			obstacles->AddObstacle(static_cast<bool>(rand() % 2), (*it)->GetTransform());
 			break;
 		}
 	}
