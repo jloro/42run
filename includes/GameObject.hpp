@@ -45,7 +45,7 @@ class GameObject
 			}
 			return dst;
 		}
-		/*
+		
 		template<class T>
 		std::list<std::shared_ptr<T>> GetComponents()
 		{
@@ -60,7 +60,7 @@ class GameObject
 				catch (std::exception &e) { continue; }
 			}
 			return lst;
-		}*/
+		}
 		// IGameObject &	operator=(const IGameObject & rhs);
 
 		virtual void	Update(void);

@@ -51,17 +51,25 @@ void    Player::Update(void)
 			_transform->position.x = glm::lerp(_transform->position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
 		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS && _jump == false)
 		{
-			_velocityY = 50.0f;
+			_velocityY = 70.0f;
 			_jump = true;
 			_jumpState = JUMPING;
 			_character->PauseAnimation();
 		}
 		if (_jump && _jumpState == JUMPING)
 			_transform->position.y += _velocityY * Engine42::Time::GetDeltaTime();
+		if (_jump && _transform->position.y > 19.0f && _jumpState == JUMPING)
+		{
+			//_jumpState = FALLING;
+			_velocityY = 40.0f;
+		}
 		if (_jump && _transform->position.y > 25.0f)
 		{
 			_jumpState = FALLING;
-			_velocityY = 30.0f;
+		}
+		if (_jump && _transform->position.y < 19.0f && _jumpState == FALLING)
+		{
+			_velocityY = 75.0f;
 		}
 	}
 	else
