@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/26 14:21:45 by jloro            ###   ########.fr        #
+#    Updated: 2019/09/26 14:32:41 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,6 @@ GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
 ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
 FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
-FASTNOISE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/FastNoise)
 
 #IRRXML_PATH = $(addprefix $(ASSIMP_PATH), /build/contrib/irrXML)
 
@@ -76,7 +75,6 @@ LIB_INCS =	-I $(GLM_PATH)/glm \
 			-I $(SDL_MIXER_PATH)/include/SDL2 \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
-			-I $(FASTNOISE_PATH)/ \
 			-I $(FREETYPE_PATH)/include
 
 
@@ -90,7 +88,6 @@ CC = clang++
 SDL2_LFLAGS = $(shell sh ./lib/sdl2/bin/sdl2-config --libs)
 
 LFLAGS =	$(GLAD_PATH)/glad.o\
-			$(FASTNOISE_PATH)/FastNoise.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
 			-L $(SDL_MIXER_PATH)/lib/ -lSDL2_mixer \
@@ -111,7 +108,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: CHECK_LIB_DIR ASSIMP SDL_MIXER FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
+all: CHECK_LIB_DIR ASSIMP SDL2 FREETYPE GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -191,21 +188,6 @@ GLAD:
 	else \
 		echo "\033$(GREEN)m✓\tGlad already installed\033[0m"; \
 		make -C $(GLAD_PATH);\
-	fi
-
-FastNoise:
-	@if [ ! -d "./lib/FastNoise" ]; then \
-		echo "\033$(PINK)m⚠\tFastNoise is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tDownloading FastNoise ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		git clone https://github.com/Auburns/FastNoise;\
-		cd FastNoise;\
-		clang++ -std=c++11 -c FastNoise.cpp -o FastNoise.o;\
-	else \
-		echo "\033$(GREEN)m✓\tFastNoise already installed\033[0m"; \
 	fi
 
 FREETYPE:	
@@ -300,4 +282,4 @@ print_name:
 print_end:
 	@echo $(MESSAGE)
 .PHONY: all clean fclean re rm_obj exe SDL2 rm_SDL2 re_SDL2 GLAD ASSIMP\
-		 re_sanitize sanitize FastNois CHECK_LIB_DIR
+		 re_sanitize sanitize CHECK_LIB_DIR
