@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/12 16:55:11 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 16:49:19 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 12:12:22 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Player : public GameObject
 		virtual void    FixedUpdate(void);
 		std::shared_ptr<Model>	_character;
 		bool					GetDead() const;
+		int						GetRow() const;
 		void					SetDead(bool dead);
 	private:
 		bool					_jump;

@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/25 16:31:20 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 11:49:32 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ class RoomManager : public GameObject
 
 		void	Reset();
 		void	Stop();
+
+		bool	GetCornerSpawned() const;
 	private:
 		glm::vec3		_nextPos;
 		glm::vec3				_nextRot;

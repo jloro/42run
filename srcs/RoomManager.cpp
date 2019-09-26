@@ -233,3 +233,5 @@ void	RoomManager::_AddCorridor()
 		}
 	}
 }
+
+bool	RoomManager::GetCornerSpawned() const { return _cornerSpawned; }

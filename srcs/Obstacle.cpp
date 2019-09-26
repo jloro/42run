@@ -12,8 +12,8 @@ Obstacle::Obstacle() : _canAdd(true), _stop(false)
 	std::shared_ptr<Model>		modelServer(new Model("ressources/obj/server/server.obj"));
 	std::shared_ptr<Model>		modelCroissant(new Model("ressources/obj/croissant/croissant.obj"));
 	srand(time(0));
-	Transform serverTransform(glm::vec3(0.0f, 0.0f, 30.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f));
-	Transform croissantTransform(glm::vec3(0.0f, 5.0f, 30.0f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f));
+	Transform serverTransform(glm::vec3(0.0f, 0.0f, 30.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(8.0f));
+	Transform croissantTransform(glm::vec3(0.0f, 5.0f, 30.0f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(5.0f));
 	for (int i = 0; i < 10; i++)
 	{
 		std::shared_ptr<GameObject> go(new GameObject(serverTransform));
@@ -42,6 +42,10 @@ void	Obstacle::Stop()
 {
 	_stop = true;
 }
+void	Obstacle::Play()
+{
+	_stop = false;
+}
 void	Obstacle::Reset()
 {
 	_stop = false;
@@ -55,7 +59,7 @@ void	Obstacle::Reset()
 
 void	Obstacle::Update()
 {
-	float timer = 2;
+	float timer = 1;
 	if (fmod(((float)SDL_GetTicks()) / 1000, timer) < 0.1 && _canAdd)
 	{
 		_AddObstacle(static_cast<bool>(rand() % 2));
