@@ -60,6 +60,6 @@ void	BoxColliderRenderer::Draw() const
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		_mesh->Draw(_shader);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_CULL_FACE);
+	//	glEnable(GL_CULL_FACE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 10:16:08 by jules             #+#    #+#             */
-/*   Updated: 2019/09/18 13:14:50 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/26 11:48:28 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include "Model.hpp"
 # include "Shader.hpp"
 
-# define OBSTACLE_SPEED_DEFAULT 20
-
 class Obstacle : public GameObject
 {
 	public:
@@ -28,9 +26,17 @@ class Obstacle : public GameObject
 		virtual void	Update(void);
 		virtual void	FixedUpdate(void);
 		std::list<std::shared_ptr<GameObject>>  _obstacles;
+
+		void	Reset();
+		void	Stop();
+		void	Play();
 	private:
-		int						_obstacleSpeed;
 		bool					_canAdd;
+		std::list<std::shared_ptr<GameObject>>  _pillar;
+		std::list<std::shared_ptr<GameObject>>  _jumpOver;
+		bool					_stop;
+
+		void					_AddObstacle(bool pillar);
 };
 
 #endif

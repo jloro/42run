@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 18:09:50 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 14:21:19 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,17 @@ class GameManager : public GameObject
 
 		virtual void	Update();
 		virtual void	FixedUpdate();
+
+		const static unsigned int	speedWorld;
+
+		static std::shared_ptr<GameManager>	instance;
+		void					Reset();
 	private:
-		void					_CheckCollision();
 		std::shared_ptr<Player>	_player;
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<Obstacle>	_obstacle;
-		std::shared_ptr<RoomManager>	_roomManager;
+		std::shared_ptr<RoomManager>	_rooms;
 };
 
 #endif

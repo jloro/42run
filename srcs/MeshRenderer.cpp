@@ -67,7 +67,7 @@ MeshRenderer &	MeshRenderer::operator=(MeshRenderer const & rhs)
 
 void MeshRenderer::Destroy(void)
 {
-	Engine42::Engine::Destroy(std::shared_ptr<MeshRenderer>(this));
+	Engine42::Engine::Destroy(this);
 }
 
 bool				MeshRenderer::IsRender() const { return _render; }

@@ -2,8 +2,9 @@
 #include "Engine.hpp"
 #include "gtx/compatibility.hpp"
 #include "BoxCollider.hpp"
+#include "GameManager.hpp"
 
-Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : GameObject(transform), _character(character), _jump(false)
+Player::Player(std::shared_ptr<Model> character, std::shared_ptr<Shader> shader, Transform transform) : GameObject(transform), _character(character), _jump(false), _dead(false)
 {
 	std::shared_ptr<ARenderer> render(new MeshRenderer(character, shader));
 	Engine42::Engine::AddRenderer(render);
@@ -20,29 +21,53 @@ void    Player::FixedUpdate(void)
 {
 }
 
+bool	Player::GetDead() const { return _dead; }
+void	Player::SetDead(bool dead) { _dead = dead; }
+int		Player::GetRow() const
+{
+	if (_transform->position.x < ROW_WIDTH && _transform->position.x > -ROW_WIDTH)
+		return 1;
+	else if (_transform->position.x < -ROW_WIDTH)
+		return 0;
+	else
+		return 2;
+}
 
 void    Player::Update(void)
 {
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && _transform->position.x > -ROW_WIDTH * 2.0f)
-		_transform->position.x = glm::lerp(_transform->position.x, -ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_UP)
-		_transform->position.x = glm::lerp(_transform->position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_DOWN && _transform->position.x < ROW_WIDTH * 2.0f)
-		_transform->position.x = glm::lerp(_transform->position.x, ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_UP)
-		_transform->position.x = glm::lerp(_transform->position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
-	if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS && _jump == false)
+	std::cout << GetRow()<< std::endl;
+	if (!_dead)
 	{
-		_jump = true;
-		_jumpState = JUMPING;
-		_character->PauseAnimation();
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_DOWN && _transform->position.x > -ROW_WIDTH * 2.0f)
+			_transform->position.x = glm::lerp(_transform->position.x, -ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_RIGHT) == KEY_UP)
+			_transform->position.x = glm::lerp(_transform->position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_DOWN && _transform->position.x < ROW_WIDTH * 2.0f)
+			_transform->position.x = glm::lerp(_transform->position.x, ROW_WIDTH * 2.0f, SPEED * Engine42::Time::GetDeltaTime());
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_LEFT) == KEY_UP)
+			_transform->position.x = glm::lerp(_transform->position.x, 0.0f, SPEED * Engine42::Time::GetDeltaTime());
+		if (Engine42::Engine::GetKeyState(SDL_SCANCODE_UP) == KEY_PRESS && _jump == false)
+		{
+			_velocityY = 50.0f;
+			_jump = true;
+			_jumpState = JUMPING;
+			_character->PauseAnimation();
+		}
+		if (_jump && _jumpState == JUMPING)
+			_transform->position.y += _velocityY * Engine42::Time::GetDeltaTime();
+		if (_jump && _transform->position.y > 25.0f)
+		{
+			_jumpState = FALLING;
+			_velocityY = 30.0f;
+		}
 	}
-	if (_jump && _jumpState == JUMPING)
-		_transform->position.y += JUMP_SPEED * Engine42::Time::GetDeltaTime();
-	if (_jump && _transform->position.y > 40.0f)
-		_jumpState = FALLING;
+	else
+	{
+		if (_character->GetCurrentAnimation() == 1 && _character->GetChrono() >= _character->GetAnimation(1)->duration / _character->GetAnimation(1)->ticksPerSecond)
+			GameManager::instance->Reset();
+	}
 	if (_jump && _jumpState == FALLING)
-		_transform->position.y -= JUMP_SPEED * Engine42::Time::GetDeltaTime();
+		_transform->position.y -= _velocityY * Engine42::Time::GetDeltaTime();
 	if (_jump && _transform->position.y <= 0.0f)
 	{
 		_character->PlayAnimation();

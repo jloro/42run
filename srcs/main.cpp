@@ -34,19 +34,21 @@ bool InitModels(SdlWindow &win)
 	std::vector<const char *>	shadersPath{ "shaders/Skeletical.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
-	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight(), true));
+	Camera* cam = new Camera(win.GetWidth(), win.GetHeight(), false);
 
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx"));
+	test->AddAnimation("Dying Backwards.fbx");
 	std::shared_ptr<Shader> 	skeletalShader(new Shader(shadersPath, type));
 	shadersPath[0] = "shaders/Vertex.vs.glsl";
 	std::shared_ptr<Shader> 	stdShader(new Shader(shadersPath, type));
 	std::shared_ptr<Player> player(new Player(test, skeletalShader, Transform(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f))));
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::SetWindow(&win);
-	Engine42::Engine::AddGameObject(cam);
-	Engine42::Engine::AddGameObject(std::shared_ptr<GameManager>(new GameManager(player)));
+	Engine42::Engine::AddGameObject(cam->instance);
+	GameManager *gm = new GameManager(player);
+	Engine42::Engine::AddGameObject(gm->instance);
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)
@@ -75,7 +77,7 @@ int				main(int ac, char **av)
 	win.CreateGlContext(4, 1, true, 24);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 	try

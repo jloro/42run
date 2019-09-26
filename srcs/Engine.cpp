@@ -8,6 +8,7 @@
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
 	_skybox = nullptr;
+	_clear = false;
 	_keyboardKeys = {SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_A};
 	_InitKeyboard();
 }
@@ -93,6 +94,13 @@ void	Engine42::Engine::_UpdateKeyboard()
 	}
 }
 
+void            Engine42::Engine::Clear(void)
+{
+	_inst._renderers.clear();
+	_inst._gameObjs.clear();
+	_inst._framebuffers.clear();
+	_inst._clear = true;
+}
 void            Engine42::Engine::createFBO(void)
 {
 	glGenFramebuffers(1, &_inst._fbo);
@@ -183,12 +191,19 @@ void            Engine42::Engine::Loop(void)
 	}
 }
 
-bool      Engine42::Engine::Destroy(std::shared_ptr<ARenderer> renderer)
+bool      Engine42::Engine::Destroy(ARenderer *renderer)
 {
     if (renderer == nullptr)
         return false;
-    _inst._renderers.remove(renderer);
-    return true;
+	for (auto it = _inst._renderers.begin(); it != _inst._renderers.end(); it++)
+	{
+		if ((*it).get() == renderer)
+		{
+			_inst._renderers.erase(it);
+			return true;
+		}
+	}
+    return false;
 }
 bool		_sort(const std::shared_ptr<ARenderer> first, const std::shared_ptr<ARenderer> sec)
 {
@@ -205,7 +220,11 @@ void                         Engine42::Engine::_RenderAll(void)
     if (_skybox != nullptr)
         _skybox->Draw();
     for (auto it = _renderers.begin(); it != _renderers.end(); it++)
+	{
          (*it)->Draw();
+		 if (_clear)
+			 return;
+	}
     for (auto it = _UI.begin(); it != _UI.end(); it++)
          (*it)->Update();
 	_win->Swap();
@@ -247,7 +266,10 @@ void                          Engine42::Engine::_UpdateAll(void)
 	for (it = _gameObjs.begin(); it != _gameObjs.end(); it++)
 	{
 		(*it)->Update();
+		if (_clear)
+			break;
 	}
+	_clear = false;
 }
 void                       Engine42::Engine::ReloadShaders(void)
 {

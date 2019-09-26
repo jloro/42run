@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:28:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 12:18:19 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 10:13:56 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <map>
 # include <assimp/Importer.hpp>
 # include "SDL.h"
+# include "Animation.hpp"
+# include "Node.hpp"
 
 # define ROTATION 0
 # define SCALING 1
@@ -38,19 +40,25 @@ class Model
 		virtual void	Draw(const std::shared_ptr<Shader>  shader);
 		void			PauseAnimation(void);
 		void			PlayAnimation(void);
+		void			AddAnimation(const char* path);
+		void			ChangeAnimation(unsigned int anim);
         Model & operator=(const Model &rhs);
-		std::shared_ptr<Shader>	_shaderCollider;
-		glm::vec3 GetMin(void) const;
-		glm::vec3 GetMax(void) const;
+		glm::vec3		GetMin(void) const;
+		glm::vec3		GetMax(void) const;
+		float			GetChrono() const;
+		unsigned int	GetCurrentAnimation() const;
+		const std::shared_ptr<Animation>	GetAnimation(unsigned int i) const;
 	protected:
 /*  protected variables    */
 		std::vector<Mesh>	_meshes;
 		std::string			_dir;
 		std::map<std::string, unsigned int>			_boneMap;
 		std::vector<BoneInfo>	_boneInfo;
+		std::vector<std::shared_ptr<Animation>>	_animations;
+		unsigned int			_currentAnimation;
+		float					_chrono;
+		std::shared_ptr<Node>	_skeleton;
 		glm::mat4				_globalTransform;
-		Uint32					_pauseTime;
-		Uint32					_tmpPauseTimer;
 		bool					_playing;
 		glm::vec3				_min;
 		glm::vec3				_max;
@@ -65,11 +73,11 @@ class Model
 		void					_LoadBones(aiMesh *mesh, std::vector<Vertex>& vertices);
 		void					_AddBoneData(unsigned int id, float weight, Vertex& vertex);
 		void					_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader);
-		void					_ReadNodeHierarchy(float animationTime, const aiNode* node, const glm::mat4 parentTransform);
-		aiQuaternion			_CalcInterpolatedRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
-		aiVector3D				_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
-		aiVector3D				_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const;
-		unsigned int			_FindKeys(float animationTime, const aiNodeAnim* nodeAnim, int state) const;
+		void					_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, const glm::mat4 parentTransform);
+		glm::quat				_CalcInterpolatedRotation(float animationTime, std::shared_ptr<NodeAnim> nodeAnim) const;
+		//aiVector3D				_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
+		//aiVector3D				_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int			_FindKeys(float animationTime, std::shared_ptr<NodeAnim> nodeAnim, int state) const;
 
 		Mesh					_ProcessMesh(aiMesh *mesh, const aiScene *scene);
 		std::vector<Texture>	_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName);

@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:50:30 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 18:57:38 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 14:21:08 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define ROOMMANAGER_HPP
 
 # include "GameObject.hpp"
-# include "Room.hpp"
+# include "Model.hpp"
+
 class RoomManager : public GameObject
 {
 	public:
@@ -25,12 +26,38 @@ class RoomManager : public GameObject
 
 		void	Update();
 		void	FixedUpdate();
-	private:
-		std::shared_ptr<Model>	_floor;
-		std::shared_ptr<Model>	_wall;
-		std::shared_ptr<Shader>	_shader;
 
-		void _MakeRoom(glm::vec3 pos);
+		glm::vec3	rotate(glm::vec3& vec, float angle, glm::vec3 normal);
+
+		std::list<std::shared_ptr<GameObject>>	corners;
+		std::list<std::shared_ptr<GameObject>>	corridors;
+
+		const static unsigned int	maxRooms;
+
+		void	Reset();
+		void	Stop();
+
+		bool	GetCornerSpawned() const;
+	private:
+		glm::vec3		_nextPos;
+		glm::vec3				_nextRot;
+		glm::vec3				_wayPlacement;
+		glm::vec3				_way;
+		bool	_rotate;
+		std::shared_ptr<Model>	_corridor;
+		std::shared_ptr<Model>	_corner;
+		unsigned int			_nbRooms;
+		int	_rotationMax;
+		float	_rotateWay;
+
+		bool					_cornerSpawned;
+		bool	_stop;
+
+		void					_AddCorridor();
+		void					_AddCorner(bool left);
+
+		void					_Init();
+
 };
 
 #endif

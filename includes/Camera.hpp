@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:47:43 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/19 15:45:42 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/26 14:21:30 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <glm.hpp>
 # include "GameObject.hpp"
 
-# define MOVE_SPEED 2.5f
+# define MOVE_SPEED 5.0f
 # define MOUSE_SENSITIVITY 0.1f
 # define FOV 45.0f
 
@@ -25,7 +25,8 @@ enum eCameraDirection { Forward, Backward, Right, Left, Up, Down};
 class Camera : public GameObject
 {
 	public:
-		Camera(float width, float height, bool freeFlight);
+		Camera(float width, float heigh, bool freeFlightt);
+		~Camera();
 
 		glm::mat4		GetMatView(void) const;
 		glm::mat4		GetMatProj(void) const;
@@ -47,7 +48,7 @@ class Camera : public GameObject
 
 		bool			GetFreeFlight() const;
 
-		static Camera	*instance;
+		static std::shared_ptr<Camera>	instance;
 	private:
 		void	_CalcMatrix();
 
