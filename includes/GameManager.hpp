@@ -19,6 +19,7 @@
 # include "Player.hpp"
 # include "Obstacle.hpp"
 # include "RoomManager.hpp"
+# include "SDL_mixer.h"
 
 class GameManager : public GameObject
 {
@@ -39,6 +40,7 @@ class GameManager : public GameObject
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<Obstacle>	_obstacle;
 		std::shared_ptr<RoomManager>	_rooms;
+		Mix_Music	*_music; 
 };
 
 #endif

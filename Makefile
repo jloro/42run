@@ -49,13 +49,13 @@ LIB_DIR = ./lib
 
 ## Macros for extern library installation ##
 SDL_VER = 2.0.9
-SDL_IMAGE_VER = 2.0.4
+SDL_MIXER_VER = 2.0.2
 ASSIMP_VER = 4.1.0
 FREETYPE_VER = 2.10.0
 
 MAIN_DIR_PATH = $(shell pwd)
 SDL_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2)
-SDL_IMAGE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_image)
+SDL_MIXER_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_mixer)
 GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
 ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
@@ -73,6 +73,7 @@ SDL2_INC = $(shell sh ./lib/sdl2/bin/sdl2-config --cflags)
 
 LIB_INCS =	-I $(GLM_PATH)/glm \
 			$(SDL2_INC) \
+			-I $(SDL_MIXER_PATH)/include/SDL2 \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
 			-I $(FASTNOISE_PATH)/ \
@@ -92,6 +93,7 @@ LFLAGS =	$(GLAD_PATH)/glad.o\
 			$(FASTNOISE_PATH)/FastNoise.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
+			-L $(SDL_MIXER_PATH)/lib/ -lSDL2_mixer \
 			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz
 
 LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
@@ -109,7 +111,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: CHECK_LIB_DIR ASSIMP SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
+all: CHECK_LIB_DIR ASSIMP SDL_MIXER FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -268,6 +270,23 @@ SDL2:
 		echo "\033$(GREEN)m✓\tSDl2-$(SDL_VER) installed !\033[0m"; \
 	else \
 		echo "\033$(GREEN)m✓\tSDl2-$(SDL_VER) already installed\033[0m"; \
+	fi
+SDL_MIXER: SDL2
+	@if [ ! -d "./lib/sdl2_mixer" ]; then \
+		export SDL2_CONFIG=$(addprefix $(SDL_PATH), /bin/sdl2-config); \
+		echo "\033$(CYAN)m➼\tCompiling SDL2_MIXER-$(SDL_MIXER_VER) ...\033[0m"; \
+		curl -OL http://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
+		tar -zxvf SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
+		rm SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
+		mkdir -p $(SDL_MIXER_PATH) && \
+		cd SDL2_mixer-$(SDL_MIXER_VER) && \
+			sh configure --prefix=$(SDL_MIXER_PATH) && \
+			make && \
+			make install && \
+		cd .. && \
+		rm -rf SDL2_mixer-$(SDL_MIXER_VER);\
+	else \
+		echo "\033$(GREEN)m✓\tSDl2_mixer-$(SDL_MIXER_VER) already installed\033[0m"; \
 	fi
 
 CHECK_LIB_DIR:
