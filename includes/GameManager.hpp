@@ -37,11 +37,14 @@ class GameManager : public GameObject
 		static std::shared_ptr<GameManager>	instance;
 		void					Reset();
 		void					Die();
+		int						GetScore(void) const;
+		void					IncreaseScore(int amount);
 	private:
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<RoomManager>	_rooms;
 		Mix_Music	*_music; 
+		float _timeScore;
 };
 
 #endif
