@@ -11,8 +11,8 @@ uniform mat4 projection;
 uniform mat4 gBones[100];
 
 out vec2 TexCoords;
-//out vec3 Normal;
-//out vec3 Pos;
+out vec3 Normal;
+out vec3 Pos;
 
 void main()
 {
@@ -22,7 +22,7 @@ void main()
 	boneTransform += gBones[aBoneIds[3]] * aWeights[3];
 
 	TexCoords = atexCoord;
-	//Normal = aNormal;
-	//Pos = (projection * view * model * vec4(aPos, 1.0f)).xyz;
+	Normal = aNormal;
+	Pos = (projection * view * model * boneTransform * vec4(aPos, 1.0f)).xyz;
 	gl_Position = projection * view * model * boneTransform * vec4(aPos, 1.0f);
 }

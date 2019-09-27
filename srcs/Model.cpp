@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/26 14:53:24 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/27 13:22:21 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,8 @@ void	Model::_LoadModel(std::string path)
 	_max = glm::vec3(0.0f);
 	_chrono = 0.0f;
 
-	if (_scene->HasAnimations())
-		std::cout << "Has animations"<< std::endl;
+	  // if (_scene->HasAnimations())
+	   //std::cout << "Has animations"<< std::endl;
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
 	if (_scene->HasAnimations())
@@ -119,6 +119,7 @@ void	Model::_LoadModel(std::string path)
 	}
 
 	/*
+	std::cout <<"Model: " << path << std::endl;
 	   if (_scene->HasAnimations())
 	   std::cout << "Has animations"<< std::endl;
 	   if (_scene->HasMaterials())
@@ -323,6 +324,9 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	std::vector<Vertex>	vertices;
 	std::vector<unsigned int>	faces;
 	std::vector<Texture>	textures;
+	aiColor3D diffuse(0.f,0.f,0.f);
+	aiColor3D specular(0.f,0.f,0.f);
+	aiColor3D ambient(0.f,0.f,0.f);
 
 	//	std::cout <<  "Load mesh" << std::endl;
 	//Get vertices
@@ -378,11 +382,16 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	if (scene->HasMaterials())
 	{
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+		material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
 		std::vector<Texture> diffuseMaps = _LoadMaterialTexture(material, aiTextureType_DIFFUSE, Diffuse);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	}
-	//std::cout << "nb meshs" << std::endl;
-	return Mesh(vertices, faces, textures);
+	if (textures.size() == 0)
+		return Mesh(vertices, faces, glm::vec3(diffuse.r, diffuse.g, diffuse.b), glm::vec3(ambient.r, ambient.g, ambient.b), glm::vec3(specular.r, specular.g, specular.b));
+	else
+		return Mesh(vertices, faces, textures);
 }
 
 std::vector<Texture>	Model::_LoadMaterialTexture(aiMaterial *mat, aiTextureType type, eTextureType typeName)
