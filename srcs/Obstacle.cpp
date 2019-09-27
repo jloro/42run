@@ -11,9 +11,11 @@ Obstacle::Obstacle()
 	std::shared_ptr<Shader> 	myShader(new Shader(shadersPath, type));
 	std::shared_ptr<Model>		modelServer(new Model("ressources/obj/server/server.obj"));
 	std::shared_ptr<Model>		modelCroissant(new Model("ressources/obj/croissant/croissant.obj"));
+	std::shared_ptr<Model>		modelCoin(new Model("ressources/obj/coin/coin.obj"));
 	srand(time(0));
 	Transform serverTransform(glm::vec3(0.0f, 0.0f, 30.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(0.2f));
 	Transform croissantTransform(glm::vec3(0.0f, 0.125f, 30.0f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(0.125f));
+	Transform coinTransform(glm::vec3(0.0f, 0.525f, 30.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(0.025f));
 	for (int i = 0; i < 20; i++)
 	{
 		std::shared_ptr<GameObject> go(new GameObject(serverTransform));
@@ -33,6 +35,17 @@ Obstacle::Obstacle()
 		go->AddComponent(collider);
 		go->AddComponent(renderer);
 		_jumpOver.push_back(go);
+	}
+	for (int i = 0; i < 40; i++)
+	{
+		std::shared_ptr<GameObject> go(new GameObject(coinTransform));
+		go->SetTag(eTags::Coin);
+		std::shared_ptr<ARenderer> renderer(new MeshRenderer(modelCoin, myShader, nullptr, false));
+		Engine42::Engine::AddRenderer(renderer);
+		std::shared_ptr<ACollider> collider(new BoxCollider(go.get(), modelCoin->GetMin(), modelCoin->GetMax(), glm::vec3(1.0f), glm::vec3(0.0f), false));
+		go->AddComponent(collider);
+		go->AddComponent(renderer);
+		_coins.push_back(go);
 	}
 }
 
@@ -58,6 +71,8 @@ void	Obstacle::Update()
 			(*it)->GetComponent<MeshRenderer>()->Destroy();
 			obstacles.erase(it);
 		}
+		if ((*it)->GetTag() == eTags::Coin)
+			(*it)->GetTransform()->rotation.y += 2.0f;
 	}
 }
 
@@ -71,7 +86,12 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 	std::list<std::shared_ptr<GameObject>>::iterator it, end;
 	int max = 0;
 	int i = 0;
-	if (pillar)
+	if (rand() % 100 > 90)
+	{
+		it = _coins.begin();
+		end = _coins.end();
+	}
+	else if (pillar)
 	{
 		it = _pillar.begin();
 		end = _pillar.end();
@@ -82,6 +102,7 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 		end = _jumpOver.end();
 		max = 2;
 	}
+
 
 	for (;it != end; it++)
 	{

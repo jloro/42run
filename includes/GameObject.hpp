@@ -16,6 +16,7 @@ enum class eTags
 	CornerLeft = 1 << 4,
 	CornerRight = 1 << 5,
 	GameManager = 1 << 6,
+	Coin = 1 << 7,
 };
 
 class GameObject

@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 10:16:08 by jules             #+#    #+#             */
-/*   Updated: 2019/09/26 17:58:38 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/27 13:41:02 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Obstacle : public GameObject
 	private:
 		std::list<std::shared_ptr<GameObject>>  _pillar;
 		std::list<std::shared_ptr<GameObject>>  _jumpOver;
+		std::list<std::shared_ptr<GameObject>>  _coins;
 
 };
 
