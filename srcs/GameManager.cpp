@@ -11,6 +11,7 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	if (instance == nullptr)
 		instance = std::shared_ptr<GameManager>(this);
 	_score = 0;
+	_timeScore = 0.0f;
 	_rooms.reset(new RoomManager);
 	Engine42::Engine::AddGameObject(_rooms);
 	if ((_music = Mix_LoadMUS("ressources/music01.wav")) == NULL)
@@ -21,7 +22,9 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
+	_tag = eTags::GameManager;
 }
+int						GameManager::GetScore(void) const {return _score;};
 
 GameManager::~GameManager() 
 {
@@ -42,6 +45,13 @@ void	GameManager::Update()
 			break;
 		}
 	}
+	_timeScore +=Engine42::Time::GetDeltaTime();
+	if (_timeScore > 0.5f && !player->GetDead()) 
+	{ 
+		++_score;
+		_timeScore -= 0.5f;
+	}
+	//Engine42::Engine::GetFontUI()->RenderText(std::string("Score: ") + std::to_string(_score), 10.0f, SdlWindow::GetMain()->GetHeight() - 24, 1.0f, glm::vec4(1.0f));
 }
 
 void	GameManager::Die()
@@ -54,6 +64,10 @@ void	GameManager::FixedUpdate()
 {
 	
 }
+void GameManager::IncreaseScore(int amount)
+{
+	_score += amount;
+}
 
 void	GameManager::Reset()
 {
@@ -62,13 +76,13 @@ void	GameManager::Reset()
 	player->_character->ChangeAnimation(0);
 	_rooms->Reset();
 	Engine42::Engine::AddGameObject(_rooms);
-	Engine42::Engine::AddGameObject(Camera::instance);
 	player->GetTransform()->position = glm::vec3(0.0f);
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
-	Engine42::Engine::AddGameObject(instance);
 	if (_music != NULL)
 	{
 		Mix_PlayMusic(_music, -1);
 	}
+	_score = 0;
+	_timeScore = 0.0f;
 }

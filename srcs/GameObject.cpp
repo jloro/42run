@@ -5,19 +5,23 @@
 GameObject::GameObject(void) : _tag(eTags::Default)
 {
     _transform = std::shared_ptr<Transform>(new Transform());
+    destroyOnReset = true;
 }
 
 GameObject::GameObject(Transform trans) : _tag(eTags::Default)
 {
     _transform = std::shared_ptr<Transform>(new Transform(trans));
+    destroyOnReset = true;
 }
 GameObject::GameObject(Transform trans, eTags tag) : _tag(tag)
 {
     _transform = std::shared_ptr<Transform>(new Transform(trans));
+    destroyOnReset = true;
 }
 GameObject::GameObject(eTags tag) : _tag(tag)
 {
     _transform = std::shared_ptr<Transform>(new Transform());
+    destroyOnReset = true;
 }
 void GameObject::AddComponent(std::shared_ptr<AComponent> component)
 {

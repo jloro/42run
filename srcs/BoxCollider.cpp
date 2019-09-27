@@ -19,7 +19,6 @@ BoxCollider::BoxCollider(GameObject *obj, glm::vec3 min, glm::vec3 max, glm::vec
 
 BoxCollider::~BoxCollider(void)
 {
-    
 }
 #include "PrintGlm.hpp"
 bool BoxCollider::IsCollindingWith(ACollider &other) const
