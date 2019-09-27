@@ -46,13 +46,20 @@ int						GameManager::GetScore(void) const {return _score;};
 void		GameManager::PlayGameOver() const
 {
 	Mix_FadeOutMusic(500);
-	Mix_PlayChannel(-1, _gameOverSound, 0);
+	if (_gameOverSound != NULL)
+	{
+		Mix_PlayChannel(-1, _gameOverSound, 0);
+	}
 }
 
 GameManager::~GameManager() 
 {
 	Mix_FreeMusic(_music);
 	_music = NULL;
+	Mix_FreeChunk(_gameOverSound);
+	_gameOverSound = NULL;
+	Mix_FreeChunk(_coinSound);
+	_coinSound = NULL;
 }
 
 void	GameManager::Update()
