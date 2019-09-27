@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-//#include "PrintGlm.hpp"
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
@@ -229,36 +228,6 @@ void                         Engine42::Engine::_RenderAll(void)
          (*it)->Update();
 	_win->Swap();
 }
-/*void                         Engine42::Engine::_RenderAll(void)
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);  
-	_renderers.sort(_sort);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (auto it = _framebuffers.begin(); it != _framebuffers.end(); it++)
-         (*it)->genTexture();
-	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-    if (_skybox != nullptr)
-        _skybox->Draw();
-    for (auto it = _renderers.begin(); it != _renderers.end(); it++)
-         (*it)->Draw();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	_shaderFbo->use();
-	_shaderFbo->setInt("screenTexture", 2);
-	glBindVertexArray(quadVAO);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, _colorBuffer);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	_win->Swap();
-}*/
 void                          Engine42::Engine::_UpdateAll(void)
 {
     std::list<std::shared_ptr<GameObject>>::iterator  it;

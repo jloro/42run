@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 11:31:23 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 13:19:39 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/27 14:41:17 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ vertices(vertices), faces(faces), textures(textures), _hasTexture(true)
 	diffuse = glm::vec3(-1.0f);
 	ambient = glm::vec3(-1.0f);
 	specular = glm::vec3(-1.0f);
-	//SendToOpenGL();
 }
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> faces, glm::vec3 diffuse, glm::vec3 ambient, glm::vec3 specular) : 
 vertices(vertices), faces(faces), _hasTexture(false)
@@ -31,7 +30,6 @@ vertices(vertices), faces(faces), _hasTexture(false)
 	this->diffuse = diffuse;
 	this->ambient = ambient;
 	this->specular = specular;
-	//SendToOpenGL();
 }
 Mesh::Mesh(Mesh const & src) 
 {
@@ -58,7 +56,6 @@ Mesh &	Mesh::operator=(Mesh const & rhs)
     glDeleteBuffers(1, &_ebo);
     glDeleteBuffers(1, &_vbo);
     glDeleteBuffers(1, &_vao);
-    //this->SendToOpenGL();
     return *this;
 }
 void	Mesh::SendToOpenGL()
@@ -86,7 +83,6 @@ void	Mesh::SendToOpenGL()
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
 	glBindVertexArray(0);
-//	std::cout << "send to opengl" << std::endl;
 }
 
 void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
@@ -95,7 +91,6 @@ void	Mesh::Draw(const std::shared_ptr<Shader>  shader) const
 	unsigned int	specularNb = 0;
 	unsigned int	cubeMapNb = 0;
 	std::string		name;
-	//std::string		number;
 
 	shader->setInt("uHasTexture", static_cast<int>(_hasTexture));
 	if (!_hasTexture)

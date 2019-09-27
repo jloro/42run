@@ -56,10 +56,8 @@ void	BoxColliderRenderer::Draw() const
 		_shader->setMat4("view", Camera::instance->GetMatView());
 		_shader->setMat4("projection", Camera::instance->GetMatProj());
 		_shader->setMat4("model", glm::scale(_transform->GetMatrix(), _collider->scale));
-		glDisable(GL_CULL_FACE);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		_mesh->Draw(_shader);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//	glEnable(GL_CULL_FACE);
 	}
 }
