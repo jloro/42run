@@ -21,6 +21,7 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
+	_tag = eTags::GameManager;
 }
 
 GameManager::~GameManager() 
@@ -62,13 +63,12 @@ void	GameManager::Reset()
 	player->_character->ChangeAnimation(0);
 	_rooms->Reset();
 	Engine42::Engine::AddGameObject(_rooms);
-	Engine42::Engine::AddGameObject(Camera::instance);
 	player->GetTransform()->position = glm::vec3(0.0f);
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
-	Engine42::Engine::AddGameObject(instance);
 	if (_music != NULL)
 	{
 		Mix_PlayMusic(_music, -1);
 	}
+
 }

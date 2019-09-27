@@ -15,6 +15,7 @@ enum class eTags
 	Player = 1 << 3,
 	CornerLeft = 1 << 4,
 	CornerRight = 1 << 5,
+	GameManager = 1 << 6,
 };
 
 class GameObject
@@ -68,6 +69,7 @@ class GameObject
 		// virtual int		Collide(IGameObject *other) = 0;
 		eTags			GetTag() const;
 		void			SetTag(eTags);
+		bool 			destroyOnReset;
 	protected:
 		eTags						_tag;
 		std::shared_ptr<Transform> _transform;

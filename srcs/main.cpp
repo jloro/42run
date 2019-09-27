@@ -49,6 +49,8 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::AddGameObject(cam->instance);
 	GameManager *gm = new GameManager(player);
 	Engine42::Engine::AddGameObject(gm->instance);
+	gm->destroyOnReset = false;
+	cam->destroyOnReset = false;
 	return true;
 }
 int ErrorQuit(std::string txt1, std::string txt2)

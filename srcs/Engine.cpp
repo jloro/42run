@@ -97,7 +97,7 @@ void	Engine42::Engine::_UpdateKeyboard()
 void            Engine42::Engine::Clear(void)
 {
 	_inst._renderers.clear();
-	_inst._gameObjs.clear();
+	_inst._gameObjs.remove_if([](std::shared_ptr<GameObject> x){return x->destroyOnReset; });
 	_inst._framebuffers.clear();
 	_inst._clear = true;
 }
@@ -262,7 +262,6 @@ void                         Engine42::Engine::_RenderAll(void)
 void                          Engine42::Engine::_UpdateAll(void)
 {
     std::list<std::shared_ptr<GameObject>>::iterator  it;
-
 	for (it = _gameObjs.begin(); it != _gameObjs.end(); it++)
 	{
 		(*it)->Update();
