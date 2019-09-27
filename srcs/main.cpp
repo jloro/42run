@@ -34,7 +34,7 @@ bool InitModels(SdlWindow &win)
 	std::vector<const char *>	shadersPath{ "shaders/Skeletical.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 
-	Camera* cam = new Camera(win.GetWidth(), win.GetHeight(), true);
+	Camera* cam = new Camera(win.GetWidth(), win.GetHeight(), false);
 
 	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
 	Engine42::Engine::AddUIElement(fps);
