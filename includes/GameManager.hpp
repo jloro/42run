@@ -44,6 +44,7 @@ class GameManager : public GameObject
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<RoomManager>	_rooms;
 		Mix_Music	*_music; 
+		Mix_Chunk	*_coinSound; 
 		float _timeScore;
 };
 

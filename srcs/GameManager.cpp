@@ -14,11 +14,16 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	_timeScore = 0.0f;
 	_rooms.reset(new RoomManager);
 	Engine42::Engine::AddGameObject(_rooms);
-	if ((_music = Mix_LoadMUS("ressources/music01.wav")) == NULL)
+	if ((_music = Mix_LoadMUS("ressources/sounds/music01.wav")) == NULL)
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
+	
 	else if (Mix_PlayMusic(_music, -1) < 0)
+	{
+		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
+	}
+	if ((_coinSound = Mix_LoadWAV("ressources/sounds/Coin.wav")) == NULL)
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
