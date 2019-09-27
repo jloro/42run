@@ -20,9 +20,8 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	}
 	if (_music != NULL)
 	{
-		Mix_VolumeMusic(10);
-		/*int channel =*/Mix_PlayMusic(_music, -1);
-		//Mix_Volume(channel, 1);
+		Mix_VolumeMusic(30);
+		Mix_FadeInMusic(_music, -1, 1000);
 	}
 	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin.wav")) == NULL)
 	{
@@ -30,11 +29,25 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	}
 	else
 	{
-		Mix_VolumeChunk(_coinSound, 70);
+		Mix_VolumeChunk(_coinSound, 60);
+	}
+	if ((_gameOverSound = Mix_LoadWAV("ressources/sounds/GameOver.wav")) == NULL)
+	{
+		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
+	}
+	else
+	{
+		Mix_VolumeChunk(_gameOverSound, 40);
 	}
 	_tag = eTags::GameManager;
 }
 int						GameManager::GetScore(void) const {return _score;};
+
+void		GameManager::PlayGameOver() const
+{
+	Mix_FadeOutMusic(500);
+	Mix_PlayChannel(-1, _gameOverSound, 0);
+}
 
 GameManager::~GameManager() 
 {
@@ -77,6 +90,7 @@ void	GameManager::Die()
 	player->_character->ChangeAnimation(1);
 	player->SetDead(true);
 	_rooms->Stop();
+	PlayGameOver();
 }
 void	GameManager::FixedUpdate()
 {
@@ -99,7 +113,7 @@ void	GameManager::Reset()
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
 	if (_music != NULL)
 	{
-		Mix_PlayMusic(_music, -1);
+		Mix_FadeInMusic(_music, -1, 500);
 	}
 	_score = 0;
 	_timeScore = 0.0f;

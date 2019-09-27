@@ -26,6 +26,7 @@ void	Player::SetDead(bool dead)
 {
 	_dead = dead;
 	_character->PlayAnimation();
+	//GameManager::instance->PlayGameOver();
 }
 int		Player::GetRow() const
 {

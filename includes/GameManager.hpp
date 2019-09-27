@@ -39,12 +39,14 @@ class GameManager : public GameObject
 		void					Die();
 		int						GetScore(void) const;
 		void					IncreaseScore(int amount);
+		void 					PlayGameOver(void)const;
 	private:
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<RoomManager>	_rooms;
 		Mix_Music	*_music; 
 		Mix_Chunk	*_coinSound; 
+		Mix_Chunk	*_gameOverSound; 
 		float _timeScore;
 };
 
