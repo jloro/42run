@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/20 12:44:53 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/27 13:22:21 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/27 14:40:59 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,6 @@ void	Model::_LoadModel(std::string path)
 	_max = glm::vec3(0.0f);
 	_chrono = 0.0f;
 
-	  // if (_scene->HasAnimations())
-	   //std::cout << "Has animations"<< std::endl;
 	if (!_scene || _scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_scene->mRootNode)
 		throw std::runtime_error(std::string("ERROR::ASSIMP::") + _importer.GetErrorString());
 	if (_scene->HasAnimations())
@@ -117,18 +115,6 @@ void	Model::_LoadModel(std::string path)
 		_hasAnim = true;
 		_currentAnimation = 0;
 	}
-
-	/*
-	std::cout <<"Model: " << path << std::endl;
-	   if (_scene->HasAnimations())
-	   std::cout << "Has animations"<< std::endl;
-	   if (_scene->HasMaterials())
-	   std::cout << "Has material"<< std::endl;
-	   if (_scene->HasMeshes())
-	   std::cout << "Has meshes"<< std::endl;
-	   if (_scene->HasTextures())
-	   std::cout << "Has textures"<< std::endl;
-	   */
 
 	_globalTransform = aiMat4ToGlmMat4(_scene->mRootNode->mTransformation.Inverse());
 
@@ -144,7 +130,7 @@ void	Model::_ProcessNode(aiNode *node, const aiScene *scene)
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 		_ProcessNode(node->mChildren[i], scene);
 }
-#include "PrintGlm.hpp"
+
 void	Model::_BoneTransform(float timeInSecond, const std::shared_ptr<Shader>  shader)
 {
 	float ticksPerSecond = _animations[_currentAnimation]->ticksPerSecond != 0 ? _animations[_currentAnimation]->ticksPerSecond : 25.0f;
@@ -214,43 +200,6 @@ glm::quat	Model::_CalcInterpolatedRotation(float animationTime, std::shared_ptr<
 	glm::quat ret = glm::mix(start, end, factor);
 	return glm::normalize(ret);
 }
-/*
-aiVector3D		Model::_CalcInterpolatedTranslation(float animationTime, const aiNodeAnim* nodeAnim) const
-{
-	if (nodeAnim->mNumPositionKeys == 1)
-		return nodeAnim->mPositionKeys[0].mValue;
-
-	unsigned int positionIndex = _FindKeys(animationTime, nodeAnim, TRANSLATION);
-	unsigned int nextPositionIndex = positionIndex + 1;
-
-	float delta = nodeAnim->mPositionKeys[nextPositionIndex].mTime - nodeAnim->mPositionKeys[positionIndex].mTime;
-	float factor = (animationTime - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / delta;
-
-	const aiVector3D start = nodeAnim->mPositionKeys[positionIndex].mValue;
-	const aiVector3D end = nodeAnim->mPositionKeys[nextPositionIndex].mValue;
-
-	aiVector3D	vec = end - start;
-	return (start + vec * factor).Normalize();
-}
-
-aiVector3D		Model::_CalcInterpolatedScaling(float animationTime, const aiNodeAnim* nodeAnim) const
-{
-	if (nodeAnim->mNumScalingKeys == 1)
-		return nodeAnim->mScalingKeys[0].mValue;
-
-	unsigned int scalingIndex = _FindKeys(animationTime, nodeAnim, SCALING);
-	unsigned int nextScalingIndex = scalingIndex + 1;
-
-	float delta = nodeAnim->mScalingKeys[nextScalingIndex].mTime - nodeAnim->mScalingKeys[scalingIndex].mTime;
-	float factor = (animationTime - (float)nodeAnim->mScalingKeys[scalingIndex].mTime) / delta;
-
-	const aiVector3D start = nodeAnim->mScalingKeys[scalingIndex].mValue;
-	const aiVector3D end = nodeAnim->mScalingKeys[nextScalingIndex].mValue;
-
-	aiVector3D	vec = end - start;
-	return (start + vec * factor).Normalize();
-}
-*/
 void	Model::_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, const glm::mat4 parentTransform)
 {
 	std::string nodeName = node->name;
@@ -260,13 +209,8 @@ void	Model::_ReadNodeHierarchy(float animationTime, std::shared_ptr<Node> node, 
 	glm::mat4	nodeTransform = node->transform;
 	if (nodeAnim != nullptr)
 	{
-		//aiVector3D	scale = _CalcInterpolatedScaling(animationTime, nodeAnim);
-		//glm::mat4	scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
-
 		glm::mat4	rotateMat = glm::mat4(_CalcInterpolatedRotation(animationTime, nodeAnim));
 
-		//aiVector3D	position = _CalcInterpolatedTranslation(animationTime, nodeAnim);
-		//glm::mat4	positionMat = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
 		nodeTransform *= rotateMat;
 	}
 
@@ -328,7 +272,6 @@ Mesh	Model::_ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	aiColor3D specular(0.f,0.f,0.f);
 	aiColor3D ambient(0.f,0.f,0.f);
 
-	//	std::cout <<  "Load mesh" << std::endl;
 	//Get vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -430,8 +373,6 @@ unsigned int 			Model::_TextureFromFile(const char *path, const std::string &dir
 {
 	std::string filename = _GetFilename(path, directory);
 	return (_TextureFromFile(filename));
-	/*/std::string filename = std::string(path);
-	  filename = directory + '/' + filename;*/
 }
 
 unsigned int 			Model::_TextureFromFile(const std::string &filename, aiTexture** textureArray)

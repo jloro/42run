@@ -65,7 +65,6 @@ void	Text::UpdateProj()
 
 void	Text::RenderText(const std::string text, float x, float y, float scale, glm::vec4 color)
 {
-	glDisable(GL_CULL_FACE);
 	GLfloat x2, y2, w, h;
 	_shader->use();
 	_shader->setVec4("color", color);
@@ -100,5 +99,4 @@ void	Text::RenderText(const std::string text, float x, float y, float scale, glm
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//glEnable(GL_CULL_FACE);
 }

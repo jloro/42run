@@ -93,7 +93,6 @@ int				main(void)
 	win.CreateGlContext(4, 1, true, 24);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 	try
