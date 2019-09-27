@@ -18,14 +18,19 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
-	
-	else if (Mix_PlayMusic(_music, -1) < 0)
+	if (_music != NULL)
+	{
+		Mix_VolumeMusic(40);
+		/*int channel =*/Mix_PlayMusic(_music, -1);
+		//Mix_Volume(channel, 1);
+	}
+	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin_sound.wav")) == NULL)
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
-	if ((_coinSound = Mix_LoadWAV("ressources/sounds/Coin.wav")) == NULL)
+	else
 	{
-		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
+		Mix_VolumeChunk(_coinSound, 40);
 	}
 	_tag = eTags::GameManager;
 }
@@ -47,7 +52,10 @@ void	GameManager::Update()
 			(*it)->GetComponent<MeshRenderer>()->Destroy();
 			_rooms->obstacles->obstacles.erase(it);
 			if ((*it)->GetTag() == eTags::Coin)
+			{
 				_score += 10;
+				Mix_PlayChannel(-1, _coinSound, 0);
+			}
 			else
 			{
 				Die();
