@@ -46,8 +46,13 @@ void	GameManager::Update()
 			(*it)->GetComponent<MeshRenderer>()->SetRender(false);
 			(*it)->GetComponent<MeshRenderer>()->Destroy();
 			_rooms->obstacles->obstacles.erase(it);
-			Die();
-			break;
+			if ((*it)->GetTag() == eTags::Coin)
+				_score += 10;
+			else
+			{
+				Die();
+				break;
+			}
 		}
 	}
 	_timeScore +=Engine42::Time::GetDeltaTime();
