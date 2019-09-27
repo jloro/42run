@@ -20,17 +20,17 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	}
 	if (_music != NULL)
 	{
-		Mix_VolumeMusic(40);
+		Mix_VolumeMusic(10);
 		/*int channel =*/Mix_PlayMusic(_music, -1);
 		//Mix_Volume(channel, 1);
 	}
-	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin_sound.wav")) == NULL)
+	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin.wav")) == NULL)
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
 	}
 	else
 	{
-		Mix_VolumeChunk(_coinSound, 40);
+		Mix_VolumeChunk(_coinSound, 70);
 	}
 	_tag = eTags::GameManager;
 }

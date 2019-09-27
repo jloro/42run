@@ -89,7 +89,6 @@ int				main(void)
 	{
 		return ErrorQuit("Failed to init freetype library", std::string());
 	}
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SdlWindow	win(800, 400, false, true, "42run");
 	win.CreateGlContext(4, 1, true, 24);
 	glEnable(GL_BLEND);
