@@ -58,6 +58,8 @@ void	Obstacle::Reset()
 		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
 	for (auto it = _jumpOver.begin(); it != _jumpOver.end(); it++)
 		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
+	for (auto it = _coins.begin(); it != _coins.end(); it++)
+		(*it)->GetComponent<MeshRenderer>()->SetRender(false);
 }
 
 void	Obstacle::Update()
@@ -86,12 +88,10 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 	std::list<std::shared_ptr<GameObject>>::iterator it, end;
 	int max = 0;
 	int i = 0;
-	if (rand() % 100 > 90)
-	{
-		it = _coins.begin();
-		end = _coins.end();
-	}
-	else if (pillar)
+	bool addCoin = false;
+	if (rand() % 100 < 75)
+		addCoin = true;
+	if (pillar)
 	{
 		it = _pillar.begin();
 		end = _pillar.end();
@@ -100,10 +100,11 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 	{
 		it = _jumpOver.begin();
 		end = _jumpOver.end();
-		max = 2;
+		max = 1;
 	}
 
 
+	bool left = true, right = true, middle = true;
 	for (;it != end; it++)
 	{
 		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
@@ -111,9 +112,15 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 			(*it)->GetTransform()->parent = parent;
 			(*it)->GetTransform()->position.z = 0.0f;
 			if (pillar)
-				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* (rand() % 3 - 1);
+				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* _GetRandomRow(left, middle, right);
 			else
-				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* (i - 1);
+				(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* _GetRandomRow(left, middle, right);
+			if ((*it)->GetTransform()->position.x == 0)
+				middle = false;
+			else if ((*it)->GetTransform()->position.x == ROW_WIDTH / -40.0f)
+				left = false;
+			else
+				right = false;
 			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
 			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
 			obstacles.push_back(*it);
@@ -122,4 +129,41 @@ void	Obstacle::AddObstacle(bool pillar, std::shared_ptr<Transform> parent)
 			i++;
 		}
 	}
+
+	if (addCoin)
+	{
+
+	for (auto it = _coins.begin(); it != _coins.end(); it++)
+	{
+		if (!(*it)->GetComponent<MeshRenderer>()->IsRender())
+		{
+			(*it)->GetTransform()->parent = parent;
+			(*it)->GetTransform()->position.z = 0.0f;
+			(*it)->GetTransform()->position.x = (ROW_WIDTH / 40.0f)* _GetRandomRow(left, middle, right);
+			(*it)->GetComponent<MeshRenderer>()->SetRender(true);
+			Engine42::Engine::AddRenderer((*it)->GetComponent<MeshRenderer>());
+			obstacles.push_back(*it);
+			break;
+		}
+	}
+	}
+}
+
+int		Obstacle::_GetRandomRow(bool left, bool middle, bool right)
+{
+	if (left && middle && right)
+		return (rand() % 3 - 1);
+	else if (!middle && left && right)
+		return (rand() % 2 == 0 ? -1 : 1);
+	else if (!left && middle && right)
+		return (rand() % 2 == 0 ? 0 : 1);
+	else if (!right && left && middle)
+		return (rand() % 2 == 0 ? -1 : 0);
+	else if (left)
+		return -1;
+	else if (middle)
+		return 0;
+	else
+		return 1;
+
 }

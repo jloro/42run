@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 10:16:08 by jules             #+#    #+#             */
-/*   Updated: 2019/09/27 13:41:02 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/27 13:57:31 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Obstacle : public GameObject
 		std::list<std::shared_ptr<GameObject>>  _jumpOver;
 		std::list<std::shared_ptr<GameObject>>  _coins;
 
+		int			_GetRandomRow(bool left, bool middle, bool right);
 };
 
 #endif
