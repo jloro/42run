@@ -13,7 +13,9 @@ clone the project, make, and run ./42run
 
 === COMMANDS ===
 
-ARROWS: Move character
+LEFT/RIGHT ARROWS: Move left and right
+
+UP ARROW: Jump
 
 ESC : Quit
 
