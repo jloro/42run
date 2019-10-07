@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/26 16:31:52 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/07 11:11:50 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,15 @@ Camera::Camera(float width, float height, bool freeFlight) : _moveSpeed(MOVE_SPE
 		instance = std::shared_ptr<Camera>(this);
 	_pos = glm::vec3(-2.0f, 60.0f, -55.0f);
 	if (!freeFlight)
+	{
 		_dir = glm::vec3(0.0f, -0.5f, 1.0f);
+		SDL_SetRelativeMouseMode(SDL_FALSE);
+	}
 	else
+	{
 		_dir = glm::vec3(0.0f, 0.0f, -1.0f);
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	}
 	_CalcMatrix();
 }
 

@@ -14,7 +14,7 @@ class MeshRenderer : public ARenderer
 public: 
 /*	constructors / destrucors	*/
     MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, 
-    std::shared_ptr<GameObject> obj = std::shared_ptr<GameObject>(nullptr), bool render = true);
+    std::shared_ptr<GameObject> obj = nullptr, bool render = true);
     MeshRenderer(const MeshRenderer & src); 
     virtual ~MeshRenderer(void); 
 
