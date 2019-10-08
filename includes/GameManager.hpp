@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/10/08 16:26:39 by jules            ###   ########.fr       */
+/*   Updated: 2019/10/08 16:57:51 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "Obstacle.hpp"
 # include "RoomManager.hpp"
 # include "SDL_mixer.h"
+# include "SoundListener.hpp"
 
 class GameManager : public GameObject
 {
@@ -44,8 +45,8 @@ class GameManager : public GameObject
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<RoomManager>	_rooms;
-		Mix_Chunk	*_coinSound; 
-		Mix_Chunk	*_gameOverSound; 
+		std::shared_ptr<SoundListener>	_coinSound; 
+		std::shared_ptr<SoundListener>	_gameOverSound; 
 		float _timeScore;
 };
 

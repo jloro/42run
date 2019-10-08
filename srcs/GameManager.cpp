@@ -3,7 +3,9 @@
 #include <cmath>
 #include "ACollider.hpp"
 #include "MusicListener.hpp"
+
 const unsigned int	GameManager::speedWorld = 80.0f;
+
 std::shared_ptr<GameManager>	GameManager::instance = nullptr;
 
 GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _score(0)
@@ -17,22 +19,10 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	std::shared_ptr<MusicListener>	music(new MusicListener("ressources/sounds/music01.wav", 30));
 	AddComponent(music);
 	music->Play(true, 1000);
-	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin.wav")) == NULL)
-	{
-		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
-	}
-	else
-	{
-		Mix_VolumeChunk(_coinSound, 60);
-	}
-	if ((_gameOverSound = Mix_LoadWAV("ressources/sounds/GameOver.wav")) == NULL)
-	{
-		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
-	}
-	else
-	{
-		Mix_VolumeChunk(_gameOverSound, 40);
-	}
+	_coinSound.reset(new SoundListener("ressources/sounds/coin.wav", 60));
+	AddComponent(_coinSound);
+	_gameOverSound.reset(new SoundListener("ressources/sounds/GameOver.wav", 40));
+	AddComponent(_gameOverSound);
 	_tag = eTags::GameManager;
 }
 int						GameManager::GetScore(void) const {return _score;};
@@ -40,18 +30,11 @@ int						GameManager::GetScore(void) const {return _score;};
 void		GameManager::PlayGameOver()
 {
 	GetComponent<MusicListener>()->Stop(true, 500);
-	if (_gameOverSound != NULL)
-	{
-		Mix_PlayChannel(-1, _gameOverSound, 0);
-	}
+	_gameOverSound->Play();
 }
 
 GameManager::~GameManager() 
 {
-	Mix_FreeChunk(_gameOverSound);
-	_gameOverSound = NULL;
-	Mix_FreeChunk(_coinSound);
-	_coinSound = NULL;
 }
 
 void	GameManager::Update()
@@ -66,7 +49,7 @@ void	GameManager::Update()
 			if ((*it)->GetTag() == eTags::Coin)
 			{
 				_score += 10;
-				Mix_PlayChannel(-1, _coinSound, 0);
+				_coinSound->Play();
 			}
 			else
 			{
