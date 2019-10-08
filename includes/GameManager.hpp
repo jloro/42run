@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/16 11:46:50 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/26 17:58:46 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/08 16:26:39 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,11 @@ class GameManager : public GameObject
 		void					Die();
 		int						GetScore(void) const;
 		void					IncreaseScore(int amount);
-		void 					PlayGameOver(void)const;
+		void 					PlayGameOver(void);
 	private:
 		int						_score;
 		std::shared_ptr<Model>	_modelPillar;
 		std::shared_ptr<RoomManager>	_rooms;
-		Mix_Music	*_music; 
 		Mix_Chunk	*_coinSound; 
 		Mix_Chunk	*_gameOverSound; 
 		float _timeScore;

@@ -2,7 +2,7 @@
 #include "Engine.hpp"
 #include <cmath>
 #include "ACollider.hpp"
-
+#include "MusicListener.hpp"
 const unsigned int	GameManager::speedWorld = 80.0f;
 std::shared_ptr<GameManager>	GameManager::instance = nullptr;
 
@@ -14,15 +14,9 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	_timeScore = 0.0f;
 	_rooms.reset(new RoomManager);
 	Engine42::Engine::AddGameObject(_rooms);
-	if ((_music = Mix_LoadMUS("ressources/sounds/music01.wav")) == NULL)
-	{
-		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
-	}
-	if (_music != NULL)
-	{
-		Mix_VolumeMusic(30);
-		Mix_FadeInMusic(_music, -1, 1000);
-	}
+	std::shared_ptr<MusicListener>	music(new MusicListener("ressources/sounds/music01.wav", 30));
+	AddComponent(music);
+	music->Play(true, 1000);
 	if ((_coinSound = Mix_LoadWAV("ressources/sounds/coin.wav")) == NULL)
 	{
 		std::cout << "error : \n" <<  Mix_GetError() << std::endl;
@@ -43,9 +37,9 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 }
 int						GameManager::GetScore(void) const {return _score;};
 
-void		GameManager::PlayGameOver() const
+void		GameManager::PlayGameOver()
 {
-	Mix_FadeOutMusic(500);
+	GetComponent<MusicListener>()->Stop(true, 500);
 	if (_gameOverSound != NULL)
 	{
 		Mix_PlayChannel(-1, _gameOverSound, 0);
@@ -54,8 +48,6 @@ void		GameManager::PlayGameOver() const
 
 GameManager::~GameManager() 
 {
-	Mix_FreeMusic(_music);
-	_music = NULL;
 	Mix_FreeChunk(_gameOverSound);
 	_gameOverSound = NULL;
 	Mix_FreeChunk(_coinSound);
@@ -118,10 +110,7 @@ void	GameManager::Reset()
 	player->GetTransform()->position = glm::vec3(0.0f);
 	Engine42::Engine::AddGameObject(player);
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
-	if (_music != NULL)
-	{
-		Mix_FadeInMusic(_music, -1, 500);
-	}
+	GetComponent<MusicListener>()->Play(true, 500);
 	_score = 0;
 	_timeScore = 0.0f;
 }
