@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/09 14:13:20 by jules            ###   ########.fr        #
+#    Updated: 2019/10/09 15:16:15 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,30 +23,18 @@ ORANGE = [038;2;239;138;5
 ## Sources ##
 SRCS_DIR = srcs
 
-SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
-		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
-		AComponent.cpp GameObject.cpp ARenderer.cpp ACollider.cpp\
-		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp \
-		main.cpp  Player.cpp GameManager.cpp Obstacle.cpp \
-		BoxColliderRenderer.cpp BoxCollider.cpp RoomManager.cpp NodeAnim.cpp\
-		Animation.cpp Node.cpp MusicListener.cpp SoundListener.cpp UiText.cpp \
+SRCS =  main.cpp  Player.cpp GameManager.cpp Obstacle.cpp RoomManager.cpp \
 
-HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
-		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
-		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
-		Text.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
-		Obstacle.hpp BoxColliderRenderer.hpp BoxCollider.hpp Model.hpp RoomManager.hpp\
-		Camera.hpp NodeAnim.hpp Animation.hpp Node.hpp MusicListener.hpp SoundListener.hpp \
-		UiText.hpp
+HEADER = Player.hpp GameManager.hpp Obstacle.hpp RoomManager.hpp \
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
 OBJS_DIR = ./objs
-OBJS_SUB_DIRS = parser rendering event init tga
 OBJS_PRE = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
 ## Lib dirs ##
 LIB_DIR = ./lib
+ENGINE_LIB_DIR = /GameEngine/lib
 
 ## Macros for extern library installation ##
 SDL_VER = 2.0.9
@@ -55,12 +43,12 @@ ASSIMP_VER = 4.1.0
 FREETYPE_VER = 2.10.0
 
 MAIN_DIR_PATH = $(shell pwd)
-SDL_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2)
-SDL_MIXER_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_mixer)
-GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
-GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
-ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
-FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
+SDL_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/sdl2)
+SDL_MIXER_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/sdl2_mixer)
+GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/glad)
+GLM_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/glm)
+ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/assimp-$(ASSIMP_VER))
+FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), $(ENGINE_LIB_DIR)/freetype-$(FREETYPE_VER))
 
 #IRRXML_PATH = $(addprefix $(ASSIMP_PATH), /build/contrib/irrXML)
 
@@ -69,14 +57,15 @@ HEADER_DIR = includes/
 ## Includes ##
 INC = -I ./$(HEADER_DIR)
 
-SDL2_INC = $(shell sh ./lib/sdl2/bin/sdl2-config --cflags)
+SDL2_INC = $(shell sh ./$(ENGINE_LIB_DIR)/sdl2/bin/sdl2-config --cflags)
 
 LIB_INCS =	-I $(GLM_PATH)/glm \
 			$(SDL2_INC) \
 			-I $(SDL_MIXER_PATH)/include/SDL2 \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
-			-I $(FREETYPE_PATH)/include
+			-I $(FREETYPE_PATH)/include \
+			-I GameEngine/includes/
 
 
 HEADERS = $(addprefix $(HEADER_DIR), $(HEADER))
@@ -86,15 +75,16 @@ INCS = $(INC) $(LIB_INCS)
 ## FLAGS ##
 CC = clang++
 
-SDL2_LFLAGS = $(shell sh ./lib/sdl2/bin/sdl2-config --libs)
+SDL2_LFLAGS = $(shell sh ./$(ENGINE_LIB_DIR)/sdl2/bin/sdl2-config --libs)
 
 LFLAGS =	$(GLAD_PATH)/glad.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
 			-L $(SDL_MIXER_PATH)/lib/ -lSDL2_mixer \
-			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz
+			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz \
+			-L GameEngine/ -lGameEngine
 
-LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
+LDFLAGS = "-Wl,-rpath,GameEngine/lib/assimp-4.1.0/lib"	
 
 
 FRAMEWORK = -framework Carbon -framework OpenGL -framework IOKit -framework CoreVideo
@@ -109,7 +99,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: CHECK_LIB_DIR ASSIMP SDL_MIXER FREETYPE GLAD GLM print_name $(NAME) print_end
+all: GAME_ENGINE print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -120,7 +110,9 @@ $(OBJS_DIR):
 	@echo "\033$(CYAN)m➼	\033$(CYAN)mCreating $(NAME)'s objects \
 	with flag : \033$(GREEN)m $(CFLAGS)\033[0m"
 	@mkdir -p $(OBJS_DIR)
-	@mkdir -p $(addprefix $(OBJS_DIR)/, $(OBJS_SUB_DIRS))
+
+GAME_ENGINE:
+	make -C GameEngine;
 
 $(NAME): $(OBJS_DIR) $(OBJS_PRE) $(HEADERS) 
 	@echo "\033$(GREEN)m➼\t\033$(GREEN)32m Creating $(NAME)'s executable\033[0m"
@@ -139,22 +131,14 @@ rm_obj:
 	@echo "\033$(PINK)36m✗	\033[0m\033$(PINK)31m$(NAME)'s object removed\033[0m"
 
 clean: rm_obj
-	@make -C $(GLAD_PATH) clean
 
 fclean: rm_obj clean
 	@rm -rf $(NAME)
 	@echo "\033$(PINK)36m✗	\033[0m\033$(PINK)31m$(NAME) removed\033[0m"
-	@make -C $(GLAD_PATH) fclean
 
 re: fclean all
 
 exe: rm_obj all
-
-rm_SDL2:
-	@rm -rf $(SDL2_PATH)
-	@echo "\033$(PINK)36m✗	SDL2-$(SDL_VER) removed\033[0m"
-
-re_SDL2: fclean rm_SDL2 all
 
 MODE_DEBUG: change_cflag all
 
@@ -163,124 +147,9 @@ re_sanitize: rm_obj MODE_DEBUG
 sanitize:
 	@$(eval CFLAGS = -fsanitize=address)
 
-GLM:
-	@if [ ! -d "./lib/glm" ]; then \
-		echo "\033$(PINK)m⚠\tGlm is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tDownloading Glm ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		git clone https://github.com/g-truc/glm glm;\
-	else \
-		echo "\033$(GREEN)m✓\tGlm already installed\033[0m"; \
-	fi
-GLAD:
-	@if [ ! -d "./lib/glad" ]; then \
-		echo "\033$(PINK)m⚠\tGlad is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tDownloading Glad ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		git clone https://github.com/jloro/Glad glad;\
-		cd glad;\
-		make;\
-	else \
-		echo "\033$(GREEN)m✓\tGlad already installed\033[0m"; \
-		make -C $(GLAD_PATH);\
-	fi
-
-FREETYPE:	
-	@if [ ! -d "./lib/freetype-$(FREETYPE_VER)" ]; then \
-		echo "\033$(PINK)m⚠\tFreetype is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tCompiling Freetype-$(FREETYPE_VER) ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		curl -OL https://mirrors.up.pt/pub/nongnu/freetype/freetype-2.10.0.tar.bz2 && \
-		tar -zxvf freetype-$(FREETYPE_VER).tar.bz2 && \
-		rm freetype-$(FREETYPE_VER).tar.bz2 && \
-		mkdir -p $(FREETYPE_PATH) && \
-		cd freetype-$(FREETYPE_VER) && \
-			cmake -B build && \
-			cd build && make && \
-		cd ../.. && \
-		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) installed !\033[0m"; \
-	else \
-		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) already installed\033[0m"; \
-	fi
-
-ASSIMP:	
-	@if [ ! -d "./lib/assimp-$(ASSIMP_VER)" ]; then \
-		echo "\033$(PINK)m⚠\tAssimp is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tCompiling assimp-$(ASSIMP_VER) ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		curl -OL https://github.com/assimp/assimp/archive/v4.1.0.tar.gz && \
-		tar -zxvf v$(ASSIMP_VER).tar.gz && \
-		rm v$(ASSIMP_VER).tar.gz && \
-		mkdir -p $(ASSIMP_PATH) && \
-		cd assimp-$(ASSIMP_VER) && \
-			cmake . && \
-			make && \
-		cd ../.. && \
-		echo "\033$(GREEN)m✓\tassimp-$(ASSIMP_VER)installed !\033[0m"; \
-	else \
-		echo "\033$(GREEN)m✓\tassimp-$(ASSIMP_VER) already installed\033[0m"; \
-	fi
-
-SDL2:
-	@if [ ! -d "./lib/sdl2" ]; then \
-		echo "\033$(PINK)m⚠\tSDL2 is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tCompiling SDL2-$(SDL_VER) ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		curl -OL http://www.libsdl.org/release/SDL2-$(SDL_VER).tar.gz && \
-		tar -zxvf SDL2-$(SDL_VER).tar.gz && \
-		rm SDL2-$(SDL_VER).tar.gz && \
-		mkdir -p $(SDL_PATH) && \
-		cd SDL2-$(SDL_VER) && \
-			sh configure --prefix=$(SDL_PATH) && \
-			make && \
-			make install && \
-		cd .. && \
-		rm -rf SDL2-$(SDL_VER);\
-		echo "\033$(GREEN)m✓\tSDl2-$(SDL_VER) installed !\033[0m"; \
-	else \
-		echo "\033$(GREEN)m✓\tSDl2-$(SDL_VER) already installed\033[0m"; \
-	fi
-SDL_MIXER: SDL2
-	@if [ ! -d "./lib/sdl2_mixer" ]; then \
-		export SDL2_CONFIG=$(addprefix $(SDL_PATH), /bin/sdl2-config); \
-		echo "\033$(CYAN)m➼\tCompiling SDL2_MIXER-$(SDL_MIXER_VER) ...\033[0m"; \
-		curl -OL http://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
-		tar -zxvf SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
-		rm SDL2_mixer-$(SDL_MIXER_VER).tar.gz && \
-		mkdir -p $(SDL_MIXER_PATH) && \
-		cd SDL2_mixer-$(SDL_MIXER_VER) && \
-			sh configure --prefix=$(SDL_MIXER_PATH) && \
-			make && \
-			make install && \
-		cd .. && \
-		rm -rf SDL2_mixer-$(SDL_MIXER_VER);\
-	else \
-		echo "\033$(GREEN)m✓\tSDl2_mixer-$(SDL_MIXER_VER) already installed\033[0m"; \
-	fi
-
-CHECK_LIB_DIR:
-	@if [ ! -d "./lib" ]; then \
-		mkdir lib;\
-	fi
-
 print_name:
 	@echo "\033[033m➼\t\033[033mCompiling $(NAME) ...\033[0m"
 
 print_end:
 	@echo $(MESSAGE)
-.PHONY: all clean fclean re rm_obj exe SDL2 rm_SDL2 re_SDL2 GLAD ASSIMP\
-		 re_sanitize sanitize CHECK_LIB_DIR
+.PHONY: all clean fclean re rm_obj exe re_sanitize sanitize

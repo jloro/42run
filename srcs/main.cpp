@@ -9,7 +9,6 @@
 #include "Terrain.hpp"
 #include "Skybox.hpp"
 #include "Player.hpp"
-#include "FpsDisplay.hpp"
 #include "GameManager.hpp"
 #include "SDL_mixer.h"
 
