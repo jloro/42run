@@ -3,6 +3,7 @@
 #include <cmath>
 #include "ACollider.hpp"
 #include "MusicListener.hpp"
+#include "UiText.hpp"
 
 const unsigned int	GameManager::speedWorld = 80.0f;
 
@@ -24,6 +25,11 @@ GameManager::GameManager(std::shared_ptr<Player> player) : player(player), _scor
 	_gameOverSound.reset(new SoundListener("ressources/sounds/GameOver.wav", 40));
 	AddComponent(_gameOverSound);
 	_tag = eTags::GameManager;
+	std::shared_ptr<UiText>	text(new UiText);
+	text->pos.x = 10.0f;
+	text->text = "Score: 0";
+	Engine42::Engine::AddUIElement(text);
+	AddComponent(text);
 }
 int						GameManager::GetScore(void) const {return _score;};
 
@@ -49,6 +55,7 @@ void	GameManager::Update()
 			if ((*it)->GetTag() == eTags::Coin)
 			{
 				_score += 10;
+				GetComponent<UiText>()->text = std::string("Score: ") + std::to_string(_score);
 				_coinSound->Play();
 			}
 			else
@@ -62,6 +69,7 @@ void	GameManager::Update()
 	if (_timeScore > 0.5f && !player->GetDead()) 
 	{ 
 		++_score;
+		GetComponent<UiText>()->text = std::string("Score: ") + std::to_string(_score);
 		_timeScore -= 0.5f;
 	}
 	//Engine42::Engine::GetFontUI()->RenderText(std::string("Score: ") + std::to_string(_score), 10.0f, SdlWindow::GetMain()->GetHeight() - 24, 1.0f, glm::vec4(1.0f));
@@ -95,5 +103,6 @@ void	GameManager::Reset()
 	Engine42::Engine::AddRenderer(player->GetComponent<MeshRenderer>());
 	GetComponent<MusicListener>()->Play(true, 500);
 	_score = 0;
+	GetComponent<UiText>()->text = std::string("Score: ") + std::to_string(_score);
 	_timeScore = 0.0f;
 }

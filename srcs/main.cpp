@@ -36,8 +36,6 @@ bool InitModels(SdlWindow &win)
 
 	Camera* cam = new Camera(win.GetWidth(), win.GetHeight(), false);
 
-	std::shared_ptr<FpsDisplay> fps(new FpsDisplay);
-	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Model>	test(new Model("ressources/obj/Running/42stud.fbx"));
 	test->AddAnimation("ressources/animations/Dying Backwards.fbx");
 	std::shared_ptr<Shader> 	skeletalShader(new Shader(shadersPath, type));
@@ -97,7 +95,7 @@ int				main(void)
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 	try
 	{
-		std::shared_ptr<Text>	font(new Text("ressources/fonts/SEASRN__.ttf", ft));
+		std::shared_ptr<Text>	font(new Text("ressources/fonts/SEASRN__.ttf", ft, 24));
 		Engine42::Engine::ChangeFontUI(font);
 	 	InitModels(win);
 	}

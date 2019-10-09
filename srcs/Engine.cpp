@@ -57,7 +57,7 @@ void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<GameOb
 
 std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
 
-void            Engine42::Engine::AddUIElement(std::shared_ptr<GameObject> object)
+void            Engine42::Engine::AddUIElement(std::shared_ptr<UiText> object)
 {
 	if (object != nullptr)
 		_inst._UI.push_back(object);
@@ -225,7 +225,7 @@ void                         Engine42::Engine::_RenderAll(void)
 			 return;
 	}
     for (auto it = _UI.begin(); it != _UI.end(); it++)
-         (*it)->Update();
+         (*it)->Draw();
 	_win->Swap();
 }
 void                          Engine42::Engine::_UpdateAll(void)

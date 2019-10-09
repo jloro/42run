@@ -4,12 +4,12 @@
 #include "gtc/type_ptr.hpp"
 #include <iostream>
 
- Text::Text(const std::string font, FT_Library lib)
+Text::Text(const std::string font, FT_Library lib, int pixelSize) : _pixelSize(pixelSize)
 {
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);
 	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
-	FT_Set_Pixel_Sizes(_face, 0, 24);
+	FT_Set_Pixel_Sizes(_face, 0, pixelSize);
 	std::vector<const char *>	shadersPath{"shaders/Text.vs.glsl", "shaders/Text.fs.glsl"};
 	std::vector<GLenum> type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_shader.reset(new Shader(shadersPath, type));
@@ -100,3 +100,5 @@ void	Text::RenderText(const std::string text, float x, float y, float scale, glm
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+int	Text::GetPixelSize(void) const { return _pixelSize; }

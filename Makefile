@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/10/08 16:53:23 by jules            ###   ########.fr        #
+#    Updated: 2019/10/09 14:13:20 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,16 +27,17 @@ SRCS =  Time.cpp SdlWindow.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp Framebuffer.cpp PostProcess.cpp\
 		AComponent.cpp GameObject.cpp ARenderer.cpp ACollider.cpp\
 		PrintGlm.cpp Text.cpp MeshRenderer.cpp Terrain.cpp \
-		FpsDisplay.cpp main.cpp  Player.cpp GameManager.cpp Obstacle.cpp \
+		main.cpp  Player.cpp GameManager.cpp Obstacle.cpp \
 		BoxColliderRenderer.cpp BoxCollider.cpp RoomManager.cpp NodeAnim.cpp\
-		Animation.cpp Node.cpp MusicListener.cpp SoundListener.cpp
+		Animation.cpp Node.cpp MusicListener.cpp SoundListener.cpp UiText.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		GameObject.hpp Engine.hpp Transform.hpp Skybox.hpp PostProcess.hpp \
 		AComponent.hpp ACollider.hpp PrintGlm.hpp  MeshRenderer.hpp Terrain.hpp  \
-		Text.hpp FpsDisplay.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
+		Text.hpp ARenderer.hpp BoxCollider.hpp Player.hpp GameManager.hpp \
 		Obstacle.hpp BoxColliderRenderer.hpp BoxCollider.hpp Model.hpp RoomManager.hpp\
-		Camera.hpp NodeAnim.hpp Animation.hpp Node.hpp MusicListener.hpp SoundListener.hpp
+		Camera.hpp NodeAnim.hpp Animation.hpp Node.hpp MusicListener.hpp SoundListener.hpp \
+		UiText.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)

@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/09/02 12:30:34 by jloro            ###   ########.fr       */
+/*   Updated: 2019/10/09 13:51:51 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ struct Character {
 class Text
 {
 	public:
-		Text(const std::string font, FT_Library lib);
+		Text(const std::string font, FT_Library lib, int pixelSize);
 		virtual ~Text();
 
 		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
 
 		void	UpdateProj();
+		int		GetPixelSize() const;
 	private:
 		FT_Face			_face;
 		std::shared_ptr<Shader>	_shader;
@@ -45,6 +46,7 @@ class Text
 		GLuint			_vao;
 		std::map<GLchar, Character> _characters;
 		glm::mat4		_proj;
+		int				_pixelSize;
 };
 
 #endif

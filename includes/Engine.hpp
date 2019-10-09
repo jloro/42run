@@ -12,7 +12,7 @@
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
 # include "Text.hpp"
-#include "Player.hpp"
+# include "UiText.hpp"
 
 enum eKeyState {
 	KEY_PRESS, //key press during frame
@@ -39,7 +39,7 @@ namespace Engine42
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<GameObject> object);
 			static void            AddGameObject(std::list<std::shared_ptr<GameObject>> objects);
-			static void            AddUIElement(std::shared_ptr<GameObject> object);
+			static void            AddUIElement(std::shared_ptr<UiText> object);
 			static void            ChangeFontUI(std::shared_ptr<Text> font);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
@@ -72,7 +72,7 @@ namespace Engine42
 			std::list<std::shared_ptr<ARenderer>>           _renderers;
 			std::list<std::shared_ptr<Framebuffer>>			_framebuffers;
 			std::list<std::shared_ptr<GameObject>>   _gameObjs;
-			std::list<std::shared_ptr<GameObject>>   _UI;
+			std::list<std::shared_ptr<UiText>>   _UI;
 			std::shared_ptr<Text>					_fontUI;
 
 			bool								_clear;

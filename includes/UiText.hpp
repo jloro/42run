@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FpsDisplay.hpp                                     :+:      :+:    :+:   */
+/*   UiText.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/27 15:29:20 by jules             #+#    #+#             */
-/*   Updated: 2019/09/27 14:42:04 by jloro            ###   ########.fr       */
+/*   Created: 2019/10/09 13:35:19 by jules             #+#    #+#             */
+/*   Updated: 2019/10/09 13:48:03 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FPSDISPLAY_HPP
-# define FPSDISPLAY_HPP
+#ifndef UITEXT_HPP
+# define UITEXT_HPP
 
-# include "GameObject.hpp"
 # include "glm.hpp"
+# include "AComponent.hpp"
+# include <string>
 
-class FpsDisplay : public GameObject
+class UiText : public AComponent
 {
 	public:
-		FpsDisplay(void);
-		virtual	~FpsDisplay();
+		UiText(std::string text, glm::vec2 pos, float scale, glm::vec4 color);
+		UiText(void);
+		virtual	~UiText();
 
-		virtual void	Update(void);
-		virtual void	FixedUpdate(void);
+		virtual void	Draw() const;
+
+		std::string		text;
+		glm::vec2		pos;
+		float			scale;
+		glm::vec4		color;
 	private:
 
 };
